@@ -3,49 +3,70 @@ import { google } from "googleapis";
 const apiKey = "AIzaSyCbFbmMsVTKyAp6SZ_xtM3yK9y6AazMM1o";
 const videoId = "https://www.youtube.com/watch?v=sUERlBS2MTU";
 
-export default defineEventHandler(async (event) => {
-  const comments = await getComments(videoId);
-  return comments;
+const youtube = google.youtube({
+  version: "v3",
+  auth: apiKey,
 });
 
-async function getComments(videoId: string) {
-  const youtube = google.youtube({
-    version: "v3",
-    auth: apiKey,
-  });
-
-  try {
-    const response = await youtube.commentThreads.list({
-      part: "snippet",
-      videoId: extractVideoId(videoId),
-      maxResults: 100,
-    });
-
-    const { items, ...rest } = response.data;
-
-    const comments = (items as any[])
-      .map((item) => ({
-        author: item.snippet.topLevelComment.snippet.authorDisplayName,
-        text: item.snippet.topLevelComment.snippet.textDisplay,
-        publishedAt: item.snippet.topLevelComment.snippet.publishedAt,
-      }))
-      .filter((item) => {
-        return item.text.includes(`&amp;t=`);
-      })
-      .map((item) => {
-        return parseComments(item.text);
-      })
-      .flat()
-      .sort((a, b) => a.time.localeCompare(b.time));
-
-    return {
-      rest,
-      items: comments,
-    };
-  } catch (error) {
-    console.error("Error fetching comments: ", error);
-    throw error;
+export default defineEventHandler(async (event) => {
+  // return await commentThreadsOne(videoId);
+  let items: any[] = [];
+  let res = { nextPageToken: "", items: [] };
+  let totalCount = 0;
+  while (true) {
+    const _res = await commentThreads(videoId, res.nextPageToken);
+    items = [...items, ..._res.items];
+    totalCount += _res.pageInfo.totalResults;
+    if (_res.nextPageToken === undefined) break;
+    res = _res;
   }
+  return {
+    totalCount,
+    searchCount: items.length,
+    items: items.sort((a, b) => a.time.localeCompare(b.time)),
+  };
+});
+
+async function commentThreadsOne(videoId: string): Promise<any> {
+  const response = await youtube.commentThreads.list({
+    part: "snippet",
+    videoId: extractVideoId(videoId),
+    maxResults: 1,
+  } as any);
+
+  const { items } = response.data;
+  return items[0];
+}
+
+async function commentThreads(videoId: string, pageToken = ""): Promise<any> {
+  const response = await youtube.commentThreads.list({
+    part: "snippet",
+    videoId: extractVideoId(videoId),
+    maxResults: 100,
+    pageToken,
+  } as any);
+
+  const { items, ...rest } = response.data;
+
+  const comments = (items as any[])
+    .map((item) => ({
+      author: item.snippet.topLevelComment.snippet.authorDisplayName,
+      text: item.snippet.topLevelComment.snippet.textDisplay,
+      publishedAt: item.snippet.topLevelComment.snippet.publishedAt,
+      likeCount: item.snippet.topLevelComment.snippet.likeCount,
+    }))
+    .filter((item) => {
+      return item.text.includes(`&amp;t=`);
+    })
+    .map((item) => {
+      return parseComments(item.text, item.likeCount);
+    })
+    .flat();
+
+  return {
+    ...rest,
+    items: comments,
+  };
 }
 
 function extractVideoId(url: string) {
@@ -59,8 +80,7 @@ function extractVideoId(url: string) {
   }
 }
 
-function parseComments(commentString: string) {
-  // 정규표현식을 사용하여 시간과 댓글 내용을 추출
+function parseComments(commentString: string, likeCount: number) {
   const regex =
     /<a href="[^"]*t=(\d+)">((\d+):(\d+))<\/a>\s*(.*?)(?=<a href="|$)/g;
   const comments = [];
@@ -69,11 +89,15 @@ function parseComments(commentString: string) {
   while ((match = regex.exec(commentString)) !== null) {
     const [x, y, z, minutes, seconds, comment] = match;
     const time = `${minutes.padStart(2, "0")}:${seconds.padStart(2, "0")}`;
+    const _comment = comment.trim().split("<br>")[0];
 
-    comments.push({
-      time: time,
-      comment: comment.trim(),
-    });
+    if (_comment) {
+      comments.push({
+        time: time,
+        comment: _comment,
+        likeCount: likeCount,
+      });
+    }
   }
 
   return comments;
