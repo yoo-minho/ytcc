@@ -1,15 +1,18 @@
 import { google } from "googleapis";
+import { CommentType } from "~/types/comm";
 
 const apiKey = "AIzaSyCbFbmMsVTKyAp6SZ_xtM3yK9y6AazMM1o";
-const videoId = "https://www.youtube.com/watch?v=sUERlBS2MTU";
-
 const youtube = google.youtube({
   version: "v3",
   auth: apiKey,
 });
 
 export default defineEventHandler(async (event) => {
-  // return await commentThreadsOne(videoId);
+  const videoId = getRouterParam(event, "videoId");
+  if (videoId === undefined) {
+    throw "터져라!";
+  }
+
   let items: any[] = [];
   let res = { nextPageToken: "", items: [] };
   let totalCount = 0;
@@ -23,31 +26,19 @@ export default defineEventHandler(async (event) => {
   return {
     totalCount,
     searchCount: items.length,
-    items: items.sort((a, b) => a.time.localeCompare(b.time)),
+    items: items.sort((a, b) => a.sec - b.sec),
   };
 });
-
-async function commentThreadsOne(videoId: string): Promise<any> {
-  const response = await youtube.commentThreads.list({
-    part: "snippet",
-    videoId: extractVideoId(videoId),
-    maxResults: 1,
-  } as any);
-
-  const { items } = response.data;
-  return items[0];
-}
 
 async function commentThreads(videoId: string, pageToken = ""): Promise<any> {
   const response = await youtube.commentThreads.list({
     part: "snippet",
-    videoId: extractVideoId(videoId),
-    maxResults: 100,
+    videoId,
+    maxResults: 100, //max 100
     pageToken,
   } as any);
 
   const { items, ...rest } = response.data;
-
   const comments = (items as any[])
     .map((item) => ({
       author: item.snippet.topLevelComment.snippet.authorDisplayName,
@@ -69,18 +60,10 @@ async function commentThreads(videoId: string, pageToken = ""): Promise<any> {
   };
 }
 
-function extractVideoId(url: string) {
-  const urlObj = new URL(url);
-  if (urlObj.hostname === "youtu.be") {
-    return urlObj.pathname.slice(1);
-  } else if (urlObj.hostname === "www.youtube.com") {
-    return urlObj.searchParams.get("v");
-  } else {
-    throw new Error("Invalid YouTube URL");
-  }
-}
-
-function parseComments(commentString: string, likeCount: number) {
+function parseComments(
+  commentString: string,
+  likeCount: number
+): CommentType[] {
   const regex =
     /<a href="[^"]*t=(\d+)">((\d+):(\d+))<\/a>\s*(.*?)(?=<a href="|$)/g;
   const comments = [];
@@ -88,12 +71,12 @@ function parseComments(commentString: string, likeCount: number) {
   let match;
   while ((match = regex.exec(commentString)) !== null) {
     const [x, y, z, minutes, seconds, comment] = match;
-    const time = `${minutes.padStart(2, "0")}:${seconds.padStart(2, "0")}`;
+    const sec = +minutes * 60 + +seconds;
     const _comment = comment.trim().split("<br>")[0];
 
     if (_comment) {
       comments.push({
-        time: time,
+        sec,
         comment: _comment,
         likeCount: likeCount,
       });
