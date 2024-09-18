@@ -36,20 +36,11 @@ const comments = ref();
 
 watch([
     () => data.value,
-    () => route.query.mode
+    () => route.query.best
 ], () => {
     let logicData = data.value?.items.map(v => {
-        const { sec, comment, likeCount } = v;
-        return {
-            sec,
-            comment,
-            likeCount,
-            click: () => seekTo(sec),
-        }
+        return { ...v, click: () => seekTo(v.sec) }
     });
-    if ('top' === route.query.mode) {
-        logicData = logicData?.sort((x, y) => y.likeCount - x.likeCount)
-    }
     comments.value = logicData;
 })
 
@@ -107,12 +98,12 @@ onMounted(() => {
 <template>
     <div class="flex flex-col h-full flex-1">
         <div id="youtube-player" class="w-full h-[240px]" style="aspect-ratio: 16 / 9;"></div>
-        <div class="w-full h-[30px] flex items-center justify-center">
-            {{ currentFormatTime }} / {{ duration }} | 댓글: {{ comments?.length }} | 총댓글: {{ data?.totalCount }}
+        <!-- <div class="w-full h-[30px] flex items-center justify-center">
+            {{ currentFormatTime }} / {{ duration }} | 댓글: {{ data?.searchCount }} | 총댓글: {{ data?.totalCount }}
         </div>
         <div>
-            <WatchModeTab />
-        </div>
+            <WatchBestTab />
+        </div> -->
         <div class="flex-1 overflow-scroll">
             <template v-if="status === 'success'">
                 <UVerticalNavigation :links="comments">

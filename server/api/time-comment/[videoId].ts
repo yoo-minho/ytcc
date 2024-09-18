@@ -1,5 +1,5 @@
 import { google } from "googleapis";
-import { CommentType } from "~/types/comm";
+import { CommentType, TimelineCommentType } from "~/types/comm";
 
 const apiKey = "AIzaSyCbFbmMsVTKyAp6SZ_xtM3yK9y6AazMM1o";
 const youtube = google.youtube({
@@ -21,12 +21,16 @@ export default defineEventHandler(async (event) => {
     items = [...items, ..._res.items];
     totalCount += _res.pageInfo.totalResults;
     if (_res.nextPageToken === undefined) break;
+    // if (totalCount > 100 * 50) break;
     res = _res;
   }
+
+  items = comments2TimelineComments(items);
+
   return {
     totalCount,
     searchCount: items.length,
-    items: items.sort((a, b) => a.sec - b.sec),
+    items: items.splice(0, 10),
   };
 });
 
@@ -84,4 +88,33 @@ function parseComments(
   }
 
   return comments;
+}
+
+function comments2TimelineComments(comments: CommentType[]) {
+  let arr = [] as TimelineCommentType[];
+  comments.forEach((comment) => {
+    if (arr.find((v) => v.sec === comment.sec)) {
+      arr = arr.map((v) => {
+        if (v.sec === comment.sec) {
+          return {
+            sec: comment.sec,
+            totalLikeCount: v.totalLikeCount + comment.likeCount,
+            comments: [...v.comments, comment].sort(
+              (a, b) => b.likeCount - a.likeCount
+            ),
+          };
+        } else {
+          return v;
+        }
+      });
+    } else {
+      arr.push({
+        sec: comment.sec,
+        totalLikeCount: comment.likeCount,
+        comments: [comment],
+      });
+    }
+  });
+  arr = [...arr].sort((a, b) => b.totalLikeCount - a.totalLikeCount);
+  return arr;
 }
