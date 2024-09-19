@@ -1,11 +1,5 @@
-import { google } from "googleapis";
+import { youtube } from "@/server/lib/youtubeDataApi";
 import { CommentType, TimelineCommentType } from "~/types/comm";
-
-const apiKey = "AIzaSyCbFbmMsVTKyAp6SZ_xtM3yK9y6AazMM1o";
-const youtube = google.youtube({
-  version: "v3",
-  auth: apiKey,
-});
 
 export default defineEventHandler(async (event) => {
   const videoId = getRouterParam(event, "videoId");

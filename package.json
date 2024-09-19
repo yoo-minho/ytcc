@@ -13,6 +13,7 @@
   "dependencies": {
     "@nuxt/ui": "^2.18.4",
     "@types/youtube": "^0.1.0",
+    "dayjs": "^1.11.13",
     "googleapis": "^140.0.1",
     "nuxt": "^3.12.4",
     "vue": "latest"
