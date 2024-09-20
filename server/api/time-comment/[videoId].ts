@@ -1,5 +1,6 @@
-import { youtube } from "@/server/lib/youtubeDataApi";
-import { CommentType, TimelineCommentType } from "~/types/comm";
+import { youtube } from "@/server/utils/youtube";
+import { formatDuration } from "@/utils/formatting";
+import { CommentType, TimelineCommentType } from "@/types/comm";
 
 export default defineEventHandler(async (event) => {
   const videoId = getRouterParam(event, "videoId");
@@ -7,50 +8,72 @@ export default defineEventHandler(async (event) => {
     throw "터져라!";
   }
 
-  let items: any[] = [];
-  let res = { nextPageToken: "", items: [] };
-  let totalCount = 0;
-  while (true) {
-    const _res = await commentThreads(videoId, res.nextPageToken);
-    items = [...items, ..._res.items];
-    totalCount += _res.pageInfo.totalResults;
-    if (_res.nextPageToken === undefined) break;
-    // if (totalCount > 100 * 50) break;
-    res = _res;
+  const response = await youtube.videos.list({
+    part: ["contentDetails"],
+    id: [videoId],
+  });
+
+  const videoDuration = response.data?.items?.[0]?.contentDetails?.duration;
+  if (!videoDuration) {
+    throw new Error("비디오 길이를 가져오는데 실패했습니다.");
   }
 
-  items = comments2TimelineComments(items);
+  const maxHour = +formatDuration(videoDuration).split(":")[0];
+  const timeStrings = generateTimeStrings(maxHour);
+  const commentPromises = timeStrings.map((timeString) => fetchCommentsForTimeString(videoId, timeString));
+
+  const results = await Promise.all(commentPromises);
+  let items = removeDuplicateComments(results.flatMap((result) => result.items))
+    .map((item) => parseComments(item))
+    .flat();
+
+  const _items = comments2TimelineComments(items).map((c) => ({ ...c, totalLikeCount: c.totalLikeCount }));
 
   return {
-    totalCount,
     searchCount: items.length,
-    items: items.splice(0, 10),
+    // items,
+    items: _items,
   };
 });
 
-async function commentThreads(videoId: string, pageToken = ""): Promise<any> {
+async function fetchCommentsForTimeString(videoId: string, timeString: string) {
+  let items: any[] = [];
+  let totalCount = 0;
+  let nextPageToken = "";
+
+  while (true) {
+    const res = await commentThreads(videoId, nextPageToken, timeString);
+    items = [...items, ...res.items];
+    totalCount += res.pageInfo.totalResults;
+    if (res.nextPageToken === undefined) break;
+    nextPageToken = res.nextPageToken;
+  }
+  return { items, totalCount };
+}
+
+async function commentThreads(videoId: string, pageToken = "", searchTerms: string): Promise<any> {
   const response = await youtube.commentThreads.list({
     part: "snippet",
     videoId,
     maxResults: 100, //max 100
     pageToken,
+    searchTerms,
+    textFormat: "plainText",
   } as any);
 
   const { items, ...rest } = response.data;
   const comments = (items as any[])
     .map((item) => ({
+      id: item.id,
       author: item.snippet.topLevelComment.snippet.authorDisplayName,
-      text: item.snippet.topLevelComment.snippet.textDisplay,
+      comment: item.snippet.topLevelComment.snippet.textDisplay,
       publishedAt: item.snippet.topLevelComment.snippet.publishedAt,
       likeCount: item.snippet.topLevelComment.snippet.likeCount,
     }))
+    .filter((item) => item.comment.includes(`:`))
     .filter((item) => {
-      return item.text.includes(`&amp;t=`);
-    })
-    .map((item) => {
-      return parseComments(item.text, item.likeCount);
-    })
-    .flat();
+      return item.likeCount > 0;
+    });
 
   return {
     ...rest,
@@ -58,26 +81,43 @@ async function commentThreads(videoId: string, pageToken = ""): Promise<any> {
   };
 }
 
-function parseComments(
-  commentString: string,
-  likeCount: number
-): CommentType[] {
-  const regex =
-    /<a href="[^"]*t=(\d+)">((\d+):(\d+))<\/a>\s*(.*?)(?=<a href="|$)/g;
+function removeDuplicateComments(items: any[]): CommentType[] {
+  return [...new Map(items.map((item) => [item.comment, item])).values()];
+}
+
+function generateTimeStrings(hour = 60): string[] {
+  return Array.from({ length: hour + 1 }, (_, i) => i.toString());
+}
+
+function parseComments(item: any): CommentType[] {
+  const { comment, likeCount } = item;
+
   const comments = [];
+  const regex = /(\d+):(\d+)\s*(.*?)(?=\d+:\d+|$)/g;
+
+  let matches = comment.match(regex);
+  let matchCount = matches ? matches.length : 0;
 
   let match;
-  while ((match = regex.exec(commentString)) !== null) {
-    const [x, y, z, minutes, seconds, comment] = match;
+  while ((match = regex.exec(comment)) !== null) {
+    const [, minutes, seconds, content] = match;
     const sec = +minutes * 60 + +seconds;
-    const _comment = comment.trim().split("<br>")[0];
 
-    if (_comment) {
-      comments.push({
-        sec,
-        comment: _comment,
-        likeCount: likeCount,
-      });
+    comments.push({
+      sec,
+      comment: content.trim() || "",
+      likeCount: Math.floor(likeCount / matchCount),
+    });
+  }
+
+  comments.reverse();
+
+  let prevComment = "";
+  for (let i = 0; i < comments.length; i++) {
+    if (!comments[i].comment) {
+      comments[i].comment = prevComment;
+    } else {
+      prevComment = comments[i].comment;
     }
   }
 
@@ -93,9 +133,7 @@ function comments2TimelineComments(comments: CommentType[]) {
           return {
             sec: comment.sec,
             totalLikeCount: v.totalLikeCount + comment.likeCount,
-            comments: [...v.comments, comment].sort(
-              (a, b) => b.likeCount - a.likeCount
-            ),
+            comments: [...v.comments, comment].sort((a, b) => b.likeCount - a.likeCount),
           };
         } else {
           return v;

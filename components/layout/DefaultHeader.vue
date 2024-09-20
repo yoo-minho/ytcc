@@ -13,7 +13,7 @@ const copyLink = async () => {
 
 <template>
     <div
-        class="mx-auto px-2 max-w-7xl flex items-center justify-between gap-3 h-[60px] border-b border-gray-500 w-full">
+        class="mx-auto px-2 max-w-7xl flex items-center justify-between gap-3 h-[60px] border-b border-gray-800 w-full">
         <div class="flex gap-1">
             <UButton color="gray" variant="ghost" @click="() => navigateTo('/')">
                 <span class="text-sm">메인으로</span>

@@ -14,39 +14,28 @@ const filterComments = [...props.comment.comments].filter(c => c.likeCount > 0).
         }
     }">
         <div class="flex gap-2">
-            <div class="flex-1 flex flex-col items-start" style="width: 0;">
-                <div class="flex w-full justify-between">
-                    <div style="color:#3ea6ff">
-                        {{ formatSeconds(comment.sec) }}
-                    </div>
-                    <div class="min-w-[48px]">
-                        <div class="flex items-center gap-1 text-base">
-                            <UIcon name="i-heroicons-hand-thumb-up-solid" />
-                            <div>{{ comment.totalLikeCount }}</div>
-                        </div>
-                    </div>
+            <div class="flex-1 flex flex-col items-start gap-1" style="width: 0;">
+                <div style="color:#3ea6ff">
+                    {{ formatSeconds(comment.sec) }}
                 </div>
                 <template v-for="(v, i) in filterComments">
                     <div class="flex w-full gap-1">
                         <template v-if="filterComments.length === 1">
-                            <div class="text-sm font-medium w-full text-left" :class="selected ? `` : `truncate`">
+                            <div class="text-sm font-medium w-full text-left">
                                 {{ v.comment }}
                             </div>
                         </template>
                         <template v-else>
-                            <div class="text-sm font-medium w-full text-left" :class="selected ? `` : `truncate`">
-                                {{ i + 1 }}. {{ v.comment }}
-                            </div>
-                            <div class="min-w-[48px]">
-                                <div class="flex items-center gap-1 text-sm">
-                                    <UIcon name="i-heroicons-hand-thumb-up" />
-                                    <div>{{ v.likeCount }}</div>
-                                </div>
+                            <div class="text-sm font-medium w-full text-left">
+                                {{ i + 1 }}. {{ v.comment }} ({{ formatCount(v.likeCount) }})
                             </div>
                         </template>
-
                     </div>
                 </template>
+                <div class="flex items-center gap-1 text-base ">
+                    <UIcon name="i-heroicons-hand-thumb-up" />
+                    <div>{{ formatCount(comment.totalLikeCount) }}</div>
+                </div>
             </div>
 
         </div>

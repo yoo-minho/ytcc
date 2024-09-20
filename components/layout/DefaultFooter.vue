@@ -8,7 +8,7 @@ const goUpdateNote = () => {
 </script>
 
 <template>
-    <div class="flex items-center border-t border-gray-500 h-[60px]">
+    <div class="flex items-center border-t border-gray-800 h-[60px]">
         <UButton color="white" to="https://www.threads.net/@irontaek" target="blog" size="sm"
             class="flex flex-col flex-1" variant="ghost">
             <UIcon name="i-ph-threads-logo-bold" class="text-xl" />
