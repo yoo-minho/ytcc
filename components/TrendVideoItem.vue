@@ -7,7 +7,7 @@ defineProps<{ video: TrendingVideoType }>()
 <template>
     <div class="cursor-pointer" @click="navigateTo(`watch?v=${video.id}`)">
         <div class="relative">
-            <img class="w-full" :src="video.thumbnail" alt="Video Thumbnail">
+            <img class="w-full" :src="video.thumbnail" alt="Video Thumbnail" style="aspect-ratio: 16 / 9;">
             <div class="absolute bottom-2 right-2 bg-black bg-opacity-75 text-white rounded px-1 font-bold">
                 {{ video.duration }}
             </div>
@@ -22,6 +22,7 @@ defineProps<{ video: TrendingVideoType }>()
                         조회수 {{ video.viewCount }} •
                         댓글수 {{ video.commentCount }} •
                         {{ video.publishedAt }}
+                        {{ video.categoryName }}
                     </p>
                 </div>
             </div>

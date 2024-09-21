@@ -17,5 +17,8 @@
     "googleapis": "^140.0.1",
     "nuxt": "^3.12.4",
     "vue": "latest"
+  },
+  "devDependencies": {
+    "sass": "^1.79.3"
   }
 }
