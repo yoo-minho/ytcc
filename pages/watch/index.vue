@@ -7,7 +7,7 @@ declare global {
 }
 
 definePageMeta({
-    layout: 'shorts'
+    layout: 'shorts',
 });
 
 const route = useRoute();
@@ -68,8 +68,9 @@ function setYoutubePlayer(YT: any) {
             rel: 0, // 관련 동영상 표시 여부 (0: 표시 안 함)
             modestbranding: 1, // YouTube 로고 표시 여부 (1: 최소화)
             disablekb: 1,
-            cc_load_policy: 0, // 자막 비활성화 시도
-            cc_lang_pref: "", // 특정 언어를 지정하지 않음
+            cc_load_policy: 3, // 자막 완전 비활성화
+            cc_lang_pref: "none", // 자막 언어 선호도 없음
+            hl: "none", // 플레이어 언어 설정 없음
         },
         events: {
             onReady: (event: any) => {
@@ -114,7 +115,7 @@ function setYoutubePlayer(YT: any) {
         <div class="flex items-center justify-between p-4 border-b border-gray-800 mt-2" style="background:rgb(17, 24, 39); border-radius: 20px 20px 0 0;
     ">
             <div><b>타임라인 댓글</b> <span class="text-sm">{{ comments?.length }}</span> </div>
-            <div class="flex" @click="navigateTo('/', { replace: true })">
+            <div class="flex cursor-pointer" @click="navigateTo('/', { replace: true })">
                 <UIcon name="i-heroicons-x-mark-20-solid" size="24px" />
             </div>
         </div>
