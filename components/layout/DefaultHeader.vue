@@ -19,7 +19,7 @@ const copyLink = async () => {
                 <span class="text-sm">메인으로</span>
             </UButton>
         </div>
-        <div class="flex-1 text-xl font-bold text-center">타임라인 댓글추출</div>
+        <div class="flex-1 text-xl font-bold text-center">유튜브 타댓추</div>
         <div class="flex gap-1">
             <UButton color="gray" variant="ghost" @click="copyLink()">
                 <span class="text-sm">공유하기</span>

@@ -9,6 +9,7 @@ export type TrendingVideoType = {
   title: string;
   channelTitle: string;
   channelThumbnail: string;
+  channelCountry: string;
   thumbnail: string;
   viewCount: string;
   commentCount: string;

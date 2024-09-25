@@ -24,20 +24,32 @@ function extractYouTubeVideoId(url: string) {
     return match ? match[1] : null;
 }
 
-const { data: videos } = await useAsyncData<TrendingVideoType[]>('trendingVideos', () =>
+const { data: videos, error } = await useAsyncData<TrendingVideoType[]>('trendingVideos', () =>
     $fetch<TrendingVideoType[]>('/api/trend', {
-        // query: { categoryId: 1 }
+        // query: { categoryId: 17 }
     })
 );
+
+const errorMessage = computed(() => {
+    return (error.value?.data as any).statusMessage
+})
 </script>
 <template>
     <div class="p-4 w-full flex flex-col gap-4">
         <UInput v-model="url" color="primary" variant="outline" placeholder="Youtube URL 붙여넣기" size="xl" />
-        <UButton color="primary" variant="solid" size="xl" :loading="loading" @click="makeCollection()">시간 댓글 모아보기
+        <UButton color="primary" variant="solid" size="xl" :loading="loading" @click="makeCollection()">
+            <span class="text-white">유튜브 타임라인 댓글 추출하기</span>
         </UButton>
     </div>
-    <div v-for="video in videos">
-        <TrendVideoItem :video="video"></TrendVideoItem>
-    </div>
+    <template v-if="videos">
+        <div v-for="video in videos">
+            <TrendVideoItem :video="video"></TrendVideoItem>
+        </div>
+    </template>
+    <template v-else-if="error">
+        <div class="p-4">
+            {{ errorMessage }}
+        </div>
+    </template>
 </template>
 <style lang='scss' scoped></style>

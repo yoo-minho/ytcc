@@ -21,19 +21,12 @@ export default defineEventHandler(async (event) => {
   const maxHour = +formatDuration(videoDuration).split(":")[0];
   const timeStrings = generateTimeStrings(maxHour);
   const commentPromises = timeStrings.map((timeString) => fetchCommentsForTimeString(videoId, timeString));
-
   const results = await Promise.all(commentPromises);
-  let items = removeDuplicateComments(results.flatMap((result) => result.items))
+  const items = removeDuplicateComments(results.flatMap((result) => result.items))
     .map((item) => parseComments(item))
     .flat();
-
   const _items = comments2TimelineComments(items).map((c) => ({ ...c, totalLikeCount: c.totalLikeCount }));
-
-  return {
-    searchCount: items.length,
-    // items,
-    items: _items,
-  };
+  return _items.splice(0, 10);
 });
 
 async function fetchCommentsForTimeString(videoId: string, timeString: string) {
@@ -93,15 +86,23 @@ function parseComments(item: any): CommentType[] {
   const { comment, likeCount } = item;
 
   const comments = [];
-  const regex = /(\d+):(\d+)\s*(.*?)(?=\d+:\d+|$)/g;
+  const regex = /(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(.*?)(?=\d{1,2}:\d{2}(?::\d{2})?|$)/g;
 
   let matches = comment.match(regex);
   let matchCount = matches ? matches.length : 0;
 
   let match;
   while ((match = regex.exec(comment)) !== null) {
-    const [, minutes, seconds, content] = match;
-    const sec = +minutes * 60 + +seconds;
+    const [, hours, minutes, seconds, content] = match;
+    let sec;
+
+    if (seconds) {
+      // 00:00:00 형태
+      sec = +hours * 3600 + +minutes * 60 + +seconds;
+    } else {
+      // 00:00 형태
+      sec = +hours * 60 + +minutes;
+    }
 
     comments.push({
       sec,
@@ -127,6 +128,7 @@ function parseComments(item: any): CommentType[] {
 function comments2TimelineComments(comments: CommentType[]) {
   let arr = [] as TimelineCommentType[];
   comments.forEach((comment) => {
+    if (comment.likeCount === 0) return;
     if (arr.find((v) => v.sec === comment.sec)) {
       arr = arr.map((v) => {
         if (v.sec === comment.sec) {

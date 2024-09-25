@@ -1,12 +1,10 @@
 import dayjs from "dayjs";
-import "dayjs/locale/ko";
 
-dayjs.locale("ko");
-
-export function formatPublishedAt(publishedAt: string): string {
-  const now = dayjs();
+export function formatPublishedAt(publishedAt: string, format?: string): string {
   const published = dayjs(publishedAt);
+  if (format) return replaceWeekdaysToKorean(published.format(format));
 
+  const now = dayjs();
   const diffMinutes = now.diff(published, "minute");
   if (diffMinutes < 60) return `${diffMinutes}분 전`;
 
@@ -23,13 +21,29 @@ export function formatPublishedAt(publishedAt: string): string {
   return `${diffYears}년 전`;
 }
 
-export function formatViewCount(viewCount: string): string {
+export function formatViewCount(viewCount: string, milestone: boolean = false): string {
   const count = parseInt(viewCount, 10);
-  if (count >= 10000) {
-    return `${Math.floor(count / 10000)}만회`;
-  } else if (count >= 1000) {
-    return `${Math.floor(count / 1000)}천회`;
+  if (milestone) {
+    if (count >= 500000000) return "5억 돌파";
+    if (count >= 100000000) return "1억 돌파";
+    if (count >= 50000000) return "5천만 돌파";
+    if (count >= 10000000) return "1천만 돌파";
+    if (count >= 5000000) return "500만 돌파";
+    if (count >= 4000000) return "400만 돌파";
+    if (count >= 3000000) return "300만 돌파";
+    if (count >= 2000000) return "200만 돌파";
+    if (count >= 1000000) return "100만 돌파";
+    if (count >= 500000) return "50만 돌파";
+    if (count >= 100000) return "10만 돌파";
+    if (count >= 50000) return "5만 돌파";
+    if (count >= 10000) return "1만 돌파";
+    if (count >= 5000) return "5천 돌파";
+    if (count >= 1000) return "1천 돌파";
   }
+
+  if (count >= 100000000) return `${Math.floor(count / 100000000)}억회`;
+  if (count >= 10000) return `${Math.floor(count / 10000)}만회`;
+  if (count >= 1000) return `${Math.floor(count / 1000)}천회`;
   return `${count}회`;
 }
 
@@ -52,7 +66,6 @@ export function formatSeconds(seconds: number) {
   const minutes = Math.floor((seconds % 3600) / 60);
   const secs = seconds % 60;
   const pad = (num: number) => String(num).padStart(2, "0");
-  // 시간 값이 0인 경우 생략하고 분:초만 반환
   if (hours > 0) {
     return `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
   } else {
@@ -62,4 +75,27 @@ export function formatSeconds(seconds: number) {
 
 export function formatCount(num: number): string {
   return num.toLocaleString();
+}
+
+export function truncateString(str: string, maxLength: number = 20): string {
+  if (str.length > maxLength) {
+    return str.slice(0, maxLength - 3) + "...";
+  }
+  return str;
+}
+
+function replaceWeekdaysToKorean(text: string): string {
+  const weekdayMap: { [key: string]: string } = {
+    sun: "일",
+    mon: "월",
+    tue: "화",
+    wed: "수",
+    thu: "목",
+    fri: "금",
+    sat: "토",
+  };
+  return text.replace(/\b(sun|mon|tue|wed|thu|fri|sat)(?:day)?\b/gi, (match) => {
+    const key = match.slice(0, 3).toLowerCase();
+    return weekdayMap[key] || match;
+  });
 }
