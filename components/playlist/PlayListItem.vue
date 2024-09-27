@@ -5,7 +5,7 @@ defineProps<{ video: TrendingVideoType }>()
 </script>
 
 <template>
-    <div class="cursor-pointer flex px-4 py-2 gap-2">
+    <div class="cursor-pointer flex px-4 py-2 gap-2" @click="navigateTo(`watch?v=${video.id}`)">
         <div class="flex-1 p-1">
             <div class="relative">
                 <img class="w-full" :src="video.thumbnail" alt="Video Thumbnail" style="aspect-ratio: 16 / 9;">
@@ -16,9 +16,17 @@ defineProps<{ video: TrendingVideoType }>()
         </div>
         <div class="flex-1 p-1 ">
             <div>
-                <p class="text-white text-base leading-tight">{{ video.title }}</p>
-                <p class="text-gray-400 text-sm">{{ video.publishedAt }}</p>
-                <p class="text-gray-400 text-sm">조회수 {{ video.viewCount }} • 댓글수 {{ video.commentCount }}</p>
+                <p class="text-white text-sm leading-tight line-clamp-3 tracking-tight">{{ video.title }}</p>
+                <p class="text-gray-400 text-xs truncate">
+                    {{ video.channelTitle }}
+                </p>
+                <p class="text-gray-400 text-xs">
+                    {{ video.publishedAt }}
+                </p>
+                <p class="text-gray-400 text-xs">
+                    조회수 {{ formatViewCount(video.viewCount) }} •
+                    댓글수 {{ formatViewCount(video.commentCount) }}
+                </p>
             </div>
         </div>
     </div>

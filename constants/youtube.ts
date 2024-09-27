@@ -17,19 +17,19 @@ export enum YouTubeCategory {
 }
 
 export const YOUTUBE_CATEGORY_MAP: Record<YouTubeCategory, string> = {
-  [YouTubeCategory.FILM_ANIMATION]: "영화 및 애니메이션",
-  [YouTubeCategory.AUTOS_VEHICLES]: "자동차 및 차량",
+  [YouTubeCategory.FILM_ANIMATION]: "영화",
+  [YouTubeCategory.AUTOS_VEHICLES]: "자동차",
   [YouTubeCategory.MUSIC]: "음악",
-  [YouTubeCategory.PETS_ANIMALS]: "애완동물 및 동물",
+  [YouTubeCategory.PETS_ANIMALS]: "동물",
   [YouTubeCategory.SPORTS]: "스포츠",
-  [YouTubeCategory.TRAVEL_EVENTS]: "여행 및 이벤트",
+  [YouTubeCategory.TRAVEL_EVENTS]: "여행",
   [YouTubeCategory.GAMING]: "게임",
   [YouTubeCategory.BLOGS]: "블로그",
   [YouTubeCategory.COMEDY]: "코미디",
-  [YouTubeCategory.ENTERTAINMENT]: "엔터테인먼트",
-  [YouTubeCategory.NEWS_POLITICS]: "뉴스 및 정치",
-  [YouTubeCategory.HOWTO_STYLE]: "노하우 및 스타일",
+  [YouTubeCategory.ENTERTAINMENT]: "엔터",
+  [YouTubeCategory.NEWS_POLITICS]: "뉴스",
+  [YouTubeCategory.HOWTO_STYLE]: "노하우",
   [YouTubeCategory.EDUCATION]: "교육",
-  [YouTubeCategory.SCIENCE_TECH]: "과학 및 기술",
-  [YouTubeCategory.NONPROFITS_ACTIVISM]: "비영리 및 사회운동",
+  [YouTubeCategory.SCIENCE_TECH]: "과학",
+  [YouTubeCategory.NONPROFITS_ACTIVISM]: "비영리",
 };

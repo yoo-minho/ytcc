@@ -54,17 +54,24 @@ export const getVideoDetails = async (videoIds: string[], params: any = {}) => {
   return response.data.items || [];
 };
 
-export async function getTrendingVideos(regionCode = "KR", maxResults = 50) {
+export async function getTrendingVideos(pageToken?: string) {
+  const maxResults = 200;
   const params: any = {
     part: ["snippet", "statistics", "contentDetails"],
     chart: "mostPopular",
-    regionCode: regionCode,
+    regionCode: "KR",
     maxResults: maxResults,
   };
 
+  if (pageToken) {
+    params.pageToken = pageToken;
+  }
   try {
     const response = await youtube.videos.list(params);
-    return response.data.items;
+    return {
+      videos: response.data.items,
+      pageToken: response.data.nextPageToken || "",
+    };
   } catch (error: any) {
     if (error.code === 403) {
       throw createError({

@@ -164,7 +164,7 @@ function setYoutubePlayer(YT: any) {
 <template>
     <div class="flex flex-col h-full">
         <div class="h-[60px] flex justify-center items-center">
-            <div class="p-8 truncate text-4xl font-bold tracking-tighter">
+            <div class="p-6 truncate text-4xl font-bold tracking-tighter">
                 {{ headerMessage }}
             </div>
         </div>
@@ -188,7 +188,7 @@ function setYoutubePlayer(YT: any) {
                     </div>
                 </template>
                 <template v-else-if="(comments?.length || 0) > 0">
-                    <div ref="commentsWrapEl" class="flex flex-col">
+                    <div class="flex flex-col">
                         <template v-for="(comment, idx) in comments">
                             <WatchCommentItem :idx="idx" :selected="comment.sec === currentSec" :comment="comment"
                                 @click="seekTo(comment.sec)" />

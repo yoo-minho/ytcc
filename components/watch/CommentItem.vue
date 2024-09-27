@@ -75,7 +75,7 @@ const copyTimelineCommentLink = (sec: number) => {
                 </div>
             </div>
             <div>
-                <UIcon :name="`i-heroicons-clipboard-document${copyCheck}`"
+                <UIcon :name="`i-heroicons-clipboard-document${copyCheck}`" class="cursor-pointer"
                     @click.stop="copyTimelineCommentLink(comment.sec)" />
             </div>
         </div>
