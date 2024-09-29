@@ -64,6 +64,26 @@ export const formatYoutubePlayListItem = (playlistItem: youtube_v3.Schema$Playli
     id: v.videoId,
     title: v.title,
     thumbnail: v.thumbnail,
-    publishedAt: v.publishedAt ? formatPublishedAt(v.publishedAt, "YYYY-MM-DD (ddd)") : "",
+    publishedAt: v.publishedAt ? formatPublishedAt(v.publishedAt, "YYYY-MM-DD (ddd) HH:mm") : "",
+    snippet,
+  };
+};
+
+export const formatYoutubePlayList = (playlistItem: youtube_v3.Schema$Playlist): any => {
+  const { id, snippet } = playlistItem;
+  const { title, description, thumbnails, channelTitle, publishedAt } = snippet || {};
+
+  const v = {
+    playlistId: id,
+    title: title || "",
+    description: description || "",
+    channelTitle: channelTitle,
+    thumbnail: thumbnails?.maxres?.url || thumbnails?.medium?.url || "",
+    publishedAt: publishedAt || "",
+    snippet,
+  };
+  return {
+    ...v,
+    publishedAt: v.publishedAt ? formatPublishedAt(v.publishedAt, "YYYY-MM-DD (ddd) HH:mm") : "",
   };
 };

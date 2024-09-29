@@ -33,3 +33,52 @@ export const YOUTUBE_CATEGORY_MAP: Record<YouTubeCategory, string> = {
   [YouTubeCategory.SCIENCE_TECH]: "과학",
   [YouTubeCategory.NONPROFITS_ACTIVISM]: "비영리",
 };
+
+export const WEEKLY_PLAYLIST_ARR = [
+  {
+    id: "PLBKy1umsMi3QKhFNFXEkhZJhUtMCrVrse",
+    title: "🏀 턴오버",
+    description: "2024 KBL 드래프트 도전기",
+    actor: "하승진, 전태풍",
+    cycle: "매주 월요일 오후 9시",
+    day: "월",
+  },
+  {
+    id: "PLuli3DqAnwjzEHHAC4He-Hf_pDK6xEjQX",
+    title: "🍜나래식🥗",
+    description: "한식, 양식, 중식, 일식 중 가장 맛있는 건? 나래식",
+    actor: "박나래",
+    cycle: "매주 수요일 오후 6시 30분",
+    day: "수",
+  },
+  {
+    id: "PLbG_OH_pU3moPUelcLwX2rM11BkWmSPqD",
+    title: "🍜 B주류경제학 시즌2",
+    description: "",
+    actor: "김창선 PD, 이재용 회계사",
+    cycle: "매주 목요일 오후 6시",
+    day: "목",
+  },
+  {
+    id: "PLfBjRrTX1Ewqz6MgyiCHubNpfQF6lUlz2",
+    title: "🌻덱스의 냉터뷰🌻",
+    description: "냉장고도 파헤치고 요리도 하는 덱스의 냉터뷰 (｡•̀ᴗ-)✧",
+    actor: "덱스",
+    cycle: "격주 목요일 오후 7시",
+    day: "목",
+  },
+  {
+    id: "PLHqqPM2t7weIMhLb_1_xa7qyPOKW8OCiq",
+    title: "",
+    actor: "장성규",
+    cycle: "매주 금요일 오후 6시",
+    day: "금",
+  },
+  {
+    id: "PLBOye70K3oCFHfbeABGgnXgTV1oR8ontz",
+    title: "",
+    actor: "이영지",
+    cycle: "매주 금요일 오후 7시",
+    day: "금",
+  },
+];

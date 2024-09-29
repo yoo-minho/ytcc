@@ -3,17 +3,13 @@ import { YOUTUBE_CATEGORY_MAP } from '@/constants/youtube';
 
 const selectedCategoryId = ref('');
 const videoDataState = useVideoDataState();
-const { data: videos, error, status } = toRef(await videoDataState.value, 'trendVideoResponse').value;
+const { data: videos, error, status } = (await videoDataState.value).trendVideoResponse;
 
 const formattedVideos = computed(() => {
     if (selectedCategoryId.value === '') return videos.value;
     return videos.value?.filter(video => video.categoryId === selectedCategoryId.value) || [];
 })
-
-const errorMessage = computed(() => {
-    return (error.value?.data as any).statusMessage
-})
-
+const errorMessage = computed(() => (error.value?.data as any).statusMessage);
 const categoryList = computed(() => Object.entries(YOUTUBE_CATEGORY_MAP).map(([k, v]) => ({
     id: k,
     value: v,

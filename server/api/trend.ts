@@ -2,7 +2,6 @@ import { formatYoutubeVideo } from "@/server/utils/youtube-formatting";
 
 export default defineEventHandler(async (event) => {
   const allVideos = await getAllVideos();
-  console.log("총 비디오 수:", allVideos.length);
   return allVideos;
 });
 

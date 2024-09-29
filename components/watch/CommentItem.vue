@@ -1,16 +1,15 @@
 <script setup lang='ts'>
 import type { TimelineCommentType } from '@/types/comm';
-import { usePlayerState } from '@/composables/useState/usePlayerState';
 
 const props = defineProps<{ idx: number; comment: TimelineCommentType; selected: boolean; }>();
 
-const playerState = usePlayerState(); // 현재 재생 시간 추적
+const { currentTime } = usePlayer(); // 현재 재생 시간 추적
 const filterComments = [...props.comment.comments].filter(c => c.likeCount > 0).splice(0, 10);
 
 const progressWidth = ref(0);
-watch(() => playerState.value.currentTime, () => {
+watch(currentTime, () => {
     if (props.selected) {
-        const elapsedTime = playerState.value.currentTime - props.comment.sec;
+        const elapsedTime = currentTime.value - props.comment.sec;
         if (elapsedTime > 0 && elapsedTime < 10) {
             const duration = 10; // 10초
             progressWidth.value = Math.min((elapsedTime / duration) * 100, 100);

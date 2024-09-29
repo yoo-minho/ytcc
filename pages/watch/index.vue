@@ -1,23 +1,15 @@
 <script setup lang="ts">
 import type { TimelineCommentType } from '@/types/comm';
+import { usePlayerProvider } from '@/composables/usePlayer';
 import dayjs from 'dayjs';
 
-import { usePlayerState } from '@/composables/useState/usePlayerState';
+const { currentSec, seekTo } = usePlayerProvider();
 
-declare global {
-    interface Window {
-        onYouTubeIframeAPIReady: () => void;
-        YT: any;
-    }
-}
-
-definePageMeta({
-    layout: 'shorts',
-});
+definePageMeta({ layout: 'shorts' });
 
 const route = useRoute();
-const router = useRouter();
 const { v: videoId, list: listId, t } = route.query;
+const time = ref();
 
 const backPage = () => {
     if (listId) {
@@ -26,14 +18,6 @@ const backPage = () => {
         navigateTo('/', { replace: true })
     }
 }
-
-let player: any;
-let playerTimer: any;
-const commentsWrapEl = ref();
-const playerState = usePlayerState(); // 현재 재생 시간 추적
-const currentSec = ref();
-const duration = ref(formatSeconds(0));
-let timeUpdateInterval: any; // 타임 업데이트를 위한 interval
 
 const copyTxt = ref('');
 const isOpenEditor = ref(false);
@@ -69,18 +53,6 @@ const toggleEditor = () => {
     }
 }
 
-const seekTo = (sec: number) => {
-    player.playVideo();
-    player.seekTo(sec, true);
-    router.push({ query: { ...route.query, t: sec } });
-
-    currentSec.value = sec;
-    clearTimeout(playerTimer);
-    playerTimer = setTimeout(() => {
-        currentSec.value = 0;
-    }, (10 * 1000));
-};
-
 const comments = ref<TimelineCommentType[]>();
 const commentsLoading = ref(false);
 const topN = computed(() => `TOP ${comments.value?.length || ''}`);
@@ -95,70 +67,15 @@ const { data, status, error } = await useFetch<TimelineCommentType[]>(`/api/time
     lazy: true,
     server: false,
 });
+
+
 watch(data, () => {
     if (!data.value) return;
 
     comments.value = data.value;
     commentsLoading.value = status.value === "pending";
-
-    if (window.YT) {
-        setYoutubePlayer(window.YT);
-    } else {
-        window.onYouTubeIframeAPIReady = () => setYoutubePlayer(window.YT);
-    }
+    time.value = Number(t) || comments.value?.[0].sec || 0;
 });
-
-function setYoutubePlayer(YT: any) {
-    const { Player, PlayerState } = YT;
-    player = new Player("youtube-player", {
-        videoId,
-        playerVars: {
-            controls: 0, // 0: 숨김, 1: 표시
-            autoplay: 1, // 자동 재생 활성화
-            mute: 0, // 음소거 (1: 음소거, 0: 음소거 해제)
-            rel: 0, // 관련 동영상 표시 여부 (0: 표시 안 함)
-            modestbranding: 1, // YouTube 로고 표시 여부 (1: 최소화)
-            disablekb: 1,
-            cc_load_policy: 3, // 자막 완전 비활성화
-            cc_lang_pref: "none", // 자막 언어 선호도 없음
-            hl: "none", // 플레이어 언어 설정 없음
-        },
-        events: {
-            onReady: (event: any) => {
-                duration.value = formatSeconds(player?.getDuration());
-                console.log("onReady");
-
-                const firstSeekTime = Number(t || comments.value?.[0].sec || 0);
-                seekTo(firstSeekTime); // 동영상 재생 시작
-            },
-            onStateChange: (event: any) => {
-                console.log("Player state changed:", event.data);
-
-                // 재생 상태일 때 타임 업데이트 시작
-                if (event.data === PlayerState.PLAYING) {
-                    if (!timeUpdateInterval) {
-                        const updateTime = () => {
-                            playerState.value.currentTime = player.getCurrentTime();
-                            requestAnimationFrame(updateTime);
-                        };
-                        requestAnimationFrame(updateTime);
-                    }
-                }
-
-                // 일시정지 또는 정지 상태일 때 타임 업데이트 중지
-                if (event.data === PlayerState.PAUSED || event.data === PlayerState.ENDED) {
-                    clearInterval(timeUpdateInterval);
-                    clearTimeout(playerTimer);
-                    timeUpdateInterval = null;
-                    currentSec.value = 0;
-                    playerState.value.currentTime = 0;
-                }
-
-                console.log('event.data', event.data, PlayerState)
-            },
-        },
-    });
-}
 </script>
 
 <template>
@@ -169,7 +86,7 @@ function setYoutubePlayer(YT: any) {
             </div>
         </div>
         <div class="w-full" style="aspect-ratio: 16 / 9">
-            <div id="youtube-player" class="w-full h-full"></div>
+            <YoutubePlayer :video-id="String(videoId)" :t="time" />
         </div>
         <div class="flex-1 flex flex-col h-0 bg-gray-900 rounded-t-3xl mt-2">
             <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800 gap-2">

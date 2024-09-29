@@ -86,6 +86,14 @@ export async function getTrendingVideos(pageToken?: string) {
   }
 }
 
+export async function getPlaylistsInfo(playlistIds: string[]) {
+  const response = await youtube.playlists.list({
+    part: ["snippet"],
+    id: playlistIds,
+  });
+  return response.data.items;
+}
+
 export async function getPlayListItemsById(playlistId: string, maxResults = 50, pageToken?: string) {
   const params: any = {
     part: ["snippet", "contentDetails"],
