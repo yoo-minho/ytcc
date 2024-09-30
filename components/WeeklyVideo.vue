@@ -58,7 +58,7 @@ const formattedPlaylists = computed(() => playlists.value
             </div>
             <div class="flex-1 overflow-y-auto w-full">
                 <div class="flex flex-col gap-4 p-4 ">
-                    <template v-for="(playlist) in formattedPlaylists" :key="index">
+                    <template v-for="(playlist) in formattedPlaylists">
                         <div class="cursor-pointer" @click="navigateTo(`playlist?v=${playlist.playlistId}`)">
                             <div class="flex flex-col gap-2">
                                 <div class="relative rounded-lg overflow-hidden border border-black-900">

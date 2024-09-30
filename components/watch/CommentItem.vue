@@ -1,14 +1,14 @@
 <script setup lang='ts'>
 import type { TimelineCommentType } from '@/types/comm';
 
-const props = defineProps<{ idx: number; comment: TimelineCommentType; selected: boolean; }>();
+const props = defineProps<{ comment: TimelineCommentType; }>();
 
-const { currentTime } = usePlayer(); // 현재 재생 시간 추적
+const { currentTime, currentSec } = usePlayer(); // 현재 재생 시간 추적
 const filterComments = [...props.comment.comments].filter(c => c.likeCount > 0).splice(0, 10);
 
 const progressWidth = ref(0);
 watch(currentTime, () => {
-    if (props.selected) {
+    if (props.comment.sec === currentSec.value) {
         const elapsedTime = currentTime.value - props.comment.sec;
         if (elapsedTime > 0 && elapsedTime < 10) {
             const duration = 10; // 10초

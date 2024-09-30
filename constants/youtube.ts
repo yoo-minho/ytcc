@@ -75,6 +75,12 @@ export const WEEKLY_PLAYLIST_ARR = [
     day: "금",
   },
   {
+    id: "PL8ZmFxF9Ts5yZY-RlNAG51MqkURwYBBk5",
+    cycle: "매주 금요일 오후 6시 30분",
+    actor: "풍자",
+    day: "금",
+  },
+  {
     id: "PLBOye70K3oCFHfbeABGgnXgTV1oR8ontz",
     title: "",
     actor: "이영지",

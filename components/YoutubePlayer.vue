@@ -54,5 +54,7 @@ function setYoutubePlayer() {
 }
 </script>
 <template>
-    <div id="youtube-player" class="w-full h-full"></div>
+    <div class="w-full" style="aspect-ratio: 16 / 9">
+        <div id="youtube-player" class="w-full h-full"></div>
+    </div>
 </template>

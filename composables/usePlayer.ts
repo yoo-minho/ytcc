@@ -9,12 +9,7 @@ export function usePlayerProvider() {
   };
 
   const seekTo = (sec: number) => {
-    console.log("usePlayerProvider.seekTo", player.value);
     if (player.value) {
-      // setInterval(() => {
-      //   player.value.playVideo();
-      //   console.log("asdasd");
-      // }, 1000);
       player.value.playVideo();
       player.value.seekTo(sec, true);
 
