@@ -8,7 +8,7 @@ const moveWatchPage = (videoId: string) => {
     navigateTo({ path: '/watch', query: { v: videoId, list: listId } });
 }
 
-const { data: videos, error } = await useAsyncData<TrendingVideoType[]>('trendingVideos', () =>
+const { data: videos, error } = await useAsyncData<TrendingVideoType[]>('playlist', () =>
     $fetch<TrendingVideoType[]>('/api/playlist', {
         method: 'POST',
         body: { listId }

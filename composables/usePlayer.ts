@@ -5,7 +5,13 @@ const currentTime = ref(0);
 
 export function usePlayerProvider() {
   const updateTime = () => {
-    currentTime.value = player.value.getCurrentTime();
+    if (player.value.getCurrentTime) {
+      currentTime.value = player.value.getCurrentTime();
+    }
+  };
+
+  const clear = () => {
+    clearTimeout(playerTimer);
   };
 
   const seekTo = (sec: number) => {
@@ -20,7 +26,7 @@ export function usePlayerProvider() {
       currentSec.value = sec;
       clearTimeout(playerTimer);
       playerTimer = setTimeout(() => {
-        currentSec.value = 0;
+        seekTo(sec);
       }, 10 * 1000);
     }
   };
@@ -31,6 +37,7 @@ export function usePlayerProvider() {
     currentTime,
     updateTime,
     seekTo,
+    clear,
   };
   provide("playerContext", playerContext);
   return playerContext;

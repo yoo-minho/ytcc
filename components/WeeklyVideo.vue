@@ -1,11 +1,17 @@
 <script setup lang="ts">
 import { WEEKLY_PLAYLIST_ARR } from "@/constants/youtube";
+import { useYoutubeApi } from "@/composables/api/useYoutubeApi";
+
 const videoDataState = useVideoDataState();
-const { data: playlists, error, status } = (await videoDataState.value).weeklyVideoResponse;
+const youtubeApi = useYoutubeApi();
+
+const { data: playlists, error, status } = youtubeApi.fetchWeeklyVideos();
+videoDataState.value.weeklyVideoData = playlists.value || [];
+
 const errorMessage = computed(() => (error.value?.data as any).statusMessage);
 
 const today = new Date().getDay();
-const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+const daysOfWeek = ['월', '화', '수', '목', '금', '토', '일', '상시'];
 const selectedDayOfWeek = ref(daysOfWeek[today]);
 
 const selectDayOfWeek = (day: string) => {
@@ -34,30 +40,37 @@ const formattedPlaylists = computed(() => playlists.value
 
 </script>
 <template>
-    <template v-if="status === 'pending'">
-        <div class="p-4">
-            loading...
+
+    <div class="flex flex-col h-screen overflow-hidden w-full" style="height: calc(100vh - 60px);">
+        <div class="h-[48px] flex-shrink-0 flex bg-gray-900 justify-center items-center gap-2">
+            <template v-for="day in daysOfWeek">
+                <div class="flex items-center justify-center w-10 h-10 rounded-2xl"
+                    :class="[day === selectedDayOfWeek ? 'text-primary-500 underline underline-offset-4' : 'border-1 border-gray-700']"
+                    @click="selectDayOfWeek(day)">
+                    <span :class="[day === selectedDayOfWeek ? 'font-bold text-xl' : 'text-gray-500']">
+                        {{ day }}
+                    </span>
+                </div>
+            </template>
         </div>
-    </template>
-    <template v-else-if="error">
-        <div class="p-4">
-            {{ errorMessage }}
-        </div>
-    </template>
-    <template v-else>
-        <div class="flex h-screen overflow-hidden w-full" style="height: calc(100vh - 60px);">
-            <div class="w-[52px] flex-shrink-0 flex flex-col bg-gray-900 items-center gap-4 p-4">
-                <template v-for="day in ['월', '화', '수', '목', '금', '토', '일']">
-                    <div class="flex items-center justify-center w-10 h-10 rounded-2xl" :class="[
-        day === selectedDayOfWeek ? 'bg-primary-500' : 'border-4 border-gray-700']" @click="selectDayOfWeek(day)">
-                        <span :class="[day === selectedDayOfWeek ? 'font-bold text-xl' : 'text-gray-500']">
-                            {{ day }}
-                        </span>
+        <div class="flex-1 overflow-y-auto w-full">
+            <div class="flex flex-col gap-4 p-4 ">
+                <template v-if="status === 'pending'">
+                    <div>
+                        loading...
                     </div>
                 </template>
-            </div>
-            <div class="flex-1 overflow-y-auto w-full">
-                <div class="flex flex-col gap-4 p-4 ">
+                <template v-else-if="error">
+                    <div>
+                        {{ errorMessage }}
+                    </div>
+                </template>
+                <template v-else-if="formattedPlaylists && formattedPlaylists.length === 0">
+                    <div>
+                        재생목록이 존재하지 않습니다.
+                    </div>
+                </template>
+                <template v-else>
                     <template v-for="(playlist) in formattedPlaylists">
                         <div class="cursor-pointer" @click="navigateTo(`playlist?v=${playlist.playlistId}`)">
                             <div class="flex flex-col gap-2">
@@ -79,16 +92,18 @@ const formattedPlaylists = computed(() => playlists.value
                                     <p class="text-gray-400 text-xs line-clamp-2 tracking-tight break-keep">
                                         {{ playlist.description }}
                                     </p>
-                                    <p class="text-gray-400 text-xs mt-1"> 출연 : {{ playlist.actor }}</p>
+                                    <p v-if="playlist.actor" class="text-gray-400 text-xs mt-1">
+                                        출연 : {{ playlist.actor }}
+                                    </p>
                                     <p class="text-gray-400 text-xs"> 제작채널 : {{ playlist.channelTitle }}</p>
                                 </div>
                             </div>
                         </div>
                         <UDivider />
                     </template>
-                </div>
+                </template>
             </div>
         </div>
-    </template>
+    </div>
 </template>
 <style lang='scss' scoped></style>

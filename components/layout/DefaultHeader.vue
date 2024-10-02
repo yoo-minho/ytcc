@@ -1,18 +1,12 @@
 <script setup lang='ts'>
+import { MAX_TREND_VIDEO_COUNT } from "@/constants/youtube";
+
 const displayState = useDisplayState();
 const toast = useToast();
 
-const openTrendVideo = () => {
-    displayState.value.currentPage = 'TREND';
-}
-
-const openWeeklyVideo = () => {
-    displayState.value.currentPage = 'WEEKLY';
-}
-
-const moveMain = () => {
-    displayState.value.currentPage = '';
-}
+const openTrendVideo = () => navigateTo({ query: { page: 'trend' } });
+const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
+const moveMain = () => navigateTo('/');
 
 const copyLink = async () => {
     await navigator.clipboard.writeText(location.href);
@@ -24,15 +18,17 @@ const copyLink = async () => {
 } 
 </script>
 <template>
-    <div class="px-4 flex items-center gap-3 h-[60px] border-b border-gray-800 w-full">
-        <div v-if="displayState.currentPage !== ''" @click="moveMain()" class="flex items-center cursor-pointer">
+    <div v-if="displayState.currentPage !== 'detail'"
+        class="px-4 flex items-center gap-3 h-[60px] border-b border-gray-800 w-full">
+        <div v-if="String(displayState.currentPage) !== ''" @click="moveMain()"
+            class="flex items-center cursor-pointer">
             <UIcon name="i-ph-arrow-left-bold" size="28px" />
         </div>
         <div class="flex-1 flex items-end">
-            <template v-if="displayState.currentPage === 'TREND'">
-                <span class="text-xl font-bold tracking-tighter">인기 급상승 동영상 TOP 100</span>
+            <template v-if="displayState.currentPage === 'trend'">
+                <span class="text-xl font-bold tracking-tighter">인기 급상승 동영상 TOP {{ MAX_TREND_VIDEO_COUNT }}</span>
             </template>
-            <template v-else-if="displayState.currentPage === 'WEEKLY'">
+            <template v-else-if="displayState.currentPage === 'weekly'">
                 <span class="text-xl font-bold tracking-tighter">요일 웹 예능 • 프로그램</span>
             </template>
             <template v-else>

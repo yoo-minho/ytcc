@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import type { TimelineCommentType } from '@/types/comm';
 
-const { currentSec, seekTo } = usePlayerProvider();
-
-definePageMeta({ layout: 'shorts' });
-
+const { player, currentSec, seekTo } = usePlayerProvider();
 const route = useRoute();
-const { v: videoId, list: listId, t } = route.query;
-const time = ref();
+const { v: videoId, list: listId, t, beforePage } = route.query;
 
 const backPage = () => {
-    if (listId) {
+    console.log('backPage', route.query);
+    if (beforePage) {
+        navigateTo({ query: { page: beforePage } }, { replace: true });
+    } else if (listId) {
         navigateTo(`/playlist?v=${listId}`, { replace: true })
     } else {
         navigateTo('/', { replace: true })
@@ -18,33 +17,36 @@ const backPage = () => {
 }
 
 const isOpenEditor = ref(false);
-const toggleEditor = () => {
-    isOpenEditor.value = !isOpenEditor.value
-}
+const toggleEditor = () => (isOpenEditor.value = !isOpenEditor.value);
 
-const comments = ref<TimelineCommentType[]>();
-
-const headerMessage = computed(() => {
-    const _comment = comments.value?.find((comment: any) => comment.sec === currentSec.value)?.comments[0].comment;
-    const defaultComment = `댓글 누르면 쇼츠 재생`
-    return _comment || defaultComment;
-})
-
-const { data, status, error } = await useFetch<TimelineCommentType[]>(`/api/time-comment/${videoId}`, {
+const { data: comments, status, error } = await useAsyncData<TimelineCommentType[]>('time-comment', () => $fetch<TimelineCommentType[]>(`/api/time-comment/${videoId}`), {
     lazy: true,
     server: false,
 });
 
-watch(data, () => {
-    if (!data.value) return;
+const headerMessage = ref('');
+const time = ref();
+watch([() => currentSec.value, () => comments.value], () => {
+    const _comment = comments.value?.find((comment: any) => comment.sec === currentSec.value)?.comments[0].comment;
+    headerMessage.value = _comment || '';
 
-    comments.value = data.value;
     time.value = Number(t) || comments.value?.[0].sec || 0;
-});
+})
+
+const isMuted = ref(true);
+const toggleMute = () => {
+    if (isMuted.value) {
+        player.value.unMute();
+        isMuted.value = false;
+    } else {
+        player.value.mute();
+        isMuted.value = true;
+    }
+}
 </script>
 
 <template>
-    <div class="flex flex-col h-full">
+    <div class="flex flex-col h-full w-full">
         <div class="h-[60px] flex justify-center items-center">
             <div class="p-6 truncate text-4xl font-bold tracking-tighter">
                 {{ headerMessage }}
@@ -53,18 +55,22 @@ watch(data, () => {
         <YoutubePlayer :video-id="String(videoId)" :t="time" />
         <div class="flex-1 flex flex-col h-0 bg-gray-900 rounded-t-3xl mt-2">
             <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800 gap-2">
-                <div class="flex-1"><b>인기 타임라인 댓글</b></div>
-                <div v-if="(comments?.length || 0) > 0" class="flex cursor-pointer" @click="toggleEditor()">
-                    <UIcon name="i-heroicons-sparkles-solid" size="20px" />
+                <div class="flex-1 text-xl tracking-tight"><b>인기 타임라인 댓글 TOP {{ comments?.length || '' }}</b></div>
+                <div class="flex cursor-pointer" @click="toggleEditor()">
+                    <UIcon name="i-heroicons-sparkles-solid" size="24px" />
                 </div>
-                <div class="flex cursor-pointer mr-[-6px]" @click="backPage()">
-                    <UIcon name="i-heroicons-x-mark-20-solid" size="32px" />
+                <div class="flex cursor-pointer" @click="toggleMute()">
+                    <UIcon :name="isMuted ? 'i-ph-speaker-simple-slash-fill' : 'i-ph-speaker-simple-high-fill'"
+                        size="24px" />
+                </div>
+                <div class="flex cursor-pointer" @click="backPage()">
+                    <UIcon name="i-ph-x-bold" size="28px" />
                 </div>
             </div>
             <div class="flex-1 overflow-scroll">
                 <template v-if="status === 'error'">
                     <div class="p-4 flex w-full h-full justify-center items-center">
-                        {{ error?.data.message }}
+                        {{ error }}
                     </div>
                 </template>
                 <template v-else-if="status === 'pending'">

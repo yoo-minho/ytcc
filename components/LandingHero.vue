@@ -87,7 +87,7 @@ const openApiSite = () => {
         </div>
         <div class="flex flex-col items-center p-4 pb-12">
             <div>Powered by <span class="underline" @click="openApiSite()">YouTubeDataAPI</span></div>
-            <div>© 2024 Yumake. All rights reserved.</div>
+            <div>© 2024 Make1k. All rights reserved.</div>
         </div>
     </div>
 </template>

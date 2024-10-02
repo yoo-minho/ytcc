@@ -1,10 +1,25 @@
 <script setup lang="ts">
-const { player, currentSec, currentTime, seekTo, updateTime } = usePlayerProvider();
-const props = defineProps<{ videoId: string, t: number }>();
+const { player, currentSec, currentTime, seekTo, updateTime, clear } = usePlayerProvider();
+const props = defineProps<{ videoId?: string, t?: number }>();
 
 watch([() => props.videoId, () => props.t], () => {
-    setYoutubePlayer();
-})
+    checkAndSetYoutubePlayer();
+});
+
+onMounted(() => {
+    checkAndSetYoutubePlayer();
+});
+
+function checkAndSetYoutubePlayer() {
+    if (!props.videoId || !props.t) return;
+
+    const youtubePlayerElement = document?.querySelector('#youtube-player');
+    if (youtubePlayerElement) {
+        setYoutubePlayer();
+    } else {
+        console.log('YouTube 플레이어 요소가 아직 존재하지 않습니다. 마운트 후 다시 시도합니다.');
+    }
+}
 
 function setYoutubePlayer() {
     const { Player, PlayerState } = (window as any).YT;
@@ -24,14 +39,13 @@ function setYoutubePlayer() {
         },
         events: {
             onReady: (event: any) => {
-                console.log('onReady', props.t);
+                if (!props.videoId || !props.t) return;
                 seekTo(props.t);
             },
             onStateChange: (event: any) => {
                 let animationFrameId: number | null = null;
 
                 if (event.data === PlayerState.PLAYING) {
-                    console.log('PLAYING');
                     const _updateTime = () => {
                         updateTime();
                         animationFrameId = requestAnimationFrame(_updateTime);
@@ -46,11 +60,17 @@ function setYoutubePlayer() {
                     if (event.data === PlayerState.PAUSED || event.data === PlayerState.ENDED) {
                         currentSec.value = 0;
                         currentTime.value = 0;
+                        clear();
                     }
                 }
             },
+            onError: (event: any) => {
+                console.error('YouTube 플레이어 오류:', event.data);
+            },
         },
     });
+
+    console.log('YouTube 플레이어 설정 완료', player.value)
 }
 </script>
 <template>

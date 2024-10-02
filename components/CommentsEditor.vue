@@ -18,7 +18,7 @@ onMounted(() => {
                 .map(comment => [
                     formatSeconds(comment.sec),
                     truncateString(comment.comments[0].comment, 25),
-                    `(👍${comment.totalLikeCount})`
+                    `(👍${formatCount(comment.totalLikeCount)})`
                 ].join(' ')
                 ).join('\n'),
             ``,

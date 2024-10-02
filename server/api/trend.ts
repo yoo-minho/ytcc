@@ -1,11 +1,13 @@
 import { formatYoutubeVideo } from "@/server/utils/youtube-formatting";
 
 export default defineEventHandler(async (event) => {
-  const allVideos = await getAllVideos();
+  const query = getQuery(event);
+  const maxVideos = parseInt(query.max as string) || 50;
+  const allVideos = await getAllVideos(maxVideos);
   return allVideos;
 });
 
-async function getAllVideos(maxVideos = 100) {
+async function getAllVideos(maxVideos: number) {
   let allVideos = [] as any[];
   let nextPageToken;
 

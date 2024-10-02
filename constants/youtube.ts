@@ -1,3 +1,5 @@
+export const MAX_TREND_VIDEO_COUNT = 50;
+
 export enum YouTubeCategory {
   FILM_ANIMATION = "1",
   AUTOS_VEHICLES = "2",
@@ -44,6 +46,11 @@ export const WEEKLY_PLAYLIST_ARR = [
     day: "월",
   },
   {
+    id: "PLbG_OH_pU3mpeKIrPn4DM9CroiCEg0l7n",
+    cycle: "매주 화요일 오후 6시",
+    day: "화",
+  },
+  {
     id: "PLuli3DqAnwjzEHHAC4He-Hf_pDK6xEjQX",
     title: "🍜나래식🥗",
     description: "한식, 양식, 중식, 일식 중 가장 맛있는 건? 나래식",
@@ -54,7 +61,7 @@ export const WEEKLY_PLAYLIST_ARR = [
   {
     id: "PLbG_OH_pU3moPUelcLwX2rM11BkWmSPqD",
     title: "🍜 B주류경제학 시즌2",
-    description: "",
+    description: "존박, 레오",
     actor: "김창선 PD, 이재용 회계사",
     cycle: "매주 목요일 오후 6시",
     day: "목",
@@ -86,5 +93,9 @@ export const WEEKLY_PLAYLIST_ARR = [
     actor: "이영지",
     cycle: "매주 금요일 오후 7시",
     day: "금",
+  },
+  {
+    id: "PL7MQjbfOyOE00FrDWwrbaTtH7mSZOKnvO",
+    day: "상시",
   },
 ];
