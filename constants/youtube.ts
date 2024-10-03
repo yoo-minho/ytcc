@@ -51,6 +51,12 @@ export const WEEKLY_PLAYLIST_ARR = [
     day: "화",
   },
   {
+    id: "PL8ZmFxF9Ts5wzAOc6dlEHcZ2p87p4oWx5",
+    cycle: "격주 화요일 오후 6시 30분",
+    actor: "장성규",
+    day: "화",
+  },
+  {
     id: "PLuli3DqAnwjzEHHAC4He-Hf_pDK6xEjQX",
     title: "🍜나래식🥗",
     description: "한식, 양식, 중식, 일식 중 가장 맛있는 건? 나래식",
@@ -66,6 +72,12 @@ export const WEEKLY_PLAYLIST_ARR = [
     cycle: "매주 목요일 오후 6시",
     day: "목",
   },
+  {
+    id: "PLL8Ck3RZ-liVMP6kg9iRIFqEfPWddoWO5",
+    cycle: "매주 목요일 오후 6시",
+    day: "목",
+  },
+
   {
     id: "PLfBjRrTX1Ewqz6MgyiCHubNpfQF6lUlz2",
     title: "🌻덱스의 냉터뷰🌻",
@@ -94,6 +106,12 @@ export const WEEKLY_PLAYLIST_ARR = [
     cycle: "매주 금요일 오후 7시",
     day: "금",
   },
+  // {
+  //   id: "PL4nhDXRzk6q1Fc1OFhK8OcVWk4yDUs-Ua",
+  //   title: "띱?",
+  //   cycle: "매주 토요일 12시",
+  //   day: "토",
+  // },
   {
     id: "PL7MQjbfOyOE00FrDWwrbaTtH7mSZOKnvO",
     day: "시즌",
@@ -101,5 +119,11 @@ export const WEEKLY_PLAYLIST_ARR = [
   {
     id: "PL_OIehNcWkf2Ke1g77DwROk-0I9vDmt7J",
     day: "완결",
+  },
+  {
+    id: "PL2vkLEO0P2xcnd29fHTjMCBZgs4APKKbl",
+    day: "완결",
+    actor: "조현아",
+    cycle: "매주 목요일 오후 7시",
   },
 ];
