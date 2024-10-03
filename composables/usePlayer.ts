@@ -19,9 +19,7 @@ export function usePlayerProvider() {
       player.value.playVideo();
       player.value.seekTo(sec, true);
 
-      const route = useRoute();
-      const router = useRouter();
-      router.push({ query: { ...route.query, t: sec } });
+      navigateTo({ query: { ...useRoute().query, t: sec }, replace: true });
 
       currentSec.value = sec;
       clearTimeout(playerTimer);

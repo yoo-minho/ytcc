@@ -17,9 +17,13 @@ export default defineEventHandler(async (event) => {
 
   const formattedVideos = videos.map((v) => formatYoutubeVideo(v));
 
-  const mergedItems = formattedPlaylistItems.map((fv) => ({
-    ...formattedVideos.find((v) => v.id === fv.id),
-    ...fv,
-  }));
+  const mergedItems = formattedPlaylistItems
+    .map((fv) => ({
+      ...formattedVideos.find((v) => v.id === fv.id),
+      ...fv,
+    }))
+    .filter((v) => v.durationSec > 60)
+    .toSorted((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+
   return mergedItems;
 });

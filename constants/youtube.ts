@@ -96,6 +96,10 @@ export const WEEKLY_PLAYLIST_ARR = [
   },
   {
     id: "PL7MQjbfOyOE00FrDWwrbaTtH7mSZOKnvO",
-    day: "상시",
+    day: "시즌",
+  },
+  {
+    id: "PL_OIehNcWkf2Ke1g77DwROk-0I9vDmt7J",
+    day: "완결",
   },
 ];

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const url = ref('');
-const loading = ref(false);
 
 const makeCollection = () => {
     const { videoId, playlistId } = extractYouTubeInfo(url.value);
@@ -10,17 +9,8 @@ const makeCollection = () => {
         return;
     }
 
-    loading.value = true;
-
-    if (videoId) {
-        navigateTo({ path: '/watch', query: { v: videoId } });
-        return;
-    }
-
-    if (playlistId) {
-        navigateTo({ path: '/playlist', query: { v: playlistId } });
-        return;
-    }
+    if (videoId) return moveVideoDetail(videoId);
+    if (playlistId) return movePlaylistDetail(playlistId)
 }
 
 function extractYouTubeInfo(url: string) {
@@ -80,7 +70,7 @@ const openApiSite = () => {
             <div class="flex gap-2 mt-4">
                 <UTextarea v-model="url" color="white" placeholder="Youtube URL" size="xl" class="flex-1" autoresize
                     :rows="1" />
-                <UButton color="primary" variant="solid" size="xl" :loading="loading" @click="makeCollection()">
+                <UButton color="primary" variant="solid" size="xl" @click="makeCollection()">
                     <UIcon name="i-ph-magnifying-glass-bold" class="text-white" size="20px" />
                 </UButton>
             </div>

@@ -36,6 +36,21 @@ export const useYoutubeApi = () => {
             return videoDataState.value.weeklyVideoData;
           }
         },
+        transform: (data) => {
+          return data?.map((p) => {
+            const matchingData = WEEKLY_PLAYLIST_ARR.find((v) => v.id === p.playlistId);
+            return {
+              playlistId: matchingData?.id || p.playlistId,
+              thumbnail: p.thumbnail,
+              title: matchingData?.title || p.title,
+              description: matchingData?.description || p.description,
+              channelTitle: p.channelTitle,
+              actor: matchingData?.actor,
+              cycle: matchingData?.cycle,
+              day: matchingData?.day,
+            };
+          });
+        },
       }
     );
 

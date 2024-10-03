@@ -15,6 +15,7 @@ export type TrendingVideoType = {
   commentCount: string;
   publishedAt: string;
   duration: string;
+  durationSec: number;
   categoryId: string;
   categoryName: string;
 };

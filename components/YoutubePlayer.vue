@@ -10,6 +10,10 @@ onMounted(() => {
     checkAndSetYoutubePlayer();
 });
 
+onUnmounted(() => {
+    clear();
+});
+
 function checkAndSetYoutubePlayer() {
     if (!props.videoId || !props.t) return;
 

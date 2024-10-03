@@ -5,17 +5,6 @@ const { player, currentSec, seekTo } = usePlayerProvider();
 const route = useRoute();
 const { v: videoId, list: listId, t, beforePage } = route.query;
 
-const backPage = () => {
-    console.log('backPage', route.query);
-    if (beforePage) {
-        navigateTo({ query: { page: beforePage } }, { replace: true });
-    } else if (listId) {
-        navigateTo(`/playlist?v=${listId}`, { replace: true })
-    } else {
-        navigateTo('/', { replace: true })
-    }
-}
-
 const isOpenEditor = ref(false);
 const toggleEditor = () => (isOpenEditor.value = !isOpenEditor.value);
 
@@ -63,7 +52,7 @@ const toggleMute = () => {
                     <UIcon :name="isMuted ? 'i-ph-speaker-simple-slash-fill' : 'i-ph-speaker-simple-high-fill'"
                         size="24px" />
                 </div>
-                <div class="flex cursor-pointer" @click="backPage()">
+                <div class="flex cursor-pointer" @click="moveBack()">
                     <UIcon name="i-ph-x-bold" size="28px" />
                 </div>
             </div>

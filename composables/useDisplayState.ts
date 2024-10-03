@@ -11,7 +11,6 @@ export const useDisplayState = () => {
     watch(
       () => route.query.page,
       (newPage) => {
-        console.log("useDisplayState", newPage);
         state.value.currentPage = (newPage as string) || "";
       },
       { immediate: true }
@@ -19,4 +18,29 @@ export const useDisplayState = () => {
   }
 
   return state;
+};
+
+export const moveBack = () => {
+  const router = useRouter();
+  if (history.state.back) {
+    router.back();
+  } else {
+    navigateTo({ path: "/", replace: true });
+  }
+};
+
+export const moveVideoDetail = (videoId: string) => {
+  const query = {
+    page: "video",
+    v: videoId,
+  } as any;
+  navigateTo({ query });
+};
+
+export const movePlaylistDetail = (listId: string) => {
+  const query = {
+    page: "playlist",
+    list: listId,
+  } as any;
+  navigateTo({ query });
 };

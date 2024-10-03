@@ -2,13 +2,15 @@
 import TrendVideo from "@/components/TrendVideo.vue";
 import WeeklyVideo from "@/components/WeeklyVideo.vue";
 import VideoDetail from "@/components/VideoDetail.vue";
+import PlaylistDetail from "@/components/PlaylistDetail.vue";
 
 const displayState = useDisplayState();
 
 const pageComponents = {
     trend: TrendVideo,
     weekly: WeeklyVideo,
-    detail: VideoDetail
+    playlist: PlaylistDetail,
+    video: VideoDetail
 };
 
 const currentComponent = computed(() => pageComponents[displayState.value.currentPage as keyof typeof pageComponents]);

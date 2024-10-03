@@ -6,7 +6,7 @@ const toast = useToast();
 
 const openTrendVideo = () => navigateTo({ query: { page: 'trend' } });
 const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
-const moveMain = () => navigateTo('/');
+const moveMain = () => navigateTo({ path: '/' });
 
 const copyLink = async () => {
     await navigator.clipboard.writeText(location.href);
@@ -18,9 +18,9 @@ const copyLink = async () => {
 } 
 </script>
 <template>
-    <div v-if="displayState.currentPage !== 'detail'"
+    <div v-if="displayState.currentPage !== 'video'"
         class="px-4 flex items-center gap-3 h-[60px] border-b border-gray-800 w-full">
-        <div v-if="String(displayState.currentPage) !== ''" @click="moveMain()"
+        <div v-if="String(displayState.currentPage) !== ''" @click="moveBack()"
             class="flex items-center cursor-pointer">
             <UIcon name="i-ph-arrow-left-bold" size="28px" />
         </div>
@@ -30,6 +30,9 @@ const copyLink = async () => {
             </template>
             <template v-else-if="displayState.currentPage === 'weekly'">
                 <span class="text-xl font-bold tracking-tighter">요일 웹 예능 • 프로그램</span>
+            </template>
+            <template v-else-if="displayState.currentPage === 'playlist'">
+                <span class="text-xl font-bold tracking-tighter">플레이리스트</span>
             </template>
             <template v-else>
                 <div class="flex items-end" @click="moveMain()">

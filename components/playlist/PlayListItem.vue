@@ -1,22 +1,9 @@
 <script setup lang="ts">
 import type { TrendingVideoType } from "@/types/comm";
-
-const props = defineProps<{ video: TrendingVideoType }>();
-
-const moveDetail = () => {
-    const route = useRoute();
-    const beforePage = route.query.page;
-    const query = {
-        page: 'detail',
-        v: props.video.id,
-    } as any;
-    if (beforePage) query.beforePage = beforePage;
-    navigateTo({ query });
-}
+defineProps<{ video: TrendingVideoType }>();
 </script>
-
 <template>
-    <div class="cursor-pointer flex px-4 py-2 gap-2" @click="moveDetail()">
+    <div class="cursor-pointer flex px-4 py-2 gap-2" @click="moveVideoDetail(video.id)">
         <div class="flex-1 p-1">
             <div class="relative">
                 <img class="w-full" :src="video.thumbnail" alt="Video Thumbnail" style="aspect-ratio: 16 / 9;">

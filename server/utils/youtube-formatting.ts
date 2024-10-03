@@ -1,6 +1,6 @@
 import { TrendingVideoType } from "@/types/comm";
 import { YOUTUBE_CATEGORY_MAP, YouTubeCategory } from "@/constants/youtube";
-import { formatDuration, formatPublishedAt, formatViewCount } from "@/utils/formatting";
+import { formatDuration, formatDuration2sec, formatPublishedAt } from "@/utils/formatting";
 import { youtube_v3 } from "googleapis";
 
 export const getChannelDetailByChannels = (channels: youtube_v3.Schema$Channel[], channelId: string) => {
@@ -46,6 +46,7 @@ export const formatYoutubeVideo = (
     commentCount: v.commentCount,
     publishedAt: formatPublishedAt(v.publishedAt),
     duration: formatDuration(v.duration),
+    durationSec: formatDuration2sec(v.duration),
     categoryName: YOUTUBE_CATEGORY_MAP[v.categoryId as YouTubeCategory] || "알 수 없음",
   };
 };
@@ -64,7 +65,7 @@ export const formatYoutubePlayListItem = (playlistItem: youtube_v3.Schema$Playli
     id: v.videoId,
     title: v.title,
     thumbnail: v.thumbnail,
-    publishedAt: v.publishedAt ? formatPublishedAt(v.publishedAt, "YYYY-MM-DD (ddd) HH:mm") : "",
+    publishedAt: v.publishedAt ? formatPublishedAt(v.publishedAt, "YYYY-MM-DD (ddd)") : "",
     snippet,
   };
 };
