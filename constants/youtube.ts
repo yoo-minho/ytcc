@@ -47,6 +47,13 @@ export const WEEKLY_PLAYLIST_ARR = [
   },
   {
     id: "PLbG_OH_pU3mpeKIrPn4DM9CroiCEg0l7n",
+    actor: "존박, 레오",
+    cycle: "매주 화요일 오후 6시",
+    day: "화",
+  },
+  {
+    id: "PLWk6nxHc-4qZHRavpwqLYxk9zUsJCobYv",
+    actor: "장도연",
     cycle: "매주 화요일 오후 6시",
     day: "화",
   },
@@ -55,6 +62,12 @@ export const WEEKLY_PLAYLIST_ARR = [
     cycle: "격주 화요일 오후 6시 30분",
     actor: "장성규",
     day: "화",
+  },
+  {
+    id: "PLW9qLIgfFDYWFgXc5QQPljO4dwTO4V6y2",
+    actor: "효연",
+    cycle: "매주 수요일 오후 5시 30분",
+    day: "수",
   },
   {
     id: "PLuli3DqAnwjzEHHAC4He-Hf_pDK6xEjQX",
@@ -77,7 +90,6 @@ export const WEEKLY_PLAYLIST_ARR = [
     cycle: "매주 목요일 오후 6시",
     day: "목",
   },
-
   {
     id: "PLfBjRrTX1Ewqz6MgyiCHubNpfQF6lUlz2",
     title: "🌻덱스의 냉터뷰🌻",
@@ -122,6 +134,7 @@ export const WEEKLY_PLAYLIST_ARR = [
   },
   {
     id: "PL2vkLEO0P2xcnd29fHTjMCBZgs4APKKbl",
+    title: "조현아의 목요일 밤",
     day: "완결",
     actor: "조현아",
     cycle: "매주 목요일 오후 7시",

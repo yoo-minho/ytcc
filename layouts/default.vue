@@ -1,7 +1,7 @@
 <script setup lang="ts">
 </script>
 <template>
-    <div class="flex justify-center bg-gray-500">
+    <div class="flex justify-center ">
         <div class="min-w-xs max-w-[430px] w-full flex flex-col h-dvh bg-black">
             <UNotifications />
             <LayoutDefaultHeader />

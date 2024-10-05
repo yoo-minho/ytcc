@@ -1,10 +1,10 @@
 <script setup lang="ts">
-defineProps<{ playlist: any }>();
+defineProps<{ playlist: any; thumbnail: boolean }>();
 </script>
 <template>
     <div class="cursor-pointer" @click="movePlaylistDetail(playlist.playlistId)">
         <div class="flex flex-col gap-2">
-            <div class="relative rounded-lg overflow-hidden border border-black-900">
+            <div v-if="thumbnail" class="relative rounded-lg overflow-hidden border border-black-900">
                 <img class="w-full" :src="playlist.thumbnail" alt="Video Thumbnail" style="aspect-ratio: 16 / 9;">
                 <div v-if="playlist.day !== '완결'"
                     class="absolute bottom-0 right-0 inline-block px-1 py-0.5 mr-1 mb-1 rounded text-xs font-bold text-white bg-red-600">

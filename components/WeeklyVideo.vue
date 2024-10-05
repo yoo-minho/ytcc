@@ -16,7 +16,8 @@ const formattedPlaylists = computed(() => playlists.value?.filter(p => {
 const errorMessage = computed(() => (error.value?.data as any).statusMessage);
 
 const today = new Date().getDay();
-const daysOfWeek = ['시즌', '월', '화', '수', '목', '금', '토', '일', '완결'];
+const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+const daysLabel = ['시즌', '월', '화', '수', '목', '금', '토', '일', '완결'];
 const selectedDayOfWeek = ref(daysOfWeek[today]);
 
 const selectDayOfWeek = (day: string) => {
@@ -26,7 +27,7 @@ const selectDayOfWeek = (day: string) => {
 <template>
     <div>
         <div class="flex-shrink-0 flex justify-center gap-2 pt-4 px-4 py-2 sticky top-0 z-10 bg-black">
-            <template v-for="day in daysOfWeek">
+            <template v-for="day in daysLabel">
                 <div class="flex justify-center w-10 h-8"
                     :class="[day === selectedDayOfWeek ? 'text-primary-500 border-b-2 border-primary-500' : '']"
                     @click="selectDayOfWeek(day)">
@@ -53,7 +54,7 @@ const selectDayOfWeek = (day: string) => {
                 </template>
                 <template v-else>
                     <template v-for="(playlist) in formattedPlaylists">
-                        <PlaylistItem :playlist="playlist" />
+                        <PlaylistItem :playlist="playlist" :thumbnail="true" />
                         <UDivider />
                     </template>
                 </template>

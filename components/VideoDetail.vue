@@ -3,12 +3,12 @@ import type { TimelineCommentType } from '@/types/comm';
 
 const { player, currentSec, seekTo } = usePlayerProvider();
 const route = useRoute();
-const { v: videoId, list: listId, t, beforePage } = route.query;
+const { v: videoId, t } = route.query;
 
 const isOpenEditor = ref(false);
 const toggleEditor = () => (isOpenEditor.value = !isOpenEditor.value);
 
-const { data: comments, status, error } = await useAsyncData<TimelineCommentType[]>('time-comment', () => $fetch<TimelineCommentType[]>(`/api/time-comment/${videoId}`), {
+const { data: comments, status, error } = await useAsyncData('time-comment', () => $fetch<TimelineCommentType[]>(`/api/time-comment/${videoId}`), {
     lazy: true,
     server: false,
 });
@@ -17,12 +17,14 @@ const headerMessage = ref('');
 const time = ref();
 watch([() => currentSec.value, () => comments.value], () => {
     const _comment = comments.value?.find((comment: any) => comment.sec === currentSec.value)?.comments[0].comment;
-    headerMessage.value = _comment || '';
+    headerMessage.value = _comment || '댓글 누르면 쇼츠 플레이';
 
     time.value = Number(t) || comments.value?.[0].sec || 0;
 })
 
-const isMuted = ref(true);
+const displayState = useDisplayState();
+
+const isMuted = ref(displayState.value.firstVideoDetail);
 const toggleMute = () => {
     if (isMuted.value) {
         player.value.unMute();
@@ -41,7 +43,7 @@ const toggleMute = () => {
                 {{ headerMessage }}
             </div>
         </div>
-        <YoutubePlayer :video-id="String(videoId)" :t="time" />
+        <YoutubePlayer :video-id="String(videoId)" :t="time" :isMuted="isMuted" />
         <div class="flex-1 flex flex-col h-0 bg-gray-900 rounded-t-3xl mt-2">
             <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800 gap-2">
                 <div class="flex-1 text-xl tracking-tight"><b>인기 타임라인 댓글 TOP {{ comments?.length || '' }}</b></div>

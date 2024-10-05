@@ -23,7 +23,7 @@ const playlist = computed(() => playlists.value?.find(p => p.playlistId === list
 <template>
     <div>
         <div class="p-4">
-            <PlaylistItem v-if="playlist" :playlist="playlist" />
+            <PlaylistItem v-if="playlist" :playlist="playlist" :thumbnail="false" />
         </div>
         <template v-if="status === 'pending'">
             <div class="p-4">로딩중...</div>

@@ -4,6 +4,7 @@ export const useDisplayState = () => {
   const route = useRoute();
   const state = useState("display", () => ({
     currentPage: route.query.page || "",
+    firstVideoDetail: true,
   }));
 
   if (!watchInitialized) {
@@ -35,6 +36,8 @@ export const moveVideoDetail = (videoId: string) => {
     v: videoId,
   } as any;
   navigateTo({ query });
+
+  useDisplayState().value.firstVideoDetail = false;
 };
 
 export const movePlaylistDetail = (listId: string) => {

@@ -4,7 +4,7 @@ import type { TimelineCommentType } from '@/types/comm';
 const props = defineProps<{ comment: TimelineCommentType; }>();
 
 const { currentTime, currentSec } = usePlayer(); // 현재 재생 시간 추적
-const filterComments = [...props.comment.comments].filter(c => c.likeCount > 0).splice(0, 10);
+const filterComments = [...props.comment.comments].filter(c => c.likeCount > 0).splice(0, 5);
 
 const progressWidth = ref(0);
 watch(currentTime, () => {
@@ -23,13 +23,8 @@ watch(currentTime, () => {
 
 const copyCheck = ref('');
 const copyTimelineCommentLink = (sec: number) => {
-    const currentUrl = window.location.href;
-    const url = new URL(currentUrl);
-    url.searchParams.delete('t');
-
     const toast = useToast();
-
-    navigator.clipboard.writeText(url.toString())
+    navigator.clipboard.writeText(window.location.href)
         .then(() => {
             toast.add({ title: '클립보드에 복사하였습니다!' });
             copyCheck.value = '-check';
