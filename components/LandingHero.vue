@@ -34,7 +34,7 @@ function extractYouTubeInfo(url: string) {
     return { videoId, playlistId };
 }
 
-const texts = ['가장 인기있는 순간', '인기 타임라인 댓글'];
+const texts = ['인기 타임라인 댓글', '인기 타임라인 댓글'];
 const currentText = ref(texts[0]);
 
 const changeText = () => {
@@ -48,13 +48,36 @@ onMounted(() => {
 const openApiSite = () => {
     navigateTo('https://developers.google.com/youtube/v3?hl=ko', { external: true });
 }
+
+const openYouTubeHome = () => {
+    const youtubeHomeUrl = 'youtube://';
+    window.location.href = youtubeHomeUrl;
+}
+
+const mobileWeb = ref(false);
+onMounted(() => {
+    mobileWeb.value = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+})
+
+const tempComments = [
+    {
+        sec: 13 * 60 + 56,
+        totalLikeCount: 9155,
+        comments: [{ comment: '[예시] 급한 분들은 여기부터 보시면 됩니다', likeCount: 9155 }]
+    }
+];
 </script>
 <template>
     <div class="w-full flex flex-col justify-between">
-        <div class="p-4 w-full">
+        <div class="p-4 w-full flex flex-col gap-4">
             <div>
-                <div class="text-2xl font-bold tracking-tight">유튜브 동영상 링크를 넣어주시면</div>
-                <div class="text-2xl font-bold tracking-tight flex">
+                <div class="text-3xl font-bold tracking-tighter text-center">유튜브 동영상 링크 넣고</div>
+                <div class="text-3xl font-bold tracking-tighter text-center">
+                    <span class="text-red-red-500">인기 타임라인 댓글</span>
+                    찾기
+                </div>
+                <!-- <div class="text-2xl font-bold tracking-tight text-center">유튜브 동영상 링크 넣고</div>
+                <div class="text-2xl font-bold tracking-tight flex justify-center">
                     <div class="relative h-8 overflow-hidden w-[172px]">
                         <transition-group name="roll" tag="div">
                             <div v-for="text in texts" :key="text"
@@ -64,16 +87,45 @@ const openApiSite = () => {
                             </div>
                         </transition-group>
                     </div>
-                    <div class="inline">을 찾아볼게요</div>
-                </div>
+                    <div class="inline ml-1">찾기</div>
+                </div> -->
             </div>
-            <div class="flex gap-2 mt-4">
+
+            <div class="flex gap-2">
                 <UTextarea v-model="url" color="white" placeholder="Youtube URL" size="xl" class="flex-1" autoresize
                     :rows="1" />
                 <UButton color="primary" variant="solid" size="xl" @click="makeCollection()">
                     <UIcon name="i-ph-magnifying-glass-bold" class="text-white" size="20px" />
                 </UButton>
             </div>
+
+            <template v-if="mobileWeb">
+                <UDivider />
+                <UButton color="white" @click="openYouTubeHome" class="w-full px-4 py-3 text-md flex justify-center">
+                    <span class="flex items-center">
+                        <UIcon name="i-openmoji-youtube" size="20px" />Youtube
+                    </span>
+                    <span>앱 바로가기</span>
+                </UButton>
+            </template>
+
+            <UDivider />
+
+            <div class="flex flex-col gap-4">
+                <div class="text-gray-300 flex flex-col">
+                    <span class="flex items-center gap-1 tracking-tighter">
+                        <UIcon name="i-ph-question-mark-light" /><span class="font-bold">타임라인 댓글</span>이란
+                    </span>
+                    <span class="tracking-tighter text-sm">
+                        시간과 함께 등록하는 댓글을 말함! 해당 시점으로 바로 이동가능!
+                    </span>
+                </div>
+                <tempComment v-for="comment in tempComments">
+                    <WatchCommentItem :comment="comment" />
+                </tempComment>
+            </div>
+
+
         </div>
         <div class="flex flex-col items-center p-4 pb-12">
             <div>Powered by <span class="underline" @click="openApiSite()">YouTubeDataAPI</span></div>

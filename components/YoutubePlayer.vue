@@ -40,7 +40,7 @@ function setYoutubePlayer() {
         videoId: props.videoId,
         playerVars: {
             controls: 0, // 0: 숨김, 1: 표시
-            autoplay: 1, // 자동 재생 활성화
+            autoplay: 0, // 0: 비활성화, 1: 활성화
             mute: props.isMuted ? 1 : 0, // 음소거 (1: 음소거, 0: 음소거 해제)
             rel: 0, // 관련 동영상 표시 여부 (0: 표시 안 함)
             modestbranding: 1, // YouTube 로고 표시 여부 (1: 최소화)

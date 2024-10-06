@@ -22,9 +22,7 @@ watch([() => currentSec.value, () => comments.value], () => {
     time.value = Number(t) || comments.value?.[0].sec || 0;
 })
 
-const displayState = useDisplayState();
-
-const isMuted = ref(displayState.value.firstVideoDetail);
+const isMuted = ref(false);
 const toggleMute = () => {
     if (isMuted.value) {
         player.value.unMute();

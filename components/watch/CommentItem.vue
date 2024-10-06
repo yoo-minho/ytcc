@@ -3,7 +3,7 @@ import type { TimelineCommentType } from '@/types/comm';
 
 const props = defineProps<{ comment: TimelineCommentType; }>();
 
-const { currentTime, currentSec } = usePlayer(); // 현재 재생 시간 추적
+const { currentTime, currentSec } = usePlayerProvider(); // 현재 재생 시간 추적
 const filterComments = [...props.comment.comments].filter(c => c.likeCount > 0).splice(0, 5);
 
 const progressWidth = ref(0);
