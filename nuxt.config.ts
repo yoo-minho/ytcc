@@ -13,6 +13,12 @@ export default defineNuxtConfig({
     enabled: process.env.NODE_ENV === "production",
     id: "G-B9HSLQ7KY1",
   },
+  colorMode: {
+    preference: "light",
+  },
+  ui: {
+    icons: ["heroicons", "ph"], //@iconify/json
+  },
   app: {
     head: {
       viewport: "width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0",

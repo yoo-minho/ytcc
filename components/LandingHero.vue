@@ -46,18 +46,11 @@ onMounted(() => {
 });
 
 const openApiSite = () => {
-    navigateTo('https://developers.google.com/youtube/v3?hl=ko', { external: true });
+    navigateTo('https://developers.google.com/youtube/v3?hl=ko', {
+        external: true,
+        open: { target: 'developers.google.com/youtube' }
+    });
 }
-
-const openYouTubeHome = () => {
-    const youtubeHomeUrl = 'youtube://';
-    window.location.href = youtubeHomeUrl;
-}
-
-const mobileWeb = ref(false);
-onMounted(() => {
-    mobileWeb.value = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-})
 
 const tempComments = [
     {
@@ -76,40 +69,24 @@ const tempComments = [
                     <span class="text-red-red-500">인기 타임라인 댓글</span>
                     찾기
                 </div>
-                <!-- <div class="text-2xl font-bold tracking-tight text-center">유튜브 동영상 링크 넣고</div>
-                <div class="text-2xl font-bold tracking-tight flex justify-center">
-                    <div class="relative h-8 overflow-hidden w-[172px]">
-                        <transition-group name="roll" tag="div">
-                            <div v-for="text in texts" :key="text"
-                                class="absolute  text-red-500 transition-transform duration-500 ease-in-out"
-                                :class="{ 'translate-y-full': text !== currentText, 'translate-y-0': text === currentText }">
-                                {{ text }}
-                            </div>
-                        </transition-group>
-                    </div>
-                    <div class="inline ml-1">찾기</div>
-                </div> -->
             </div>
 
             <div class="flex gap-2">
-                <UTextarea v-model="url" color="white" placeholder="Youtube URL" size="xl" class="flex-1" autoresize
-                    :rows="1" />
+                <UTextarea v-model="url" placeholder="Youtube URL" size="xl" class="flex-1 dark" autoresize :rows="1" />
                 <UButton color="primary" variant="solid" size="xl" @click="makeCollection()">
                     <UIcon name="i-ph-magnifying-glass-bold" class="text-white" size="20px" />
                 </UButton>
             </div>
 
-            <template v-if="mobileWeb">
-                <UDivider />
-                <UButton color="white" @click="openYouTubeHome" class="w-full px-4 py-3 text-md flex justify-center">
-                    <span class="flex items-center">
-                        <UIcon name="i-openmoji-youtube" size="20px" />Youtube
-                    </span>
-                    <span>앱 바로가기</span>
-                </UButton>
-            </template>
+            <UDivider class="dark" />
+            <UButton @click="openYouTubeApp" color="black" class="w-full px-4 py-3 text-md flex justify-center">
+                <span class="flex items-center">
+                    <UIcon name="i-openmoji-youtube" size="20px" />Youtube
+                </span>
+                <span>앱 바로가기</span>
+            </UButton>
 
-            <UDivider />
+            <UDivider class="dark" />
 
             <div class="flex flex-col gap-4">
                 <div class="text-gray-300 flex flex-col">
@@ -117,7 +94,7 @@ const tempComments = [
                         <UIcon name="i-ph-question-mark-light" /><span class="font-bold">타임라인 댓글</span>이란
                     </span>
                     <span class="tracking-tighter text-sm">
-                        시간과 함께 등록하는 댓글을 말함! 해당 시점으로 바로 이동가능!
+                        시간과 함께 등록하는 댓글�� 말함! 해당 시점으로 바로 이동가능!
                     </span>
                 </div>
                 <tempComment v-for="comment in tempComments">

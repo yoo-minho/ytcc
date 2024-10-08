@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const response = await youtube.videos.list({
-    part: ["contentDetails"],
+    part: ["snippet", "contentDetails"],
     id: [videoId],
   });
 
@@ -26,7 +26,11 @@ export default defineEventHandler(async (event) => {
     .map((item) => parseComments(item))
     .flat();
   const _items = comments2TimelineComments(items).map((c) => ({ ...c, totalLikeCount: c.totalLikeCount }));
-  return _items.splice(0, 10);
+
+  return {
+    channelTitle: response.data?.items?.[0]?.snippet?.channelTitle,
+    comments: _items.splice(0, 20),
+  };
 });
 
 async function fetchCommentsForTimeString(videoId: string, timeString: string) {

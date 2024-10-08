@@ -1,9 +1,21 @@
 let playerTimer: any;
+
 const player = ref<any>(null);
-const currentSec = ref();
 const currentTime = ref(0);
+const isMuted = ref(true);
+const loopTime = ref(10);
+const currentSec = ref();
 
 export function usePlayerProvider() {
+  const route = useRoute();
+
+  if (route.query.loop) {
+    loopTime.value = Number(route.query.loop);
+  }
+  if (route.query.t) {
+    currentSec.value = Number(route.query.t);
+  }
+
   const updateTime = () => {
     if (player.value.getCurrentTime) {
       currentTime.value = player.value.getCurrentTime();
@@ -15,17 +27,16 @@ export function usePlayerProvider() {
   };
 
   const seekTo = (sec: number) => {
-    if (player.value) {
+    if (player.value && player.value.playVideo) {
+      currentSec.value = sec;
+
       player.value.playVideo();
       player.value.seekTo(sec, true);
 
-      navigateTo({ query: { ...useRoute().query, t: sec }, replace: true });
-
-      currentSec.value = sec;
       clearTimeout(playerTimer);
       playerTimer = setTimeout(() => {
         seekTo(sec);
-      }, 10 * 1000);
+      }, loopTime.value * 1000);
     }
   };
 
@@ -33,6 +44,8 @@ export function usePlayerProvider() {
     player,
     currentSec,
     currentTime,
+    isMuted,
+    loopTime,
     updateTime,
     seekTo,
     clear,
