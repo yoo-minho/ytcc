@@ -28,7 +28,7 @@ export function usePlayerProvider() {
   };
 
   const seekTo = (sec: number) => {
-    if (player.value && player.value.playVideo) {
+    if (player.value && player.value.playVideo && sec > 0) {
       t.value = sec;
 
       player.value.playVideo();

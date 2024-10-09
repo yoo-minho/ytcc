@@ -43,6 +43,7 @@ const toggleMute = () => {
     if (isMuted.value) {
         player.value.unMute();
         isMuted.value = false;
+        seekTo(t.value);
     } else {
         player.value.mute();
         isMuted.value = true;
@@ -74,31 +75,23 @@ const toggleLoop = () => {
                 <span class="text-[24px]">{{ channelTitle }}</span>
             </div>
         </div> -->
-        <div class="h-[60px] flex w-full items-center justify-between px-2 gap-2">
-            <div>
-                <UButton color="black" :ui="{ rounded: 'rounded-full' }" class="flex items-center justify-center gap-1"
-                    @click="toggleLoop()">
-                    <UIcon name="i-ph-repeat" size="24px" />
+        <div class="h-[60px] flex w-full items-center justify-center px-2 gap-2">
+            <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="toggleMute()">
+                <UIcon :name="isMuted ? 'i-ph-speaker-simple-slash-fill' : 'i-ph-speaker-simple-high-fill'" size="20px">
+                </UIcon>
+            </UButton>
+            <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="toggleLoop()">
+                <div class="flex items-center">
+                    <UIcon name="i-ph-repeat" size="20px" />
                     <div>{{ loop }}초</div>
-                </UButton>
-            </div>
-            <div class="flex items-center justify-center ">
-                <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="toggleMute()">
-                    <UIcon :name="isMuted ? 'i-ph-speaker-simple-slash-fill' : 'i-ph-speaker-simple-high-fill'"
-                        size="20px">
-                    </UIcon>
-                </UButton>
-            </div>
-            <div class="flex-1 flex items-center justify-end gap-2">
-                <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="toggleMute()">
-                    공유
-                </UButton>
-                <UButton color="black" :ui="{ rounded: 'rounded-full' }" class="flex items-center justify-center gap-1"
-                    @click="openYouTubeApp(videoId)">
-                    <UIcon name="i-openmoji-youtube" size="24px" />
-                    <div>유튜브 앱에서 즐기기</div>
-                </UButton>
-            </div>
+                </div>
+            </UButton>
+            <ShareIcon />
+            <UButton color="black" :ui="{ rounded: 'rounded-full' }" class="flex items-center justify-center gap-1"
+                @click="openYouTubeApp(videoId)">
+                <UIcon name="i-openmoji-youtube" size="24px" />
+                <div>유튜브 앱에서 즐기기</div>
+            </UButton>
         </div>
         <div class="flex-1 flex flex-col h-0 bg-gray-900">
             <div class="p-4 border-b border-gray-800">

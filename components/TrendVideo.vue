@@ -36,15 +36,16 @@ const categoryList = computed(() =>
             </div>
         </template>
         <template v-else>
-            <div class="flex flex-wrap gap-1 p-4 pb-2">
-                <UButton variant="outline" @click="selectedCategoryId = ''" color="white">
-                    <UIcon name="i-ph-compass" size="24px" />
-                    <UIcon v-if="selectedCategoryId === ''" name="i-heroicons-check-solid" />
+            <div class="flex flex-wrap px-4 pb-2 gap-1">
+                <UButton variant="outline" :color="selectedCategoryId === '' ? 'primary' : 'white'"
+                    @click="selectedCategoryId = ''">
+                    <UIcon name="i-ph-compass" size="16px" />
                 </UButton>
                 <template v-for="category in categoryList">
-                    <UButton variant="outline" @click="selectedCategoryId = category.id" color="white">
+                    <UButton class="px-2 text-xs" variant="outline"
+                        :color="selectedCategoryId === category.id ? 'primary' : 'white'"
+                        @click="selectedCategoryId = category.id">
                         {{ category.value }}
-                        <UIcon v-if="selectedCategoryId === category.id" name="i-heroicons-check-solid" />
                     </UButton>
                 </template>
             </div>

@@ -79,7 +79,7 @@ const tempComments = [
             </div>
 
             <UDivider class="dark" />
-            <UButton @click="openYouTubeApp" color="black" class="w-full px-4 py-3 text-md flex justify-center">
+            <UButton @click="openYouTubeApp()" color="black" class="w-full px-4 py-3 text-md flex justify-center">
                 <span class="flex items-center">
                     <UIcon name="i-openmoji-youtube" size="20px" />Youtube
                 </span>
