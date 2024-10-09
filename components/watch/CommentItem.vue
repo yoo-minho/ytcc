@@ -3,15 +3,21 @@ import type { TimelineCommentType } from '@/types/comm';
 
 const props = defineProps<{ comment: TimelineCommentType; }>();
 
-const { currentTime, currentSec, loopTime } = usePlayerProvider(); // 현재 재생 시간 추적
+const { currentTime, t, loop } = usePlayerProvider(); // 현재 재생 시간 추적
 const filterComments = [...props.comment.comments].filter(c => c.likeCount > 0).splice(0, 3);
 
+const sharable = ref(false);
 const progressWidth = ref(0);
+
+onMounted(() => {
+    sharable.value = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) && !!navigator.share
+})
+
 watch(currentTime, () => {
-    if (props.comment.sec === currentSec.value) {
+    if (props.comment.sec === t.value) {
         const elapsedTime = currentTime.value - props.comment.sec;
-        if (elapsedTime > 0 && elapsedTime < loopTime.value) {
-            progressWidth.value = Math.min((elapsedTime / loopTime.value) * 100, 100);
+        if (elapsedTime > 0 && elapsedTime < loop.value) {
+            progressWidth.value = Math.min((elapsedTime / loop.value) * 100, 100);
         } else {
             progressWidth.value = 0;
         }
@@ -21,12 +27,14 @@ watch(currentTime, () => {
 })
 
 const copyCheck = ref('');
-const copyTimelineCommentLink = (sec: number) => {
+const copyTimelineCommentLink = (sec?: number) => {
     const toast = useToast();
     const url = new URL(window.location.href);
-    url.searchParams.set('t', sec.toString());
-    if (loopTime.value !== 10) {
-        url.searchParams.set('loop', loopTime.value.toString());
+    if (sec) {
+        url.searchParams.set('t', sec.toString());
+    }
+    if (loop.value !== 10) {
+        url.searchParams.set('loop', loop.value.toString());
     }
 
     navigator.clipboard.writeText(url.toString())
@@ -40,6 +48,29 @@ const copyTimelineCommentLink = (sec: number) => {
         .catch(err => {
             toast.add({ title: '잠시 후 다시 시도해주세요!' });
         });
+}
+
+const shareTimelineComment = (sec?: number) => {
+    if (sharable.value) {
+        const url = new URL(window.location.href);
+        if (sec) {
+            url.searchParams.set('t', sec.toString());
+        }
+        if (loop.value !== 10) {
+            url.searchParams.set('loop', loop.value.toString());
+        }
+        navigator.share({
+            title: '타임라인 댓글 공유',
+            text: '이 시간대의 댓글을 확인해보세요!',
+            url: url.toString()
+        }).then(() => {
+            console.log('공유 성공');
+        }).catch((error) => {
+            console.error('공유 실패:', error);
+        });
+    } else {
+        copyTimelineCommentLink(sec);
+    }
 }
 </script>
 
@@ -67,9 +98,13 @@ const copyTimelineCommentLink = (sec: number) => {
                         <div>{{ formatCount(comment.totalLikeCount) }}</div>
                     </div>
                 </div>
-                <div>
-                    <UIcon :name="`i-heroicons-clipboard-document${copyCheck}`" class="cursor-pointer"
-                        @click.stop="copyTimelineCommentLink(comment.sec)" />
+                <div class="cursor-pointer" @click.stop="shareTimelineComment(comment.sec)">
+                    <template v-if="sharable">
+                        <UIcon name="i-ph-share-fat-fill" />
+                    </template>
+                    <template v-else>
+                        <UIcon :name="`i-heroicons-clipboard-document${copyCheck}`" />
+                    </template>
                 </div>
             </div>
         </UCard>

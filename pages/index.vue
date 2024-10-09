@@ -21,7 +21,7 @@ const currentComponent = computed(() => pageComponents[displayState.value.curren
             <LandingHero v-if="displayState.currentPage === ''" class="absolute inset-0 z-10" />
         </Transition>
         <Transition name="slide-up">
-            <VideoDetail v-if="displayState.currentPage === 'video'" class="absolute inset-0 z-30 bg-black " />
+            <VideoDetail v-show="displayState.currentPage === 'video'" class="absolute inset-0 z-30 bg-black " />
         </Transition>
         <Transition name="slide">
             <component :is="currentComponent" v-if="currentComponent" class="absolute inset-0 z-20 bg-black" />

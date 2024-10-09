@@ -1,36 +1,42 @@
 <script setup lang="ts">
 import type { TimelineCommentType } from '@/types/comm';
 
-const { player, currentSec, isMuted, loopTime, seekTo } = usePlayerProvider();
-const route = useRoute();
-const { v: videoId, t } = route.query;
+const { player, t, isMuted, loop, seekTo } = usePlayerProvider();
 
 const isOpenEditor = ref(false);
 const toggleEditor = () => (isOpenEditor.value = !isOpenEditor.value);
 
+const videoId = ref();
+const route = useRoute();
+watch(() => route.query.v, () => {
+    videoId.value = String(route.query.v);
+}, { immediate: true })
+
+type CommentType = { comments: TimelineCommentType[], channelTitle: string };
+
 const { data, status, error } = await useAsyncData('time-comment',
-    () => $fetch<{ comments: TimelineCommentType[], channelTitle: string }>(`/api/time-comment/${videoId}`), {
+    () => {
+        if (!videoId.value) return Promise.resolve({ comments: [], channelTitle: '' });
+        return $fetch<CommentType>(`/api/time-comment/${videoId.value}`);
+    }, {
     lazy: true,
     server: false,
+    watch: [videoId],
 });
 
 const comments = ref();
-const channelTitle = ref();
-
-channelTitle.value = '채널이름';
+const channelTitle = ref('채널이름');
+const headerMessage = ref('');
 
 watch(data, () => {
+    channelTitle.value = data.value?.channelTitle || '채널이름';
     comments.value = data.value?.comments;
-    channelTitle.value = data.value?.channelTitle;
+    t.value = comments.value?.[0].sec || 0;
+    headerMessage.value = comments.value?.[0]?.comments[0].comment || '댓글 누르면 쇼츠 플레이';
 })
 
-const headerMessage = ref('');
-const time = ref();
-watch([() => currentSec.value, () => comments.value], () => {
-    const _comment = comments.value?.find((comment: any) => comment.sec === currentSec.value)?.comments[0].comment;
-    headerMessage.value = _comment || '댓글 누르면 쇼츠 플레이';
-
-    time.value = Number(t) || comments.value?.[0].sec || 0;
+watch(t, () => {
+    headerMessage.value = comments.value?.find((v: any) => v.sec === t.value)?.comments[0].comment || '댓글 누르면 쇼츠 플레이';
 })
 
 const toggleMute = () => {
@@ -45,11 +51,11 @@ const toggleMute = () => {
 
 const toggleLoop = () => {
     const loopTimes = [10, 15, 30, 60];
-    const currentIndex = loopTimes.indexOf(loopTime.value);
+    const currentIndex = loopTimes.indexOf(loop.value);
     const nextIndex = (currentIndex + 1) % loopTimes.length;
-    loopTime.value = loopTimes[nextIndex];
+    loop.value = loopTimes[nextIndex];
 
-    seekTo(currentSec.value);
+    seekTo(t.value);
 }
 </script>
 
@@ -61,14 +67,21 @@ const toggleLoop = () => {
                 {{ headerMessage }}
             </div>
         </div>
-        <YoutubePlayer :video-id="String(videoId)" :t="time" :isMuted="isMuted" />
-        <div class="h-[60px] flex justify-center items-center">
+        <YoutubePlayer :video-id="videoId" />
+        <!-- <div class="h-[60px] flex justify-center items-center">
             <div class="p-6 truncate font-bold tracking-tighter flex items-center gap-1">
                 <UIcon name="i-openmoji-youtube" size="48px" />
                 <span class="text-[24px]">{{ channelTitle }}</span>
             </div>
-        </div>
-        <div class="h-[60px] flex w-full items-center justify-between px-4 gap-2 border-b border-gray-800">
+        </div> -->
+        <div class="h-[60px] flex w-full items-center justify-between px-2 gap-2">
+            <div>
+                <UButton color="black" :ui="{ rounded: 'rounded-full' }" class="flex items-center justify-center gap-1"
+                    @click="toggleLoop()">
+                    <UIcon name="i-ph-repeat" size="24px" />
+                    <div>{{ loop }}초</div>
+                </UButton>
+            </div>
             <div class="flex items-center justify-center ">
                 <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="toggleMute()">
                     <UIcon :name="isMuted ? 'i-ph-speaker-simple-slash-fill' : 'i-ph-speaker-simple-high-fill'"
@@ -76,14 +89,15 @@ const toggleLoop = () => {
                     </UIcon>
                 </UButton>
             </div>
-            <div class="w-[80px]">
-                <UButton color="black" class="flex items-center justify-center gap-1" @click="toggleLoop()">
-                    <UIcon name="i-ph-repeat" size="24px" />
-                    <div>{{ loopTime }}초</div>
+            <div class="flex-1 flex items-center justify-end gap-2">
+                <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="toggleMute()">
+                    공유
                 </UButton>
-            </div>
-            <div class="flex-1 flex items-center justify-end ">
-
+                <UButton color="black" :ui="{ rounded: 'rounded-full' }" class="flex items-center justify-center gap-1"
+                    @click="openYouTubeApp(videoId)">
+                    <UIcon name="i-openmoji-youtube" size="24px" />
+                    <div>유튜브 앱에서 즐기기</div>
+                </UButton>
             </div>
         </div>
         <div class="flex-1 flex flex-col h-0 bg-gray-900">

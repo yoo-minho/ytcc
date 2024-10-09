@@ -1,38 +1,36 @@
 <script setup lang="ts">
 const {
     player,
-    currentSec,
+    t,
+    isMuted,
     currentTime,
     seekTo,
     updateTime,
     clear,
 } = usePlayerProvider();
-const props = defineProps<{ videoId?: string; t?: number, isMuted: boolean }>();
 
-watch([() => props.videoId, () => props.t], () => {
-    checkAndSetYoutubePlayer();
-});
+const props = defineProps<{ videoId: string }>();
 
 onMounted(() => {
-    checkAndSetYoutubePlayer();
+    setYoutubePlayer();
+});
+
+watch([() => props.videoId], () => {
+    player.value?.loadVideoById(props.videoId);
+    if (isMuted.value) {
+        player.value.mute();
+    } else {
+        player.value.unMute();
+    }
+});
+
+watch(t, () => {
+    seekTo(t.value);
 });
 
 onUnmounted(() => {
     clear();
 });
-
-function checkAndSetYoutubePlayer() {
-    if (!props.videoId || !props.t) return;
-
-    const youtubePlayerElement = document?.querySelector("#youtube-player");
-    if (youtubePlayerElement) {
-        setYoutubePlayer();
-    } else {
-        console.log(
-            "YouTube 플레이어 요소가 아직 존재하지 않습니다. 마운트 후 다시 시도합니다."
-        );
-    }
-}
 
 function setYoutubePlayer() {
     const { Player, PlayerState } = (window as any).YT;
@@ -41,7 +39,7 @@ function setYoutubePlayer() {
         playerVars: {
             controls: 0, // 0: 숨김, 1: 표시
             autoplay: 0, // 0: 비활성화, 1: 활성화
-            mute: props.isMuted ? 1 : 0, // 음소거 (1: 음소거, 0: 음소거 해제)
+            mute: 1, // 음소거 (1: 음소거, 0: 음소거 해제)
             rel: 0, // 관련 동영상 표시 여부 (0: 표시 안 함)
             modestbranding: 1, // YouTube 로고 표시 여부 (1: 최소화)
             disablekb: 1,
@@ -52,8 +50,8 @@ function setYoutubePlayer() {
         },
         events: {
             onReady: (event: any) => {
-                if (props.videoId && props.t) {
-                    seekTo(props.t);
+                if (props.videoId && t.value) {
+                    seekTo(t.value);
                 }
             },
             onStateChange: (event: any) => {
@@ -72,7 +70,7 @@ function setYoutubePlayer() {
                     }
 
                     if (event.data === PlayerState.PAUSED || event.data === PlayerState.ENDED) {
-                        currentSec.value = 0;
+                        t.value = 0;
                         currentTime.value = 0;
                         clear();
                     }

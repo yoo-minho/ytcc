@@ -139,4 +139,5 @@ export const WEEKLY_PLAYLIST_ARR = [
     actor: "조현아",
     cycle: "매주 목요일 오후 7시",
   },
+  { id: "PL4P8Dv_rpsNzWhpntV51XhQdq4R-iBNtD", cycle: "", day: "일" },
 ];

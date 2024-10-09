@@ -2,18 +2,19 @@ let playerTimer: any;
 
 const player = ref<any>(null);
 const currentTime = ref(0);
+const videoId = ref("");
 const isMuted = ref(true);
-const loopTime = ref(10);
-const currentSec = ref();
+const loop = ref(10);
+const t = ref();
 
 export function usePlayerProvider() {
   const route = useRoute();
 
   if (route.query.loop) {
-    loopTime.value = Number(route.query.loop);
+    loop.value = Number(route.query.loop);
   }
   if (route.query.t) {
-    currentSec.value = Number(route.query.t);
+    t.value = Number(route.query.t);
   }
 
   const updateTime = () => {
@@ -28,7 +29,7 @@ export function usePlayerProvider() {
 
   const seekTo = (sec: number) => {
     if (player.value && player.value.playVideo) {
-      currentSec.value = sec;
+      t.value = sec;
 
       player.value.playVideo();
       player.value.seekTo(sec, true);
@@ -36,16 +37,17 @@ export function usePlayerProvider() {
       clearTimeout(playerTimer);
       playerTimer = setTimeout(() => {
         seekTo(sec);
-      }, loopTime.value * 1000);
+      }, loop.value * 1000);
     }
   };
 
   const playerContext = {
     player,
-    currentSec,
+    videoId,
+    t,
     currentTime,
     isMuted,
-    loopTime,
+    loop,
     updateTime,
     seekTo,
     clear,
