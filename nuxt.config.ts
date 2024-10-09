@@ -16,8 +16,14 @@ export default defineNuxtConfig({
   colorMode: {
     preference: "light",
   },
-  ui: {
-    icons: ["heroicons", "ph"], //@iconify/json
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: "modern-compiler", // Deprecation Warning: The legacy JS API. Sass 2.0.0.
+        },
+      },
+    },
   },
   app: {
     head: {

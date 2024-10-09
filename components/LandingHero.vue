@@ -56,7 +56,7 @@ const tempComments = [
     {
         sec: 13 * 60 + 56,
         totalLikeCount: 9155,
-        comments: [{ comment: '[예시] 급한 분들은 여기부터 보시면 됩니다', likeCount: 9155 }]
+        comments: [{ comment: '급한 분들은 여기부터 보시면 됩니다', likeCount: 9155 }]
     }
 ];
 </script>
@@ -94,7 +94,7 @@ const tempComments = [
                         <UIcon name="i-ph-question-mark-light" /><span class="font-bold">타임라인 댓글</span>이란
                     </span>
                     <span class="tracking-tighter text-sm">
-                        시간과 함께 등록하는 댓글�� 말함! 해당 시점으로 바로 이동가능!
+                        시간과 함께 등록하는 댓글을 말함! 해당 시점으로 바로 이동가능!<br>에를들어,
                     </span>
                 </div>
                 <tempComment v-for="comment in tempComments">
