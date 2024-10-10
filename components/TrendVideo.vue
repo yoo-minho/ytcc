@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { YOUTUBE_CATEGORY_MAP, MAX_TREND_VIDEO_COUNT } from "@/constants/youtube";
+import { MAX_TREND_VIDEO_COUNT } from "@/constants/youtube";
 import { useYoutubeApi } from "@/composables/api/useYoutubeApi";
 
 const youtubeApi = useYoutubeApi();
@@ -14,46 +14,21 @@ const formattedVideos = computed(() => {
     return videos.value?.filter((video) => video.categoryId === selectedCategoryId.value) || [];
 });
 const errorMessage = computed(() => (error.value?.data as any)?.statusMessage);
-const categoryList = computed(() =>
-    Object.entries(YOUTUBE_CATEGORY_MAP)
-        .map(([k, v]) => ({
-            id: k,
-            value: v,
-            count: videos.value?.filter((video) => video.categoryId === k).length || 0,
-        }))
-        .filter((v) => v.count > 0)
-        .toSorted((a, b) => b.count - a.count)
-);
 </script>
 <template>
-    <div>
+    <div class="w-full pt-2">
         <template v-if="status === 'pending'">
-            <div class="p-4">loading...</div>
+            <div class="p-4 w-full">loading...</div>
         </template>
         <template v-else-if="error">
-            <div class="p-4">
+            <div class="p-4 w-full">
                 {{ errorMessage }}
             </div>
         </template>
-        <template v-else>
-            <div class="flex flex-wrap px-4 pb-2 gap-1">
-                <UButton variant="outline" :color="selectedCategoryId === '' ? 'primary' : 'white'"
-                    @click="selectedCategoryId = ''">
-                    <UIcon name="i-ph-compass" size="16px" />
-                </UButton>
-                <template v-for="category in categoryList">
-                    <UButton class="px-2 text-xs" variant="outline"
-                        :color="selectedCategoryId === category.id ? 'primary' : 'white'"
-                        @click="selectedCategoryId = category.id">
-                        {{ category.value }}
-                    </UButton>
-                </template>
+        <template v-if="videos">
+            <div v-for="(video, idx) in formattedVideos">
+                <PlaylistPlayListItem :video="video" :idx="idx" />
             </div>
-            <template v-if="videos">
-                <div v-for="video in formattedVideos">
-                    <PlaylistPlayListItem :video="video"></PlaylistPlayListItem>
-                </div>
-            </template>
         </template>
     </div>
 </template>

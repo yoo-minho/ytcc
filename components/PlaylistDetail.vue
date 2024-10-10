@@ -11,7 +11,7 @@ videoDataState.value.weeklyVideoData = playlists.value || [];
 const route = useRoute();
 const { list: listId } = route.query;
 
-const { data: videos, status } = useAsyncData<TrendingVideoType[]>("playlist", () =>
+const { data: videos, status } = useAsyncData("playlist", () =>
     $fetch<TrendingVideoType[]>("/api/playlist", {
         method: "POST",
         body: { listId: listId },
@@ -30,9 +30,7 @@ const playlist = computed(() => playlists.value?.find(p => p.playlistId === list
         </template>
         <template v-else>
             <template v-if="videos">
-                <div v-for="video in videos" @click="moveVideoDetail(video.id)">
-                    <PlaylistPlayListItem :video="video"></PlaylistPlayListItem>
-                </div>
+                <PlaylistPlayListItem v-for="video in videos" :video="video" @click="moveVideoDetail(video.id)" />
             </template>
         </template>
     </div>

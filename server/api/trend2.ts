@@ -95,8 +95,6 @@ async function fetchVideos(categoryId: string, maxResults: number) {
     if (!nextPageToken) break;
   }
 
-  console.log(`cycle ${i}`);
-
   return videos.slice(0, maxResults);
 }
 

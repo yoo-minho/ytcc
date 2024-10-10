@@ -1,14 +1,10 @@
 <script setup lang="ts">
 const url = ref('');
+const toast = useToast();
 
 const makeCollection = () => {
-    const { videoId, playlistId } = extractYouTubeInfo(url.value);
-    if (videoId === '' && playlistId === '') {
-        const toast = useToast();
-        toast.add({ title: '유효한 링크가 아닙니다!' })
-        return;
-    }
-
+    const { videoId, playlistId, empty } = extractYouTubeInfo(url.value);
+    if (empty) return toast.add({ title: '유효한 링크가 아닙니다!' });
     if (videoId) return moveVideoDetail(videoId);
     if (playlistId) return movePlaylistDetail(playlistId)
 }
@@ -29,21 +25,9 @@ function extractYouTubeInfo(url: string) {
             playlistId = searchParams.get('list') || '';
         }
     } catch (error) {
-        console.error('URL 파싱 오류:', error);
     }
-    return { videoId, playlistId };
+    return { videoId, playlistId, empty: videoId === '' && playlistId === '' };
 }
-
-const texts = ['인기 타임라인 댓글', '인기 타임라인 댓글'];
-const currentText = ref(texts[0]);
-
-const changeText = () => {
-    currentText.value = currentText.value === texts[0] ? texts[1] : texts[0];
-};
-
-onMounted(() => {
-    setInterval(changeText, 3000);
-});
 
 const openApiSite = () => {
     navigateTo('https://developers.google.com/youtube/v3?hl=ko', {
@@ -59,6 +43,20 @@ const tempComments = [
         comments: [{ comment: '급한 분들은 여기부터 보시면 됩니다', likeCount: 9155 }]
     }
 ];
+
+// 최근 클립보드 내용을 가져와 URL 입력란에 붙여넣는 함수
+const pasteFromClipboard = async () => {
+    try {
+        const clipboardText = await navigator.clipboard.readText();
+        if (clipboardText) {
+            if (extractYouTubeInfo(clipboardText.trim()).empty) return;
+            url.value = clipboardText.trim();
+        }
+    } catch (error) {
+        console.error('클립보드 접근 오류:', error);
+    }
+};
+
 </script>
 <template>
     <div class="w-full flex flex-col justify-between">
@@ -72,13 +70,15 @@ const tempComments = [
             </div>
 
             <div class="flex gap-2">
-                <UTextarea v-model="url" placeholder="Youtube URL" size="xl" class="flex-1 dark" autoresize :rows="1" />
+                <UTextarea v-model="url" placeholder="Youtube URL" size="xl" class="flex-1 dark" autoresize :rows="1"
+                    @focus="pasteFromClipboard()" />
                 <UButton color="primary" variant="solid" size="xl" @click="makeCollection()">
                     <UIcon name="i-ph-magnifying-glass-bold" class="text-white" size="20px" />
                 </UButton>
             </div>
 
             <UDivider class="dark" />
+
             <UButton @click="openYouTubeApp()" color="black" class="w-full px-4 py-3 text-md flex justify-center">
                 <span class="flex items-center">
                     <UIcon name="i-openmoji-youtube" size="20px" />Youtube
@@ -97,12 +97,10 @@ const tempComments = [
                         시간과 함께 등록하는 댓글을 말함! 해당 시점으로 바로 이동가능!<br>에를들어,
                     </span>
                 </div>
-                <tempComment v-for="comment in tempComments">
+                <template v-for="comment in tempComments">
                     <WatchCommentItem :comment="comment" />
-                </tempComment>
+                </template>
             </div>
-
-
         </div>
         <div class="flex flex-col items-center p-4 pb-12">
             <div>Powered by <span class="underline" @click="openApiSite()">YouTubeDataAPI</span></div>

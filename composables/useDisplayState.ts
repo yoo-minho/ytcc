@@ -3,7 +3,8 @@ let watchInitialized = false;
 export const useDisplayState = () => {
   const route = useRoute();
   const state = useState("display", () => ({
-    currentPage: route.query.page || "",
+    currentPage: String(route.query.page || ""),
+    scroll: {} as any,
   }));
 
   if (!watchInitialized) {

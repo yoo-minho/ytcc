@@ -12,7 +12,9 @@ const pageComponents = {
     playlist: PlaylistDetail,
 };
 
-const currentComponent = computed(() => pageComponents[displayState.value.currentPage as keyof typeof pageComponents]);
+const currentComponent = computed(
+    () => pageComponents[displayState.value.currentPage as keyof typeof pageComponents]
+);
 </script>
 
 <template>
@@ -21,10 +23,10 @@ const currentComponent = computed(() => pageComponents[displayState.value.curren
             <LandingHero v-if="displayState.currentPage === ''" class="absolute inset-0 z-10" />
         </Transition>
         <Transition name="slide-up">
-            <VideoDetail v-show="displayState.currentPage === 'video'" class="absolute inset-0 z-30 bg-black " />
+            <VideoDetail v-show="displayState.currentPage === 'video'" class="absolute inset-0 z-30 bg-black" />
         </Transition>
         <Transition name="slide">
-            <component :is="currentComponent" v-if="currentComponent" class="absolute inset-0 z-20 bg-black" />
+            <component :is="currentComponent" v-if="currentComponent" class="abolute inset-0 z-20 bg-black" />
         </Transition>
     </div>
 </template>

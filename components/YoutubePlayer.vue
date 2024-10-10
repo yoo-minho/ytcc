@@ -16,11 +16,13 @@ onMounted(() => {
 });
 
 watch([() => props.videoId], () => {
-    player.value?.loadVideoById(props.videoId);
-    if (isMuted.value) {
-        player.value.mute();
-    } else {
-        player.value.unMute();
+    if (props.videoId) {
+        player.value?.loadVideoById(props.videoId);
+        if (isMuted.value) {
+            player.value.mute();
+        } else {
+            player.value.unMute();
+        }
     }
 });
 

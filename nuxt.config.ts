@@ -13,6 +13,11 @@ export default defineNuxtConfig({
     enabled: process.env.NODE_ENV === "production",
     id: "G-B9HSLQ7KY1",
   },
+  icon: {
+    serverBundle: {
+      collections: ["ph", "heroicons", "openmoji"], // <!--- this
+    },
+  },
   colorMode: {
     preference: "light",
   },

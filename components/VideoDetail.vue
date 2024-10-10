@@ -9,7 +9,7 @@ const toggleEditor = () => (isOpenEditor.value = !isOpenEditor.value);
 const videoId = ref();
 const route = useRoute();
 watch(() => route.query.v, () => {
-    videoId.value = String(route.query.v);
+    videoId.value = String(route.query.v || '');
 }, { immediate: true })
 
 type CommentType = { comments: TimelineCommentType[], channelTitle: string };
@@ -31,7 +31,7 @@ const headerMessage = ref('');
 watch(data, () => {
     channelTitle.value = data.value?.channelTitle || '채널이름';
     comments.value = data.value?.comments;
-    t.value = comments.value?.[0].sec || 0;
+    t.value = comments.value?.[0]?.sec || 0;
     headerMessage.value = comments.value?.[0]?.comments[0].comment || '댓글 누르면 쇼츠 플레이';
 })
 
@@ -62,7 +62,6 @@ const toggleLoop = () => {
 
 <template>
     <div class="flex flex-col h-full w-full">
-
         <div class="h-[60px] flex justify-center items-center">
             <div class="p-6 truncate text-4xl font-bold tracking-tighter">
                 {{ headerMessage }}
