@@ -5,19 +5,16 @@ export const useYoutubeApi = () => {
   const fetchTrendingVideos = (count: number = 50) =>
     useAsyncData<TrendingVideoType[]>(
       "trendingVideos",
-      () =>
-        $fetch<TrendingVideoType[]>("/api/trend", {
+      async () => {
+        const videoDataState = useVideoDataState();
+        if (videoDataState.value.trendVideoData.length > 0) {
+          return videoDataState.value.trendVideoData;
+        }
+        return await $fetch<TrendingVideoType[]>("/api/trend", {
           params: { max: count },
-        }),
-      {
-        lazy: true,
-        getCachedData: () => {
-          const videoDataState = useVideoDataState();
-          if (videoDataState.value.trendVideoData.length > 0) {
-            return videoDataState.value.trendVideoData;
-          }
-        },
-      }
+        });
+      },
+      { lazy: true }
     );
 
   const fetchWeeklyVideos = () =>

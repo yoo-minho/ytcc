@@ -21,32 +21,33 @@ watch(currentTime, () => {
     }
 })
 </script>
-
 <template>
     <div class="dark">
-        <UCard class="flex gap-2 relative overflow-hidden rounded-none" :ui="{
-            body: { base: 'w-full', padding: 'px-4 py-5 sm:p-3' }
+        <UCard class="flex gap-2 relative overflow-hidden rounded-none cursor-pointer" :ui="{
+            body: { base: 'w-full', padding: 'p-4 sm:p-4' }
         }">
             <div class="absolute top-0 left-0 h-full w-full bg-blue-500 opacity-10"
                 :style="{ width: `${progressWidth}%` }">
             </div>
             <div class="flex gap-2">
-                <div class="flex-1 flex flex-col items-start gap-1" style="width: 0;">
+                <div class="flex-1 flex flex-col items-start gap-1" style="width: 100%;">
                     <div class="flex justify-between w-full">
-                        <div style="color:#3ea6ff">
-                            {{ formatSeconds(comment.sec) }}
+                        <div class="flex gap-2" style="color:#3ea6ff">
+                            <span> {{ formatSeconds(comment.sec) }}</span>
+                            <span class="opacity-30">~ {{ formatSeconds(comment.sec + loop) }}</span>
+                        </div>
+                    </div>
+                    <div class="w-full overflow-hidden">
+                        <p class="text-[13px] line-clamp-3 text-ellipsis overflow-hidden">
+                            {{ filterComments.map(v => v.comment.trim()).filter(Boolean).join(' / ') }}
+                        </p>
+                    </div>
+                    <div class="flex justify-between w-full">
+                        <div class="flex items-center gap-1 text-base ">
+                            <UIcon name="i-heroicons-hand-thumb-up" />
+                            <div>{{ formatCount(comment.totalLikeCount) }}</div>
                         </div>
                         <ShareIcon :t="comment.sec" />
-                    </div>
-                    <template v-for="(v, i) in filterComments">
-                        <div class="flex w-full gap-1 text-[13px]">
-                            {{ filterComments.length === 1 ? v.comment : `${i + 1}. ${v.comment}
-                            (${formatCount(v.likeCount)})` }}
-                        </div>
-                    </template>
-                    <div class="flex items-center gap-1 text-base ">
-                        <UIcon name="i-heroicons-hand-thumb-up" />
-                        <div>{{ formatCount(comment.totalLikeCount) }}</div>
                     </div>
                 </div>
             </div>

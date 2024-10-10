@@ -1,6 +1,9 @@
-let playerTimer: any;
+import type { YouTubePlayer } from "youtube-player/dist/types";
 
-const player = ref<any>(null);
+let playerTimer: any = null;
+
+const player = ref<YouTubePlayer>();
+const scrollContainer = ref<HTMLElement | null>(null);
 const currentTime = ref(0);
 const videoId = ref("");
 const isMuted = ref(true);
@@ -17,14 +20,28 @@ export function usePlayerProvider() {
     t.value = Number(route.query.t);
   }
 
-  const updateTime = () => {
-    if (player.value.getCurrentTime) {
-      currentTime.value = player.value.getCurrentTime();
+  const updateTime = async () => {
+    if (player.value?.getCurrentTime) {
+      currentTime.value = await player.value.getCurrentTime();
     }
   };
 
   const clear = () => {
+    player.value?.stopVideo();
     clearTimeout(playerTimer);
+  };
+
+  const scrollToElement = () => {
+    if (scrollContainer.value) {
+      const elementId = `comment-${t.value}`;
+      const element = document.getElementById(elementId);
+      if (element) {
+        scrollContainer.value.scrollTo({
+          top: element.offsetTop - scrollContainer.value.offsetTop,
+          behavior: "smooth",
+        });
+      }
+    }
   };
 
   const seekTo = (sec: number) => {
@@ -48,8 +65,10 @@ export function usePlayerProvider() {
     currentTime,
     isMuted,
     loop,
+    scrollContainer,
     updateTime,
     seekTo,
+    scrollToElement,
     clear,
   };
   provide("playerContext", playerContext);

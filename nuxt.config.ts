@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
-  modules: ["@nuxt/ui", "nuxt-gtag"],
+  modules: ["@nuxt/ui", "nuxt-gtag", "@nuxt/icon"],
   runtimeConfig: {
     googleApiKey: process.env.GOOGLE_API_KEY,
     googleClientId: process.env.GOOGLE_CLIENT_ID,
@@ -14,10 +14,15 @@ export default defineNuxtConfig({
     id: "G-B9HSLQ7KY1",
   },
   icon: {
-    serverBundle: {
-      collections: ["ph", "heroicons", "openmoji"], // <!--- this
-    },
+    serverBundle: "remote",
   },
+  // icon: {
+  //   // provider: "iconify",
+  //   // serverBundle: false,
+  //   serverBundle: {
+  //     collections: ["ph", "heroicons", "openmoji"], // <!--- this
+  //   },
+  // },
   colorMode: {
     preference: "light",
   },

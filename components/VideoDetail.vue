@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { TimelineCommentType } from '@/types/comm';
 
-const { player, t, isMuted, loop, seekTo } = usePlayerProvider();
+const { player, t, isMuted, loop, scrollContainer, seekTo, scrollToElement } = usePlayerProvider();
 
 const isOpenEditor = ref(false);
 const toggleEditor = () => (isOpenEditor.value = !isOpenEditor.value);
@@ -9,7 +9,7 @@ const toggleEditor = () => (isOpenEditor.value = !isOpenEditor.value);
 const videoId = ref();
 const route = useRoute();
 watch(() => route.query.v, () => {
-    videoId.value = String(route.query.v || '');
+    videoId.value = route.query.v ? String(route.query.v) : undefined;
 }, { immediate: true })
 
 type CommentType = { comments: TimelineCommentType[], channelTitle: string };
@@ -37,6 +37,7 @@ watch(data, () => {
 
 watch(t, () => {
     headerMessage.value = comments.value?.find((v: any) => v.sec === t.value)?.comments[0].comment || '댓글 누르면 쇼츠 플레이';
+    scrollToElement();
 })
 
 const toggleMute = () => {
@@ -57,6 +58,7 @@ const toggleLoop = () => {
     loop.value = loopTimes[nextIndex];
 
     seekTo(t.value);
+    scrollToElement();
 }
 </script>
 
@@ -74,10 +76,15 @@ const toggleLoop = () => {
                 <span class="text-[24px]">{{ channelTitle }}</span>
             </div>
         </div> -->
-        <div class="h-[60px] flex w-full items-center justify-center px-2 gap-2">
+        <div class="h-[60px] flex w-full items-center justify-center px-2 gap-2 opacity-70 tracking-tighter">
             <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="toggleMute()">
-                <UIcon :name="isMuted ? 'i-ph-speaker-simple-slash-fill' : 'i-ph-speaker-simple-high-fill'" size="20px">
-                </UIcon>
+                <div class="flex">
+                    <MyIcon :show="isMuted" name="ph:speaker-simple-slash-fill" size="20px" />
+                    <MyIcon :show="!isMuted" name="ph:speaker-simple-high-fill" size="20px" />
+                </div>
+            </UButton>
+            <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="scrollToElement()">
+                <MyIcon :show="true" name="ph:gps-fix-fill" size="20px" />
             </UButton>
             <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="toggleLoop()">
                 <div class="flex items-center">
@@ -85,7 +92,6 @@ const toggleLoop = () => {
                     <div>{{ loop }}초</div>
                 </div>
             </UButton>
-            <ShareIcon />
             <UButton color="black" :ui="{ rounded: 'rounded-full' }" class="flex items-center justify-center gap-1"
                 @click="openYouTubeApp(videoId)">
                 <UIcon name="i-openmoji-youtube" size="24px" />
@@ -96,27 +102,25 @@ const toggleLoop = () => {
             <div class="p-4 border-b border-gray-800">
                 <div class="flex items-center justify-between gap-2">
                     <div class="flex-1 tracking-tight flex items-center gap-2 font-bold">
-                        인기 타임라인 댓글
+                        타임라인 댓글 <div>[ 인기순 ]</div>
                         <div class="flex cursor-pointer" @click="toggleEditor()">
                             <UIcon name="i-heroicons-sparkles-solid" size="20px" />
                         </div>
                     </div>
-
                     <div class="flex cursor-pointer" @click="moveBack()">
                         <UIcon name="i-ph-x" size="28px" />
                     </div>
                 </div>
-
             </div>
-            <div class="flex-1 overflow-scroll">
+            <div class="flex-1 overflow-scroll" ref="scrollContainer">
                 <template v-if="status === 'error'">
                     <div class="p-4 flex w-full h-full justify-center items-center">
                         {{ error }}
                     </div>
                 </template>
-                <template v-else-if="status === 'pending'">
+                <template v-else-if="['idle', 'pending'].includes(status)">
                     <div class="p-4 flex w-full h-full justify-center items-center">
-                        loading...
+                        로딩중...
                     </div>
                 </template>
                 <template v-else-if="comments && comments.length === 0">
@@ -128,8 +132,9 @@ const toggleLoop = () => {
                 </template>
                 <template v-else>
                     <div class="flex flex-col">
-                        <template v-for="( comment ) in  comments ">
-                            <WatchCommentItem :comment="comment" @click="seekTo(comment.sec)" />
+                        <template v-for="(comment) in comments">
+                            <WatchCommentItem :id="`comment-${comment.sec}`" :comment="comment"
+                                @click="seekTo(comment.sec); scrollToElement()" />
                         </template>
                     </div>
                 </template>

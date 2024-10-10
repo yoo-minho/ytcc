@@ -45,15 +45,10 @@ const copyLink = async () => {
                 </div>
             </template>
         </div>
-        <div v-if="displayState.currentPage === ''" @click="openTrendVideo()" class="flex items-center cursor-pointer">
-            <UIcon name="i-ph-compass" size="28px" />
-        </div>
-        <div v-if="displayState.currentPage === ''" @click="openWeeklyVideo()" class="flex items-center cursor-pointer">
-            <UIcon name="i-ph-calendar-blank" size="28px" />
-        </div>
-        <div class="flex items-center cursor-pointer" @click="() => copyLink()">
-            <UIcon name="i-ph-share-network" size="24px" />
-        </div>
+        <MyIcon :show="displayState.currentPage === ''" name="ph:compass" size="28px" @click="openTrendVideo()" />
+        <MyIcon :show="displayState.currentPage === ''" name="ph:calendar-blank" size="28px"
+            @click="openWeeklyVideo()" />
+        <MyIcon :show="true" name="ph:share-network" size="24px" @click="copyLink()" />
     </div>
 </template>
 

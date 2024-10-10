@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 const {
     player,
     t,
@@ -7,15 +8,16 @@ const {
     seekTo,
     updateTime,
     clear,
+    scrollToElement,
 } = usePlayerProvider();
 
-const props = defineProps<{ videoId: string }>();
+const props = defineProps<{ videoId?: string }>();
 
 onMounted(() => {
     setYoutubePlayer();
 });
 
-watch([() => props.videoId], () => {
+watch(() => props.videoId, () => {
     if (props.videoId) {
         player.value?.loadVideoById(props.videoId);
         if (isMuted.value) {
@@ -23,6 +25,8 @@ watch([() => props.videoId], () => {
         } else {
             player.value.unMute();
         }
+    } else {
+        clear();
     }
 });
 
