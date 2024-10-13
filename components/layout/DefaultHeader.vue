@@ -4,8 +4,7 @@ import { MAX_TREND_VIDEO_COUNT } from "@/constants/youtube";
 const displayState = useDisplayState();
 const toast = useToast();
 
-const openTrendVideo = () => navigateTo({ query: { page: 'trend' } });
-const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
+
 const moveMain = () => navigateTo({ path: '/' });
 
 const copyLink = async () => {
@@ -26,7 +25,7 @@ const copyLink = async () => {
         </div>
         <div class="flex-1 flex items-end">
             <template v-if="displayState.currentPage === 'trend'">
-                <span class="text-xl font-bold tracking-tighter">인기 급상승 동영상 TOP {{ MAX_TREND_VIDEO_COUNT }}</span>
+                <span class="text-xl font-bold tracking-tighter">인기 급상승 동영상</span>
             </template>
             <template v-else-if="displayState.currentPage === 'weekly'">
                 <span class="text-xl font-bold tracking-tighter">요일 웹 예능 • 프로그램</span>
@@ -45,9 +44,9 @@ const copyLink = async () => {
                 </div>
             </template>
         </div>
-        <MyIcon :show="displayState.currentPage === ''" name="ph:compass" size="28px" @click="openTrendVideo()" />
+        <!-- <MyIcon :show="displayState.currentPage === ''" name="ph:compass" size="28px" @click="openTrendVideo()" />
         <MyIcon :show="displayState.currentPage === ''" name="ph:calendar-blank" size="28px"
-            @click="openWeeklyVideo()" />
+            @click="openWeeklyVideo()" /> -->
         <MyIcon :show="true" name="ph:share-network" size="24px" @click="copyLink()" />
     </div>
 </template>

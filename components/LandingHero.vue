@@ -2,7 +2,7 @@
 const url = ref('');
 const toast = useToast();
 
-const texts = ['인기 타임라인 댓글', '인기 타임라인 댓글'];
+const texts = ['10분', '21분', '34분'];
 const currentText = ref(texts[0]);
 
 const changeText = () => {
@@ -68,50 +68,71 @@ const pasteFromClipboard = async () => {
     }
 };
 
+const openTrendVideo = () => navigateTo({ query: { page: 'trend' } });
+const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
+
 </script>
 <template>
     <div class="w-full flex flex-col justify-between">
         <div class="p-4 w-full flex flex-col gap-4">
             <div>
-                <div class="text-3xl font-bold tracking-tighter text-center">유튜브 동영상 링크 넣고</div>
-                <div class="text-3xl font-bold tracking-tighter text-center">
-                    <span class="text-red-red-500">인기 타임라인 댓글</span>
-                    찾기
+                <div class="tracking-tight text-center">
+                    <span class="font-bold">팬</span>들이 직접 뽑은 유튜브 영상 속
                 </div>
+                <div class="text-3xl tracking-tighter font-bold text-center">
+                    최고 인기있는 <span class="text-red-red-500">10초</span>
+                </div>
+                <div class="tracking-tight text-center">궁금하다면 링크를 가져오세요!</div>
+                <!-- <div class="text-2xl font-bold tracking-tight">유튜브 동영상 링크를 넣어주시면</div> -->
+                <!-- <div class="text-2xl font-bold tracking-tight flex">
+                    <div class="relative h-8 overflow-hidden w-[172px]">
+                        <transition-group name="roll" tag="div">
+                            <div v-for="text in texts" :key="text"
+                                class="absolute  text-red-500 transition-transform duration-500 ease-in-out"
+                                :class="{ 'translate-y-full': text !== currentText, 'translate-y-0': text === currentText }">
+                                {{ text }}
+                            </div>
+                        </transition-group>
+                    </div>
+                    <div class="inline">을 찾아볼게요</div>
+                </div> -->
             </div>
 
-            <div class="flex gap-2">
-                <UTextarea v-model="url" placeholder="Youtube URL" size="xl" class="flex-1 dark" autoresize :rows="1"
+            <div class="flex gap-2 items-center justify-between">
+                <UTextarea v-model="url" placeholder="Youtube URL" size="xl" class="dark w-full" autoresize :rows="1"
                     @focus="pasteFromClipboard()" />
                 <UButton color="primary" variant="solid" size="xl" @click="makeCollection()">
-                    <UIcon name="i-ph-magnifying-glass-bold" class="text-white" size="20px" />
+                    <UIcon name="i-ph-magnifying-glass-bold" class="text-white" size="24px" />
+                </UButton>
+            </div>
+            <UiYoutubeAppBtn text="유튜브 앱 열고 링크 가져오기" />
+
+            <UDivider class="dark" label="OR" />
+
+            <div class="flex gap-2 items-center justify-between">
+                <div>
+                    <div class="text-2xl tracking-tighter font-bold">
+                        인급동 : 인기 급상승 동영상
+                    </div>
+                </div>
+                <UButton color="primary" variant="solid" size="xl" @click="openTrendVideo()">
+                    <Icon name="ph:fire" size="24px" class="text-white" />
                 </UButton>
             </div>
 
-            <UDivider class="dark" />
+            <UDivider class="dark" label="OR" />
 
-            <UButton @click="openYouTubeApp()" color="black" class="w-full px-4 py-3 text-md flex justify-center">
-                <span class="flex items-center">
-                    <UIcon name="i-openmoji-youtube" size="20px" />Youtube
-                </span>
-                <span>앱 바로가기</span>
-            </UButton>
-
-            <UDivider class="dark" />
-
-            <div class="flex flex-col gap-4">
-                <div class="text-gray-300 flex flex-col">
-                    <span class="flex items-center gap-1 tracking-tighter">
-                        <UIcon name="i-ph-question-mark-light" /><span class="font-bold">타임라인 댓글</span>이란
-                    </span>
-                    <span class="tracking-tighter text-sm">
-                        시간과 함께 등록하는 댓글을 말함! 해당 시점으로 바로 이동가능!<br>에를들어,
-                    </span>
+            <div class="flex gap-2 items-center justify-between">
+                <div>
+                    <div class="text-2xl tracking-tighter font-bold">
+                        요일 웹 예능 • 프로그램
+                    </div>
                 </div>
-                <template v-for="comment in tempComments">
-                    <WatchCommentItem :comment="comment" />
-                </template>
+                <UButton color="primary" variant="solid" size="xl" @click="openWeeklyVideo()">
+                    <Icon name="ph:calendar-blank" size="24px" class="text-white" />
+                </UButton>
             </div>
+
         </div>
         <div class="flex flex-col items-center p-4 pb-12">
             <div>Powered by <span class="underline" @click="openApiSite()">YouTubeDataAPI</span></div>

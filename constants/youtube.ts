@@ -38,6 +38,19 @@ export const YOUTUBE_CATEGORY_MAP: Record<YouTubeCategory, string> = {
 
 export const WEEKLY_PLAYLIST_ARR = [
   {
+    id: "PLol-dXBOYZCwzaXU5Hh9YhU7AxpJXzHNA",
+    actor: "김예원",
+    cycle: "매주 월요일 오후 6시",
+    day: "월",
+  },
+  {
+    id: "PLdvjXAGyK6xXPqNiGx8FZ885N1bM1zjcy",
+    title: "잔한형",
+    actor: "신동엽",
+    cycle: "매주 월요일 오후 6시",
+    day: "월",
+  },
+  {
     id: "PLBKy1umsMi3QKhFNFXEkhZJhUtMCrVrse",
     title: "🏀 턴오버",
     description: "2024 KBL 드래프트 도전기",
@@ -70,6 +83,12 @@ export const WEEKLY_PLAYLIST_ARR = [
     day: "수",
   },
   {
+    id: "PLol-dXBOYZCxtuPo8l_HLXN4ZncUTK82o",
+    actor: "탁재훈, 신규진",
+    cycle: "매주 수요일 오후 6시",
+    day: "수",
+  },
+  {
     id: "PLuli3DqAnwjzEHHAC4He-Hf_pDK6xEjQX",
     title: "🍜나래식🥗",
     description: "한식, 양식, 중식, 일식 중 가장 맛있는 건? 나래식",
@@ -91,6 +110,13 @@ export const WEEKLY_PLAYLIST_ARR = [
     day: "목",
   },
   {
+    id: "PLdvjXAGyK6xWIZfCWJzeQTACl-dGKGmuS",
+    title: "쏘는형",
+    actor: "신동엽",
+    cycle: "매주 목요일 오후 6시",
+    day: "목",
+  },
+  {
     id: "PLfBjRrTX1Ewqz6MgyiCHubNpfQF6lUlz2",
     title: "🌻덱스의 냉터뷰🌻",
     description: "냉장고도 파헤치고 요리도 하는 덱스의 냉터뷰 (｡•̀ᴗ-)✧",
@@ -103,6 +129,12 @@ export const WEEKLY_PLAYLIST_ARR = [
     title: "",
     actor: "장성규",
     cycle: "매주 금요일 오후 6시",
+    day: "금",
+  },
+  {
+    id: "PLol-dXBOYZCyVjq6u3XRvMFhjMJdCQFvu",
+    cycle: "매주 금요일 오후 6시",
+    actor: "탁재훈",
     day: "금",
   },
   {
@@ -124,6 +156,14 @@ export const WEEKLY_PLAYLIST_ARR = [
   //   cycle: "매주 토요일 12시",
   //   day: "토",
   // },
+  {
+    id: "PLZHuNVGYrlkvFwUOIPcJnAITdo9n6WllN",
+    title: "🥄토요일은 밥이 쏜다 🥄",
+    actor: "히밥",
+    cycle: "매주 토요일 오후 5시",
+    day: "토",
+  },
+
   {
     id: "PL7MQjbfOyOE00FrDWwrbaTtH7mSZOKnvO",
     day: "시즌",
