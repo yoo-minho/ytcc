@@ -48,6 +48,8 @@ export function usePlayerProvider() {
     if (player.value && player.value.playVideo && sec > 0) {
       t.value = sec;
 
+      console.log("시작", { sec });
+
       player.value.playVideo();
       player.value.seekTo(sec, true);
 

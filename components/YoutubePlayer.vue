@@ -18,8 +18,8 @@ onMounted(() => {
 });
 
 watch(() => props.videoId, () => {
-    if (props.videoId) {
-        player.value?.loadVideoById(props.videoId);
+    if (props.videoId && player.value) {
+        player.value.loadVideoById(props.videoId);
         if (isMuted.value) {
             player.value.mute();
         } else {
@@ -48,8 +48,8 @@ function setYoutubePlayer() {
             mute: 1, // 음소거 (1: 음소거, 0: 음소거 해제)
             rel: 0, // 관련 동영상 표시 여부 (0: 표시 안 함)
             modestbranding: 1, // YouTube 로고 표시 여부 (1: 최소화)
-            disablekb: 1,
-            cc_load_policy: 3, // 자막 완전 비활성화
+            disablekb: 1, // 키보드 단축키 비활성화
+            cc_load_policy: 1, // 자막 비활성화 (1: 비활성화, 0: 활성화)
             cc_lang_pref: "none", // 자막 언어 선호도 없음
             hl: "none", // 플레이어 언어 설정 없음
             playsinline: 1, // 인라인 재생 활성화 (모바일에서 중요)

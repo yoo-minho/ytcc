@@ -36,7 +36,7 @@ const copyLink = async () => {
             </template>
             <template v-else>
                 <div class="flex items-end" @click="moveMain()">
-                    <span class="text-xl font-bold tracking-tighter">YTCC</span>
+                    <span class="text-xl font-bold tracking-tighter">Moments</span>
                     <span class="text-xs font-light ml-2 tracking-tight flex flex-wrap items-center">
                         <span class="mr-1">for</span>
                         <UIcon name="i-openmoji-youtube" size="20px" />

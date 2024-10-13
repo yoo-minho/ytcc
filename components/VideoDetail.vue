@@ -41,13 +41,15 @@ watch(t, () => {
 })
 
 const toggleMute = () => {
-    if (isMuted.value) {
-        player.value.unMute();
-        isMuted.value = false;
-        seekTo(t.value);
-    } else {
-        player.value.mute();
-        isMuted.value = true;
+    if (player.value) {
+        if (isMuted.value) {
+            player.value.unMute();
+            isMuted.value = false;
+            seekTo(t.value);
+        } else {
+            player.value.mute();
+            isMuted.value = true;
+        }
     }
 }
 
@@ -77,12 +79,6 @@ const toggleLoop = () => {
             </div>
         </div> -->
         <div class="h-[60px] flex w-full items-center justify-center px-2 gap-2 opacity-70 tracking-tighter">
-            <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="toggleMute()">
-                <div class="flex">
-                    <MyIcon :show="isMuted" name="ph:speaker-simple-slash-fill" size="20px" />
-                    <MyIcon :show="!isMuted" name="ph:speaker-simple-high-fill" size="20px" />
-                </div>
-            </UButton>
             <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="scrollToElement()">
                 <MyIcon :show="true" name="ph:gps-fix-fill" size="20px" />
             </UButton>
@@ -92,10 +88,15 @@ const toggleLoop = () => {
                     <div>{{ loop }}초</div>
                 </div>
             </UButton>
-            <UButton color="black" :ui="{ rounded: 'rounded-full' }" class="flex items-center justify-center gap-1"
-                @click="openYouTubeApp(videoId)">
-                <UIcon name="i-openmoji-youtube" size="24px" />
-                <div>유튜브 앱에서 즐기기</div>
+            <UiYoutubeAppBtn :video-id="videoId" />
+            <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="toggleMute()">
+                <div class="flex items-center justify-center gap-1">
+                    <template v-if="isMuted">
+                        <MyIcon :show="isMuted" name="ph:speaker-simple-slash-fill" size="20px" />
+                        <div>음소거 해제</div>
+                    </template>
+                    <MyIcon :show="!isMuted" name="ph:speaker-simple-high-fill" size="20px" />
+                </div>
             </UButton>
         </div>
         <div class="flex-1 flex flex-col h-0 bg-gray-900">
@@ -125,9 +126,9 @@ const toggleLoop = () => {
                 </template>
                 <template v-else-if="comments && comments.length === 0">
                     <div class="p-4 flex flex-col w-full h-full justify-center items-center gap-2">
-                        이 콘텐츠에는 인기 있는 타임라인 댓글이 없습니다.<br>
-                        유튜브에서 타임라인 댓글을 작성해보세요!
-                        <UButton>유튜브로 이동</UButton>
+                        이 콘텐츠에는 타임라인 댓글이 없습니다.<br>
+                        첫번째 타임라인 댓글을 작성해보세요!
+                        <UiYoutubeAppBtn :video-id="videoId" />
                     </div>
                 </template>
                 <template v-else>

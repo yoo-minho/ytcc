@@ -2,6 +2,17 @@
 const url = ref('');
 const toast = useToast();
 
+const texts = ['인기 타임라인 댓글', '인기 타임라인 댓글'];
+const currentText = ref(texts[0]);
+
+const changeText = () => {
+    currentText.value = currentText.value === texts[0] ? texts[1] : texts[0];
+};
+
+onMounted(() => {
+    setInterval(changeText, 3000);
+});
+
 const makeCollection = () => {
     const { videoId, playlistId, empty } = extractYouTubeInfo(url.value);
     if (empty) return toast.add({ title: '유효한 링크가 아닙니다!' });

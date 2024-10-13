@@ -21,7 +21,7 @@ export const formatYoutubeVideo = (
     title: title || "",
     channelTitle: channelTitle || "",
     channelId: channelId || "",
-    thumbnail: thumbnails?.maxres?.url || thumbnails?.medium?.url || "",
+    thumbnail: thumbnails?.medium?.url || "",
     publishedAt: publishedAt || "",
     viewCount: viewCount || "",
     commentCount: commentCount || "",
