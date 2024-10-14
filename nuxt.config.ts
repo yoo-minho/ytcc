@@ -26,6 +26,12 @@ export default defineNuxtConfig({
     },
   },
 
+  icon: {
+    serverBundle: {
+      collections: ["ph"],
+    },
+  },
+
   pwa: {
     // workbox: {
     //   navigateFallback: "/",

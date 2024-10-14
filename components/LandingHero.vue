@@ -116,7 +116,7 @@ const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
                     </div>
                 </div>
                 <UButton color="primary" variant="solid" size="xl" @click="openTrendVideo()">
-                    <Icon name="ph:fire" size="24px" class="text-white" />
+                    <Icon name="heroicons:fire" size="24px" class="text-white" />
                 </UButton>
             </div>
 

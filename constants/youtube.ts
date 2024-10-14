@@ -36,6 +36,7 @@ export const YOUTUBE_CATEGORY_MAP: Record<YouTubeCategory, string> = {
   [YouTubeCategory.NONPROFITS_ACTIVISM]: "비영리",
 };
 
+//이거 한번 조회해서 파일로 만들어버릴까?
 export const WEEKLY_PLAYLIST_ARR = [
   {
     id: "PLol-dXBOYZCwzaXU5Hh9YhU7AxpJXzHNA",
@@ -45,7 +46,7 @@ export const WEEKLY_PLAYLIST_ARR = [
   },
   {
     id: "PLdvjXAGyK6xXPqNiGx8FZ885N1bM1zjcy",
-    title: "잔한형",
+    title: "짠한형",
     actor: "신동엽",
     cycle: "매주 월요일 오후 6시",
     day: "월",
