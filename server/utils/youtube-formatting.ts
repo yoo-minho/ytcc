@@ -79,7 +79,7 @@ export const formatYoutubePlayList = (playlistItem: youtube_v3.Schema$Playlist):
     title: title || "",
     description: description || "",
     channelTitle: channelTitle,
-    thumbnail: thumbnails?.maxres?.url || thumbnails?.medium?.url || "",
+    thumbnail: thumbnails?.medium?.url || "",
     publishedAt: publishedAt || "",
     snippet,
   };

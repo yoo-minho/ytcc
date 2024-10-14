@@ -21,7 +21,7 @@ const { data: videos, status } = useAsyncData("playlist", () =>
 const playlist = computed(() => playlists.value?.find(p => p.playlistId === listId));
 </script>
 <template>
-    <div>
+    <div class="w-full absolute">
         <div class="p-4">
             <PlaylistItem v-if="playlist" :playlist="playlist" :thumbnail="false" />
         </div>
@@ -30,7 +30,9 @@ const playlist = computed(() => playlists.value?.find(p => p.playlistId === list
         </template>
         <template v-else>
             <template v-if="videos">
-                <PlaylistPlayListItem v-for="video in videos" :video="video" @click="moveVideoDetail(video.id)" />
+                <div class="px-4">
+                    <PlaylistPlayListItem v-for="video in videos" :video="video" @click="moveVideoDetail(video.id)" />
+                </div>
             </template>
         </template>
     </div>

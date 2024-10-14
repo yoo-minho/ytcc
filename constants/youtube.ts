@@ -39,12 +39,6 @@ export const YOUTUBE_CATEGORY_MAP: Record<YouTubeCategory, string> = {
 //이거 한번 조회해서 파일로 만들어버릴까?
 export const WEEKLY_PLAYLIST_ARR = [
   {
-    id: "PLol-dXBOYZCwzaXU5Hh9YhU7AxpJXzHNA",
-    actor: "김예원",
-    cycle: "매주 월요일 오후 6시",
-    day: "월",
-  },
-  {
     id: "PLdvjXAGyK6xXPqNiGx8FZ885N1bM1zjcy",
     title: "짠한형",
     actor: "신동엽",
@@ -181,4 +175,10 @@ export const WEEKLY_PLAYLIST_ARR = [
     cycle: "매주 목요일 오후 7시",
   },
   { id: "PL4P8Dv_rpsNzWhpntV51XhQdq4R-iBNtD", cycle: "", day: "일" },
+  {
+    id: "PLol-dXBOYZCwzaXU5Hh9YhU7AxpJXzHNA",
+    actor: "김예원",
+    cycle: "매주 월요일 오후 6시",
+    day: "완결",
+  },
 ];

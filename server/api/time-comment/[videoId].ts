@@ -59,18 +59,16 @@ async function commentThreads(videoId: string, pageToken = "", searchTerms: stri
   } as any);
 
   const { items, ...rest } = response.data;
-  const comments = (items as any[])
-    .map((item) => ({
-      id: item.id,
-      author: item.snippet.topLevelComment.snippet.authorDisplayName,
-      comment: item.snippet.topLevelComment.snippet.textDisplay,
-      publishedAt: item.snippet.topLevelComment.snippet.publishedAt,
-      likeCount: item.snippet.topLevelComment.snippet.likeCount,
-    }))
-    .filter((item) => item.comment.includes(`:`))
-    .filter((item) => {
-      return item.likeCount > 0;
-    });
+
+  let comments = (items as any[]).map((item) => ({
+    id: item.id,
+    author: item.snippet.topLevelComment.snippet.authorDisplayName,
+    comment: item.snippet.topLevelComment.snippet.textDisplay,
+    publishedAt: item.snippet.topLevelComment.snippet.publishedAt,
+    likeCount: item.snippet.topLevelComment.snippet.likeCount,
+  }));
+
+  comments = comments.filter((item) => item.comment.includes(`:`));
 
   return {
     ...rest,

@@ -3,7 +3,7 @@ import type { TrendingVideoType } from "@/types/comm";
 defineProps<{ video: TrendingVideoType; idx?: number }>();
 </script>
 <template>
-    <div class="cursor-pointer flex px-4 py-2 gap-2" @click="moveVideoDetail(video.id)">
+    <div class="cursor-pointer flex gap-2 py-2" @click="moveVideoDetail(video.id)">
         <div class="p-1 w-1/2">
             <div class="relative">
                 <img class="w-full" :src="video.thumbnail" alt="Video Thumbnail" style="aspect-ratio: 16 / 9;">
@@ -39,6 +39,7 @@ defineProps<{ video: TrendingVideoType; idx?: number }>();
             </div>
         </div>
     </div>
+
 </template>
 
 <style scoped></style>

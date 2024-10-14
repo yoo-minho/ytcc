@@ -8,11 +8,6 @@ const videoDataState = useVideoDataState();
 const { data: videos, error, status } = youtubeApi.fetchTrendingVideos(MAX_TREND_VIDEO_COUNT);
 videoDataState.value.trendVideoData = videos.value || [];
 
-const selectedCategoryId = ref("");
-const formattedVideos = computed(() => {
-    if (selectedCategoryId.value === "") return videos.value;
-    return videos.value?.filter((video) => video.categoryId === selectedCategoryId.value) || [];
-});
 const errorMessage = computed(() => (error.value?.data as any)?.statusMessage);
 </script>
 <template>
@@ -26,8 +21,8 @@ const errorMessage = computed(() => (error.value?.data as any)?.statusMessage);
             </div>
         </template>
         <template v-if="videos">
-            <div v-for="(video, idx) in formattedVideos">
-                <PlaylistPlayListItem :video="video" :idx="idx" />
+            <div v-for="(video, idx) in videoDataState.trendVideoData">
+                <PlaylistPlayListItem :video="video" :idx="idx" class="px-4" />
             </div>
         </template>
     </div>

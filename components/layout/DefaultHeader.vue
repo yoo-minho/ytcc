@@ -1,6 +1,4 @@
 <script setup lang='ts'>
-import { MAX_TREND_VIDEO_COUNT } from "@/constants/youtube";
-
 const displayState = useDisplayState();
 const toast = useToast();
 
@@ -34,13 +32,9 @@ const copyLink = async () => {
                 <span class="text-xl font-bold tracking-tighter">플레이리스트</span>
             </template>
             <template v-else>
-                <div class="flex items-end" @click="moveMain()">
-                    <span class="text-xl font-bold tracking-tighter">Moments</span>
-                    <span class="text-xs font-light ml-2 tracking-tight flex flex-wrap items-center">
-                        <span class="mr-1">for</span>
-                        <UIcon name="i-openmoji-youtube" size="20px" />
-                        <span>Youtube</span>
-                    </span>
+                <div class="flex items-center gap-2" @click="moveMain()">
+                    <img src="/public/icon-192.png" width="28px" />
+                    <span class="text-xl tracking-tight">YouTube Moments</span>
                 </div>
             </template>
         </div>

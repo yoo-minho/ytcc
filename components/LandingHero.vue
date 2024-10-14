@@ -1,4 +1,22 @@
 <script setup lang="ts">
+import { MAX_TREND_VIDEO_COUNT } from "@/constants/youtube";
+import { useYoutubeApi } from "@/composables/api/useYoutubeApi";
+
+const youtubeApi = useYoutubeApi();
+const videoDataState = useVideoDataState();
+
+const { data: videos, status: videoStatus } = youtubeApi.fetchTrendingVideos(MAX_TREND_VIDEO_COUNT);
+watch(videos, () => {
+    videoDataState.value.trendVideoData = videos.value || [];
+})
+
+const today = new Date().getDay();
+const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+const { data: playlists, status: playlistsStatus } = youtubeApi.fetchWeeklyVideos();
+watch(playlists, () => {
+    videoDataState.value.weeklyVideoData = playlists.value?.filter(p => p.day?.includes(daysOfWeek[today])) || []
+})
+
 const url = ref('');
 const toast = useToast();
 
@@ -76,27 +94,19 @@ const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
     <div class="w-full flex flex-col justify-between">
         <div class="p-4 w-full flex flex-col gap-4">
             <div>
-                <div class="tracking-tight text-center">
-                    <span class="font-bold">팬</span>들이 직접 뽑은 유튜브 영상 속
+
+                <div class="text-3xl tracking-tight font-bold pb-2">
+                    영상 <span class="text-red-red-500">최고의 순간</span>을 즐기는 방법
                 </div>
-                <div class="text-3xl tracking-tighter font-bold text-center">
-                    최고 인기있는 <span class="text-red-red-500">10초</span>
+                <div class="text-xs tracking-tight">
+                    Step 1. 타임라인 댓글을 인기순으로 모아본다.
                 </div>
-                <div class="tracking-tight text-center">궁금하다면 링크를 가져오세요!</div>
-                <!-- <div class="text-2xl font-bold tracking-tight">유튜브 동영상 링크를 넣어주시면</div> -->
-                <!-- <div class="text-2xl font-bold tracking-tight flex">
-                    <div class="relative h-8 overflow-hidden w-[172px]">
-                        <transition-group name="roll" tag="div">
-                            <div v-for="text in texts" :key="text"
-                                class="absolute  text-red-500 transition-transform duration-500 ease-in-out"
-                                :class="{ 'translate-y-full': text !== currentText, 'translate-y-0': text === currentText }">
-                                {{ text }}
-                            </div>
-                        </transition-group>
-                    </div>
-                    <div class="inline">을 찾아볼게요</div>
-                </div> -->
+                <div class="text-xs tracking-tight">
+                    Step 2. 타임라인 댓글을 친구에게 공유한다.
+                </div>
             </div>
+
+
 
             <div class="flex gap-2 items-center justify-between">
                 <UTextarea v-model="url" placeholder="Youtube URL" size="xl" class="dark w-full" autoresize :rows="1"
@@ -107,31 +117,66 @@ const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
             </div>
             <UiYoutubeAppBtn text="유튜브 앱 열고 링크 가져오기" />
 
-            <UDivider class="dark" label="OR" />
+            <UDivider class="dark" />
 
-            <div class="flex gap-2 items-center justify-between">
-                <div>
-                    <div class="text-2xl tracking-tighter font-bold">
-                        인급동 : 인기 급상승 동영상
+            <div>
+                <div class="flex gap-2 items-center justify-between">
+                    <div>
+                        <div class="text-xl tracking-tighter font-bold flex items-center gap-1">
+                            <Icon name="ph:calendar-blank"></Icon> 요일 웹 예능
+                        </div>
+                    </div>
+                    <div class="cursor-pointer text-sm text-gray-400 flex items-center" @click="openWeeklyVideo()">
+                        전체 보기 <Icon name="ph:caret-right-bold"></Icon>
                     </div>
                 </div>
-                <UButton color="primary" variant="solid" size="xl" @click="openTrendVideo()">
-                    <Icon name="heroicons:fire" size="24px" class="text-white" />
-                </UButton>
-            </div>
-
-            <UDivider class="dark" label="OR" />
-
-            <div class="flex gap-2 items-center justify-between">
                 <div>
-                    <div class="text-2xl tracking-tighter font-bold">
-                        요일 웹 예능 • 프로그램
+                    <div class="grid grid-cols-2 py-2 gap-4">
+                        <template v-if="playlistsStatus === 'pending'">
+                            <template v-for="n in 2 ">
+                                <div class="w-1/2">
+                                    <PlaylistSkeletonItem />
+                                </div>
+                            </template>
+                        </template>
+                        <template v-else>
+                            <template v-for="(playlist) in [...videoDataState.weeklyVideoData].splice(0, 2)">
+                                <PlaylistItem :playlist="playlist" :thumbnail="true" />
+                            </template>
+                        </template>
                     </div>
                 </div>
-                <UButton color="primary" variant="solid" size="xl" @click="openWeeklyVideo()">
-                    <Icon name="ph:calendar-blank" size="24px" class="text-white" />
-                </UButton>
             </div>
+
+            <UDivider class="dark" />
+
+            <div>
+                <div class="flex gap-2 items-center justify-between">
+                    <div>
+                        <div class="text-xl tracking-tighter font-bold flex items-center gap-1">
+                            <Icon name="ph:fire"></Icon> 인기 급상승 동영상
+                        </div>
+                    </div>
+                    <div class="cursor-pointer text-sm text-gray-400 flex items-center" @click="openTrendVideo()">
+                        전체 보기 <Icon name="ph:caret-right-bold"></Icon>
+                    </div>
+                </div>
+                <div>
+                    <template v-if="videoStatus === 'pending'">
+                        <div v-for="n in 3 ">
+                            <PlaylistPlayListSkeletonItem />
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div v-for="(video, idx) in [...videoDataState.trendVideoData].splice(0, 3)">
+                            <PlaylistPlayListItem :video="video" :idx="idx" />
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <UDivider class="dark" />
+
 
         </div>
         <div class="flex flex-col items-center p-4 pb-12">
@@ -140,18 +185,4 @@ const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
         </div>
     </div>
 </template>
-<style scoped>
-.roll-move {
-    transition: transform 0.5s;
-}
-
-.roll-enter-active,
-.roll-leave-active {
-    transition: transform 0.5s;
-}
-
-.roll-enter-from,
-.roll-leave-to {
-    transform: translateY(100%);
-}
-</style>
+<style scoped></style>

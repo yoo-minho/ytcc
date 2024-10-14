@@ -67,12 +67,14 @@ export default defineNuxtConfig({
     //   ],
     // },
     client: {
-      installPrompt: "true",
+      installPrompt: true,
+      periodicSyncForUpdates: 3600,
     },
     includeAssets: ["favicon.ico", "apple-touch-icon.png"],
     manifest: {
       name: "Youtube Moments",
       short_name: "Youtube Moments",
+      description: "YouTube 영상의 최고의 순간을 타임라인 댓글로 즐기고 공유하세요.",
       start_url: "/",
       display: "standalone",
       background_color: "#ff0000",
@@ -106,7 +108,25 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      viewport: "width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0",
+      title: "YouTube Moments - 영상의 최고의 순간을 즐기세요",
+      meta: [
+        { charset: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0" },
+        {
+          hid: "description",
+          name: "description",
+          content: "YouTube 영상의 최고의 순간을 타임라인 댓글로 즐기고 공유하세요.",
+        },
+        { property: "og:title", content: "YouTube Moments" },
+        { property: "og:description", content: "YouTube 영상의 최고의 순간을 타임라인 댓글로 즐기고 공유하세요." },
+        { property: "og:image", content: "/icon-512.png" },
+        { property: "og:url", content: "https://youtube-moments.make1k.app" },
+        { property: "og:type", content: "website" },
+      ],
+      link: [
+        { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+        { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+      ],
       script: [
         {
           src: "https://www.youtube.com/iframe_api",
