@@ -14,7 +14,7 @@ defineProps<{ playlist: any; thumbnail: boolean }>();
                 <p class="text-white font-bold leading-tight line-clamp-1 tracking-tight">
                     {{ playlist.title }}
                 </p>
-                <p class="text-gray-600 text-xs line-clamp-1 tracking-tight break-keep">
+                <p class="text-gray-300 text-xs line-clamp-1 tracking-tight break-keep">
                     {{ playlist.description }}
                 </p>
                 <p v-if="playlist.actor" class="text-gray-400 text-xs mt-1">

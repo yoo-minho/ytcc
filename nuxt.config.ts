@@ -3,6 +3,7 @@ import { version } from "./package.json";
 export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
+
   ssr: false,
 
   modules: ["@nuxt/ui", "nuxt-gtag", "@nuxt/icon", "@vite-pwa/nuxt"],
@@ -72,7 +73,7 @@ export default defineNuxtConfig({
     },
     includeAssets: ["favicon.ico", "apple-touch-icon.png"],
     manifest: {
-      name: "Youtube Moments",
+      name: "유튜브",
       short_name: "Youtube Moments",
       description: "YouTube 영상의 최고의 순간을 타임라인 댓글로 즐기고 공유하세요.",
       start_url: "/",

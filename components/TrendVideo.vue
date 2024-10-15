@@ -6,7 +6,9 @@ const youtubeApi = useYoutubeApi();
 const videoDataState = useVideoDataState();
 
 const { data: videos, error, status } = youtubeApi.fetchTrendingVideos(MAX_TREND_VIDEO_COUNT);
-videoDataState.value.trendVideoData = videos.value || [];
+watch(videos, () => {
+    videoDataState.value.trendVideoData = videos.value || [];
+})
 
 const errorMessage = computed(() => (error.value?.data as any)?.statusMessage);
 </script>

@@ -26,7 +26,7 @@ const copyLink = async () => {
                 <span class="text-xl font-bold tracking-tighter">인기 급상승 동영상</span>
             </template>
             <template v-else-if="displayState.currentPage === 'weekly'">
-                <span class="text-xl font-bold tracking-tighter">요일 웹 예능 • 프로그램</span>
+                <span class="text-xl font-bold tracking-tighter">요일웹예능</span>
             </template>
             <template v-else-if="displayState.currentPage === 'playlist'">
                 <span class="text-xl font-bold tracking-tighter">플레이리스트</span>
@@ -34,7 +34,10 @@ const copyLink = async () => {
             <template v-else>
                 <div class="flex items-center gap-2" @click="moveMain()">
                     <img src="/public/icon-192.png" width="28px" />
-                    <span class="text-xl tracking-tight">YouTube Moments</span>
+                    <div class="flex items-center">
+                        <span class="font-bold mr-1 text-xl tracking-tighter">YouTube</span>
+                        <span class="font-bold text-xl text-red-500 tracking-tighter">Moments</span>
+                    </div>
                 </div>
             </template>
         </div>

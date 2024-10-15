@@ -5,7 +5,6 @@ const props = defineProps<{ comment: TimelineCommentType }>();
 
 const { currentTime, t, loop } = usePlayerProvider(); // 현재 재생 시간 추적
 const filterComments = [...props.comment.comments]
-    .filter((c) => c.likeCount > 0)
     .splice(0, 3);
 
 const progressWidth = ref(0);
@@ -38,8 +37,8 @@ watch(currentTime, () => {
                             <span class="opacity-30">~ {{ formatSeconds(comment.sec + loop) }}</span>
                         </div>
                     </div>
-                    <div class="w-full overflow-hidden">
-                        <p class="text-[13px] line-clamp-3 text-ellipsis overflow-hidden">
+                    <div class="w-full">
+                        <p class="text-[13px] line-clamp-3">
                             {{
                                 filterComments
                                     .map((v) => v.comment.trim())
@@ -49,10 +48,11 @@ watch(currentTime, () => {
                         </p>
                     </div>
                     <div class="flex justify-between w-full">
-                        <div class="flex items-center gap-1 text-base">
+                        <div v-if="comment.totalLikeCount > 0" class="flex items-center gap-1 text-base">
                             <UIcon name="i-heroicons-hand-thumb-up" />
                             <div>{{ formatCount(comment.totalLikeCount) }}</div>
                         </div>
+                        <div v-else></div>
                         <div>
                             <ShareIcon :t="comment.sec" />
                         </div>

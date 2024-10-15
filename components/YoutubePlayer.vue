@@ -18,8 +18,7 @@ onMounted(() => {
 
 watch(() => props.videoId, () => {
     if (props.videoId && player.value) {
-        player.value.loadVideoById(props.videoId);
-        player.value.pauseVideo();
+        player.value.cueVideoById(props.videoId);
         if (isMuted.value) {
             player.value.mute();
         } else {

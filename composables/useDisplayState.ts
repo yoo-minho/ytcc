@@ -34,7 +34,7 @@ export const moveVideoDetail = (videoId: string) => {
   const query = {
     page: "video",
     v: videoId,
-    loop: 5,
+    loop: 10,
   } as any;
   navigateTo({ query });
 };

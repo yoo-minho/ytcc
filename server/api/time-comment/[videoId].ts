@@ -1,5 +1,5 @@
 import { youtube } from "@/server/utils/youtube";
-import { formatDuration } from "@/utils/formatting";
+import { formatDuration, formatDuration2sec } from "@/utils/formatting";
 import { CommentType, TimelineCommentType } from "@/types/comm";
 
 export default defineEventHandler(async (event) => {
@@ -18,6 +18,8 @@ export default defineEventHandler(async (event) => {
     throw new Error("비디오 길이를 가져오는데 실패했습니다.");
   }
 
+  console.log("formatDuration(videoDuration)", formatDuration(videoDuration));
+
   const maxHour = +formatDuration(videoDuration).split(":")[0];
   const timeStrings = generateTimeStrings(maxHour);
   const commentPromises = timeStrings.map((timeString) => fetchCommentsForTimeString(videoId, timeString));
@@ -25,7 +27,9 @@ export default defineEventHandler(async (event) => {
   const items = removeDuplicateComments(results.flatMap((result) => result.items))
     .map((item) => parseComments(item))
     .flat();
-  const _items = comments2TimelineComments(items).map((c) => ({ ...c, totalLikeCount: c.totalLikeCount }));
+  const _items = comments2TimelineComments(items)
+    .filter((c) => c.sec < formatDuration2sec(videoDuration) - 5) //최대 재생시간 이하로 뽑히는
+    .map((c) => ({ ...c, totalLikeCount: c.totalLikeCount }));
 
   return {
     channelTitle: response.data?.items?.[0]?.snippet?.channelTitle,
@@ -86,26 +90,18 @@ function generateTimeStrings(hour = 60): string[] {
 
 function parseComments(item: any): CommentType[] {
   const { comment, likeCount } = item;
-
   const comments = [];
+  // 시간 형식 (00:00 또는 00:00:00)과 내용을 매칭하는 정규식
   const regex = /(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(.*?)(?=\d{1,2}:\d{2}(?::\d{2})?|$)/g;
+  const matchCount = (comment.match(regex) || []).length;
 
-  let matches = comment.match(regex);
-  let matchCount = matches ? matches.length : 0;
-
+  // 모든 시간 표시와 내용을 추출
   let match;
   while ((match = regex.exec(comment)) !== null) {
     const [, hours, minutes, seconds, content] = match;
-    let sec;
-
-    if (seconds) {
-      // 00:00:00 형태
-      sec = +hours * 3600 + +minutes * 60 + +seconds;
-    } else {
-      // 00:00 형태
-      sec = +hours * 60 + +minutes;
-    }
-
+    // 초 단위로 시간 변환
+    const sec = seconds ? +hours * 3600 + +minutes * 60 + +seconds : +hours * 60 + +minutes;
+    if ((content.trim() || "") === "") continue;
     comments.push({
       sec,
       comment: content.trim() || "",
@@ -113,24 +109,21 @@ function parseComments(item: any): CommentType[] {
     });
   }
 
+  // 시간 역순으로 정렬
   comments.reverse();
 
+  // 빈 댓글 내용을 이전 댓글로 채우기
   let prevComment = "";
-  for (let i = 0; i < comments.length; i++) {
-    if (!comments[i].comment) {
-      comments[i].comment = prevComment;
-    } else {
-      prevComment = comments[i].comment;
-    }
-  }
-
-  return comments;
+  return comments.map((c) => {
+    if (!c.comment) c.comment = prevComment;
+    else prevComment = c.comment;
+    return c;
+  });
 }
 
 function comments2TimelineComments(comments: CommentType[]) {
   let arr = [] as TimelineCommentType[];
   comments.forEach((comment) => {
-    if (comment.likeCount === 0) return;
     if (arr.find((v) => v.sec === comment.sec)) {
       arr = arr.map((v) => {
         if (v.sec === comment.sec) {

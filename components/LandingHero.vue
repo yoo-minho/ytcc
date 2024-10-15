@@ -6,16 +6,25 @@ const youtubeApi = useYoutubeApi();
 const videoDataState = useVideoDataState();
 
 const { data: videos, status: videoStatus } = youtubeApi.fetchTrendingVideos(MAX_TREND_VIDEO_COUNT);
+console.log({ videos });
 watch(videos, () => {
     videoDataState.value.trendVideoData = videos.value || [];
 })
+
+const trend3Videos = computed(() => {
+    return [...videoDataState.value.trendVideoData].splice(0, 3);
+});
 
 const today = new Date().getDay();
 const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 const { data: playlists, status: playlistsStatus } = youtubeApi.fetchWeeklyVideos();
 watch(playlists, () => {
-    videoDataState.value.weeklyVideoData = playlists.value?.filter(p => p.day?.includes(daysOfWeek[today])) || []
+    videoDataState.value.weeklyVideoData = playlists.value || []
 })
+
+const todayPlaylists = computed(() => {
+    return videoDataState.value.weeklyVideoData?.filter(p => p.day?.includes(daysOfWeek[today])).splice(0, 2);
+});
 
 const url = ref('');
 const toast = useToast();
@@ -65,14 +74,6 @@ const openApiSite = () => {
     });
 }
 
-const tempComments = [
-    {
-        sec: 13 * 60 + 56,
-        totalLikeCount: 9155,
-        comments: [{ comment: '급한 분들은 여기부터 보시면 됩니다', likeCount: 9155 }]
-    }
-];
-
 // 최근 클립보드 내용을 가져와 URL 입력란에 붙여넣는 함수
 const pasteFromClipboard = async () => {
     try {
@@ -99,23 +100,25 @@ const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
                     영상 <span class="text-red-red-500">최고의 순간</span>을 즐기는 방법
                 </div>
                 <div class="text-xs tracking-tight">
-                    Step 1. 타임라인 댓글을 인기순으로 모아본다.
+                    1️⃣ 타임라인 댓글을 인기순으로 모아본다.
                 </div>
                 <div class="text-xs tracking-tight">
-                    Step 2. 타임라인 댓글을 친구에게 공유한다.
+                    2️⃣ 타임라인 댓글을 친구들에게 공유한다.
                 </div>
             </div>
 
-
-
             <div class="flex gap-2 items-center justify-between">
-                <UTextarea v-model="url" placeholder="Youtube URL" size="xl" class="dark w-full" autoresize :rows="1"
-                    @focus="pasteFromClipboard()" />
-                <UButton color="primary" variant="solid" size="xl" @click="makeCollection()">
-                    <UIcon name="i-ph-magnifying-glass-bold" class="text-white" size="24px" />
+                <UTextarea v-model="url" placeholder="Youtube URL" size="xl" class="dark w-full text-xs" autoresize
+                    :rows="1" @focus="pasteFromClipboard()" />
+            </div>
+            <div>
+                <UiYoutubeAppBtn v-if="extractYouTubeInfo(url).empty" text="유튜브 앱 열고 링크 가져오기" class="w-full" />
+                <UButton v-else color="black" class=" text-white flex items-center justify-center gap-1 w-full"
+                    @click="makeCollection()">
+                    <UIcon name="i-ph-magnifying-glass-bold" size="20px" />
+                    <div>{{ '최고의 순간 찾기' }}</div>
                 </UButton>
             </div>
-            <UiYoutubeAppBtn text="유튜브 앱 열고 링크 가져오기" />
 
             <UDivider class="dark" />
 
@@ -123,7 +126,7 @@ const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
                 <div class="flex gap-2 items-center justify-between">
                     <div>
                         <div class="text-xl tracking-tighter font-bold flex items-center gap-1">
-                            <Icon name="ph:calendar-blank"></Icon> 요일 웹 예능
+                            <Icon name="ph:calendar-blank"></Icon> {{ daysOfWeek[today] }}요웹예능
                         </div>
                     </div>
                     <div class="cursor-pointer text-sm text-gray-400 flex items-center" @click="openWeeklyVideo()">
@@ -132,15 +135,13 @@ const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
                 </div>
                 <div>
                     <div class="grid grid-cols-2 py-2 gap-4">
-                        <template v-if="playlistsStatus === 'pending'">
+                        <template v-if="playlistsStatus !== 'success'">
                             <template v-for="n in 2 ">
-                                <div class="w-1/2">
-                                    <PlaylistSkeletonItem />
-                                </div>
+                                <PlaylistSkeletonItem />
                             </template>
                         </template>
                         <template v-else>
-                            <template v-for="(playlist) in [...videoDataState.weeklyVideoData].splice(0, 2)">
+                            <template v-for="(playlist) in todayPlaylists">
                                 <PlaylistItem :playlist="playlist" :thumbnail="true" />
                             </template>
                         </template>
@@ -168,7 +169,7 @@ const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
                         </div>
                     </template>
                     <template v-else>
-                        <div v-for="(video, idx) in [...videoDataState.trendVideoData].splice(0, 3)">
+                        <div v-for="(video, idx) in trend3Videos">
                             <PlaylistPlayListItem :video="video" :idx="idx" />
                         </div>
                     </template>

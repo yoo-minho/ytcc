@@ -7,7 +7,7 @@ const scrollContainer = ref<HTMLElement | null>(null);
 const currentTime = ref(0);
 const videoId = ref("");
 const isMuted = ref(true);
-const loop = ref(5);
+const loop = ref(10);
 const t = ref();
 
 export function usePlayerProvider() {
@@ -45,18 +45,20 @@ export function usePlayerProvider() {
   };
 
   const seekTo = (sec: number) => {
-    if (player.value && player.value.playVideo && sec > 0) {
-      t.value = sec;
+    if (player.value) {
+      if (sec > 0) {
+        t.value = sec;
 
-      console.log("시작", { sec });
+        player.value.playVideo();
+        player.value.seekTo(sec, true);
 
-      player.value.playVideo();
-      player.value.seekTo(sec, true);
-
-      clearTimeout(playerTimer);
-      playerTimer = setTimeout(() => {
-        seekTo(sec);
-      }, loop.value * 1000);
+        clearTimeout(playerTimer);
+        playerTimer = setTimeout(() => {
+          seekTo(sec);
+        }, loop.value * 1000);
+      } else {
+        player.value.stopVideo();
+      }
     }
   };
 

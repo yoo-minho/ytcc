@@ -14,7 +14,7 @@ export const useYoutubeApi = () => {
           params: { max: count },
         });
       },
-      { lazy: true }
+      { lazy: true, server: false }
     );
 
   const fetchWeeklyVideos = () =>

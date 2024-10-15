@@ -59,6 +59,7 @@ export function formatDuration(duration: string): string {
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   }
 }
+
 export function formatDuration2sec(duration: string): number {
   const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
   const hours = parseInt(match?.[1] ?? "0") || 0;

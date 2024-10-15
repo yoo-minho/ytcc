@@ -20,6 +20,9 @@ watch(() => displayState.value.currentPage, (afterPage, beforePage) => {
             ...scroll,
             [beforePage]: scrollPosition.value,
         }
+        if (scrollContainer.value) {
+            scrollContainer.value.scrollTop = 0;
+        }
     }
 })
 </script>

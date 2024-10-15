@@ -31,7 +31,7 @@ const headerMessage = ref('');
 watch(data, () => {
     channelTitle.value = data.value?.channelTitle || '채널이름';
     comments.value = data.value?.comments;
-    t.value = comments.value?.[0]?.sec || 0;
+    t.value = comments.value[0]?.sec || 0;
     headerMessage.value = comments.value?.[0]?.comments[0].comment || '댓글 누르면 쇼츠 플레이';
 })
 
@@ -72,12 +72,6 @@ const toggleLoop = () => {
             </div>
         </div>
         <YoutubePlayer :video-id="videoId" />
-        <!-- <div class="h-[60px] flex justify-center items-center">
-            <div class="p-6 truncate font-bold tracking-tighter flex items-center gap-1">
-                <UIcon name="i-openmoji-youtube" size="48px" />
-                <span class="text-[24px]">{{ channelTitle }}</span>
-            </div>
-        </div> -->
         <div class="h-[60px] flex w-full items-center justify-center px-2 gap-2 opacity-70 tracking-tighter">
             <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="scrollToElement()">
                 <MyIcon :show="true" name="ph:gps-fix-fill" size="20px" />
@@ -88,7 +82,7 @@ const toggleLoop = () => {
                     <div>{{ loop }}초</div>
                 </div>
             </UButton>
-            <UiYoutubeAppBtn :video-id="videoId" />
+            <UiYoutubeAppBtn :video-id="videoId" :ui="{ rounded: 'rounded-full' }" />
             <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="toggleMute()">
                 <div class="flex items-center justify-center gap-1">
                     <template v-if="isMuted">
@@ -120,8 +114,10 @@ const toggleLoop = () => {
                     </div>
                 </template>
                 <template v-else-if="['idle', 'pending'].includes(status)">
-                    <div class="p-4 flex w-full h-full justify-center items-center">
-                        로딩중...
+                    <div class="flex flex-col">
+                        <template v-for="n in 3">
+                            <WatchSkeletonCommentItem />
+                        </template>
                     </div>
                 </template>
                 <template v-else-if="comments && comments.length === 0">
