@@ -126,11 +126,12 @@ const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
                 <div class="flex gap-2 items-center justify-between">
                     <div>
                         <div class="text-xl tracking-tighter font-bold flex items-center gap-1">
-                            <Icon name="ph:calendar-blank"></Icon> {{ daysOfWeek[today] }}요웹예능
+                            <MyIcon name="ph:calendar-blank" /> {{ daysOfWeek[today] }}요웹예능
                         </div>
                     </div>
                     <div class="cursor-pointer text-sm text-gray-400 flex items-center" @click="openWeeklyVideo()">
-                        전체 보기 <Icon name="ph:caret-right-bold"></Icon>
+                        전체 보기
+                        <MyIcon name="ph:caret-right-bold" />
                     </div>
                 </div>
                 <div>
