@@ -41,10 +41,10 @@ export function formatViewCount(viewCount: string, milestone: boolean = false): 
     if (count >= 1000) return "1천 돌파";
   }
 
-  if (count >= 100000000) return `${Math.floor(count / 100000000)}억회`;
-  if (count >= 10000) return `${Math.floor(count / 10000)}만회`;
-  if (count >= 1000) return `${Math.floor(count / 1000)}천회`;
-  return `${count}회`;
+  if (count >= 100000000) return `${Math.floor(count / 100000000).toLocaleString()}억회`;
+  if (count >= 10000) return `${Math.floor(count / 10000).toLocaleString()}만회`;
+  if (count >= 1000) return `${Math.floor(count / 1000).toLocaleString()}천회`;
+  return `${count.toLocaleString()}회`;
 }
 
 export function formatDuration(duration: string): string {

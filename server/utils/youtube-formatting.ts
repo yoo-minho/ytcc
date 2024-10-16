@@ -58,7 +58,7 @@ export const formatYoutubePlayListItem = (playlistItem: youtube_v3.Schema$Playli
   const v = {
     videoId: contentDetails?.videoId,
     title: title || "",
-    thumbnail: thumbnails?.maxres?.url || thumbnails?.medium?.url || "",
+    thumbnail: thumbnails?.medium?.url || "",
     publishedAt: publishedAt || "",
   };
   return {

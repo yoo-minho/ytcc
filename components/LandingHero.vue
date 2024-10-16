@@ -115,8 +115,9 @@ const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
                 <UiYoutubeAppBtn v-if="extractYouTubeInfo(url).empty" text="유튜브 앱 열고 링크 가져오기" class="w-full" />
                 <UButton v-else color="black" class=" text-white flex items-center justify-center gap-1 w-full"
                     @click="makeCollection()">
-                    <UIcon name="i-ph-magnifying-glass-bold" size="20px" />
-                    <div>{{ '최고의 순간 찾기' }}</div>
+                    <Icon name="openmoji:youtube" size="24px" />
+                    <div class="tracking-tighter">영상 최고의 순간 찾기</div>
+                    <Icon name="openmoji:eyes" size="24px" />
                 </UButton>
             </div>
 

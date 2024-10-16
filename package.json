@@ -21,12 +21,12 @@
     "nuxt": "^3.13.2",
     "nuxt-gtag": "^3.0.1",
     "vue": "latest",
-    "youtube-player": "^5.6.0"
-  },
-  "devDependencies": {
+    "youtube-player": "^5.6.0",
     "@iconify-json/heroicons": "^1.2.1",
     "@iconify-json/openmoji": "^1.2.3",
-    "@iconify-json/ph": "^1.2.1",
+    "@iconify-json/ph": "^1.2.1"
+  },
+  "devDependencies": {
     "sass": "^1.79.4"
   }
 }

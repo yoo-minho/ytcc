@@ -28,8 +28,8 @@ export default defineNuxtConfig({
   },
 
   icon: {
-    serverBundle: {
-      collections: ["ph", "openmoji"],
+    clientBundle: {
+      scan: true,
     },
   },
 
