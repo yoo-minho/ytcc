@@ -104,10 +104,10 @@ const toggleLoop = () => {
       <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="toggleMute()">
         <div class="flex items-center justify-center gap-1">
           <template v-if="isMuted">
-            <MyIcon :show="isMuted" name="ph:speaker-simple-slash-fill" size="20px" />
+            <Icon name="ph:speaker-simple-slash-fill" size="20px" />
             <div>음소거 해제</div>
           </template>
-          <MyIcon :show="!isMuted" name="ph:speaker-simple-high-fill" size="20px" />
+          <Icon v-else name="ph:speaker-simple-high-fill" size="20px" />
         </div>
       </UButton>
     </div>

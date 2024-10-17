@@ -112,6 +112,7 @@ const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
                     :rows="1" @focus="pasteFromClipboard()" />
             </div>
             <div>
+                <span class=text-xs>::{{ url }}::</span>
                 <UiYoutubeAppBtn v-if="extractYouTubeInfo(url).empty" text="유튜브 앱 열고 링크 가져오기" class="w-full" />
                 <UButton v-else color="black" class=" text-white flex items-center justify-center gap-1 w-full"
                     @click="makeCollection()">

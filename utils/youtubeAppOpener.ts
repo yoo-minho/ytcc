@@ -1,5 +1,5 @@
 export const openYouTubeApp = (videoCode?: string) => {
-  if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+  if (false && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
     const youtubeDeepLink = videoCode ? `vnd.youtube:${videoCode}` : "youtube://";
     const iframe = document.createElement("iframe");
     iframe.style.display = "none";
