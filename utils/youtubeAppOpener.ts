@@ -1,12 +1,21 @@
 export const openYouTubeApp = (videoCode?: string) => {
-  if (false && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
-    const youtubeDeepLink = videoCode ? `vnd.youtube:${videoCode}` : "youtube://";
+  const youtubeUrl = videoCode ? `https://www.youtube.com/watch?v=${videoCode}` : "https://www.youtube.com/";
+  if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
     const iframe = document.createElement("iframe");
     iframe.style.display = "none";
     document.body.appendChild(iframe);
-    iframe.src = youtubeDeepLink;
+    iframe.src = youtubeUrl;
+
+    // 일정 시간 후에 앱이 열리지 않았다면 웹 페이지로 이동
+    setTimeout(() => {
+      if (document.hasFocus()) {
+        navigateTo(youtubeUrl, {
+          external: true,
+          open: { target: "youtube" },
+        });
+      }
+    }, 2000); // 2초 후 확인
   } else {
-    const youtubeUrl = videoCode ? `https://www.youtube.com/watch?v=${videoCode}` : "https://www.youtube.com/";
     navigateTo(youtubeUrl, {
       external: true,
       open: { target: "youtube" },
