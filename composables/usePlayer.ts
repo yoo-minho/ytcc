@@ -44,7 +44,7 @@ export function usePlayerProvider() {
     }
   };
 
-  const seekTo = (sec: number) => {
+  const seekTo = async (sec: number) => {
     if (player.value) {
       if (sec > 0) {
         t.value = sec;

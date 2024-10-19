@@ -2,7 +2,7 @@ import { formatYoutubeVideo } from "@/server/utils/youtube-formatting";
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
-  const maxVideos = parseInt(query.max as string) || 50;
+  const maxVideos = parseInt(query.max as string) || 100;
   const allVideos = await getAllVideos(maxVideos);
   return allVideos;
 });

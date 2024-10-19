@@ -6,7 +6,6 @@ const youtubeApi = useYoutubeApi();
 const videoDataState = useVideoDataState();
 
 const { data: videos, status: videoStatus } = youtubeApi.fetchTrendingVideos(MAX_TREND_VIDEO_COUNT);
-console.log({ videos });
 watch(videos, () => {
     videoDataState.value.trendVideoData = videos.value || [];
 })
@@ -15,7 +14,9 @@ const trend3Videos = computed(() => {
     return [...videoDataState.value.trendVideoData].splice(0, 3);
 });
 
-const today = new Date().getDay();
+const yesterday = new Date();
+yesterday.setDate(yesterday.getDate() - 1);
+const yesterdayDay = yesterday.getDay();
 const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 const { data: playlists, status: playlistsStatus } = youtubeApi.fetchWeeklyVideos();
 watch(playlists, () => {
@@ -23,7 +24,7 @@ watch(playlists, () => {
 })
 
 const todayPlaylists = computed(() => {
-    return videoDataState.value.weeklyVideoData?.filter(p => p.day?.includes(daysOfWeek[today])).splice(0, 2);
+    return videoDataState.value.weeklyVideoData?.filter(p => p.day?.includes(daysOfWeek[yesterdayDay])).splice(0, 2);
 });
 
 const url = ref('');
@@ -126,8 +127,8 @@ const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
             <div>
                 <div class="flex gap-2 items-center justify-between">
                     <div>
-                        <div class="text-xl tracking-tighter font-bold flex items-center gap-1">
-                            <MyIcon name="ph:calendar-blank" /> {{ daysOfWeek[today] }}요웹예능
+                        <div class="text-xl font-bold flex items-center gap-1">
+                            <MyIcon name="ph:calendar-blank" /> {{ daysOfWeek[yesterdayDay] }}요웹예능
                         </div>
                     </div>
                     <div class="cursor-pointer text-sm text-gray-400 flex items-center" @click="openWeeklyVideo()">

@@ -4,8 +4,8 @@ defineProps<{ videoId?: string; text?: string }>();
 
 <template>
     <UButton color="black" class="flex items-center justify-center gap-1" @click="openYouTubeApp(videoId)">
-        <Icon name="openmoji:youtube" size="24px" />
-        <div class="tracking-tighter">{{ text || '앱 열기' }}</div>
+        <Icon name="openmoji:youtube" size="20px" />
+        <div class="tracking-tighter">{{ text || "앱 열기" }}</div>
     </UButton>
 </template>
 

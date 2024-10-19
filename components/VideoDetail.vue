@@ -43,18 +43,27 @@ const comments = ref();
 const channelTitle = ref("채널이름");
 const headerMessage = ref("");
 
-watch(data, () => {
-  channelTitle.value = data.value?.channelTitle || "채널이름";
-  comments.value = data.value?.comments;
-  t.value = comments.value[0]?.sec || 0;
-  headerMessage.value =
-    comments.value?.[0]?.comments[0].comment || "댓글 누르면 쇼츠 플레이";
-});
+const updateHeaderMessage = (comment: string = "댓글 누르면 순간 플레이") => {
+  headerMessage.value = comment;
+};
+
+const updateDataValues = () => {
+  if (data.value) {
+    channelTitle.value = data.value.channelTitle || "채널이름";
+    comments.value = data.value.comments;
+    t.value = comments.value?.[0]?.sec || 0;
+    updateHeaderMessage(comments.value?.[0]?.comments[0]?.comment);
+  }
+};
+
+const findCommentAtCurrentTime = () => {
+  return comments.value?.find((v: any) => v.sec === t.value)?.comments[0]?.comment;
+};
+
+watch(data, updateDataValues);
 
 watch(t, () => {
-  headerMessage.value =
-    comments.value?.find((v: any) => v.sec === t.value)?.comments[0].comment ||
-    "댓글 누르면 쇼츠 플레이";
+  updateHeaderMessage(findCommentAtCurrentTime());
   scrollToElement();
 });
 
@@ -75,9 +84,14 @@ const toggleLoop = () => {
   const loopTimes = [10, 15, 30, 60];
   const currentIndex = loopTimes.indexOf(loop.value);
   const nextIndex = (currentIndex + 1) % loopTimes.length;
-  loop.value = loopTimes[nextIndex];
 
-  seekTo(t.value);
+  if (loop.value < loopTimes[nextIndex]) {
+    loop.value = loopTimes[nextIndex];
+  } else {
+    loop.value = loopTimes[nextIndex];
+    seekTo(t.value);
+  }
+
   scrollToElement();
 };
 </script>
@@ -85,11 +99,22 @@ const toggleLoop = () => {
 <template>
   <div class="flex flex-col h-full w-full">
     <div class="h-[60px] flex justify-center items-center">
-      <div class="p-6 truncate text-4xl font-bold tracking-tighter">
+      <div class="p-6 truncate text-3xl font-bold tracking-tighter">
         {{ headerMessage }}
       </div>
     </div>
-    <YoutubePlayer :video-id="videoId" />
+
+    <template v-if="['idle', 'pending'].includes(status)">
+      <div class="w-full" style="aspect-ratio: 16 / 9">
+        <div class="w-full aspect-video flex items-center justify-center bg-gray-900 h-full">
+          <div class="w-16 h-16 border-4 border-gray-700 border-t-gray-200 rounded-full animate-spin"></div>
+        </div>
+      </div>
+    </template>
+    <template v-else>
+      <YoutubePlayer :video-id="videoId" />
+    </template>
+
     <div class="h-[60px] flex w-full items-center justify-center px-2 gap-2 opacity-70 tracking-tighter">
       <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="scrollToElement()">
         <MyIcon :show="true" name="ph:gps-fix-fill" size="20px" />
@@ -116,7 +141,7 @@ const toggleLoop = () => {
         <div class="flex items-center justify-between gap-2">
           <div class="flex-1 tracking-tight flex items-center gap-2 font-bold">
             타임라인 댓글
-            <div>[ 인기순 ]</div>
+            <div class="bg-white text-black rounded-md px-2 py-1 text-sm">인기순</div>
             <div class="flex cursor-pointer" @click="toggleEditor()">
               <UIcon name="i-heroicons-sparkles-solid" size="20px" />
             </div>

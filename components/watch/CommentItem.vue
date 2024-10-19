@@ -4,8 +4,9 @@ import type { TimelineCommentType } from "@/types/comm";
 const props = defineProps<{ comment: TimelineCommentType }>();
 
 const { currentTime, t, loop } = usePlayerProvider(); // 현재 재생 시간 추적
-const filterComments = [...props.comment.comments]
-    .splice(0, 3);
+const filterComments = computed(() => props.comment.comments.map((v) => v.comment.trim())
+    .filter(Boolean)
+    .splice(0, 3));
 
 const progressWidth = ref(0);
 
@@ -37,19 +38,17 @@ watch(currentTime, () => {
                             <span class="opacity-30">~ {{ formatSeconds(comment.sec + loop) }}</span>
                         </div>
                     </div>
-                    <div class="w-full">
-                        <p class="text-[13px] line-clamp-3">
-                            {{
-                                filterComments
-                                    .map((v) => v.comment.trim())
-                                    .filter(Boolean)
-                                    .join(" / ")
-                            }}
-                        </p>
+                    <div class="w-full flex flex-col">
+                        <template v-for="(text) in filterComments">
+                            <p class="line-clamp-2 tracking-tighter text-[13px]">
+                                <Icon name="material-symbols:subdirectory-arrow-right" /> {{ text }}
+                            </p>
+                        </template>
                     </div>
                     <div class="flex justify-between w-full">
-                        <div v-if="comment.totalLikeCount > 0" class="flex items-center gap-1 text-base">
-                            <UIcon name="i-heroicons-hand-thumb-up" />
+                        <div v-if="comment.totalLikeCount > 0" class="flex items-center gap-1"
+                            :class="{ 'animate-bounce': comment.sec === t }">
+                            <UIcon name="i-heroicons-hand-thumb-up" class="like-icon" />
                             <div>{{ formatCount(comment.totalLikeCount) }}</div>
                         </div>
                         <div v-else></div>
@@ -63,4 +62,24 @@ watch(currentTime, () => {
     </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.like-icon {
+    transition: transform 0.2s ease-in-out;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-2px);
+    }
+}
+
+.animate-bounce {
+    animation: bounce 0.5s infinite;
+}
+</style>
