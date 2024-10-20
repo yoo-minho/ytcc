@@ -3,29 +3,24 @@
 const {
     player,
     t,
-    isMuted,
     currentTime,
     seekTo,
     updateTime,
     clear,
 } = usePlayerProvider();
 
-const props = defineProps<{ videoId?: string }>();
+const props = defineProps<{ videoId?: string, loading: boolean }>();
 
 onMounted(() => {
     setYoutubePlayer();
 });
 
-watch(() => props.videoId, () => {
+watch(() => props.videoId, async () => {
     if (props.videoId && player.value) {
-        player.value.cueVideoById(props.videoId);
+        await player.value.cueVideoById(props.videoId);
     } else {
         clear();
     }
-});
-
-watch(t, () => {
-    seekTo(t.value);
 });
 
 onUnmounted(() => {
@@ -50,8 +45,8 @@ function setYoutubePlayer() {
         },
         events: {
             onReady: (event: any) => {
-                if (props.videoId && t.value) {
-                    seekTo(t.value);
+                if (props.videoId) {
+                    seekTo();
                 }
             },
             onStateChange: (event: any) => {
@@ -81,13 +76,20 @@ function setYoutubePlayer() {
             },
         },
     });
-
-    console.log("YouTube 플레이어 설정 완료", player.value);
 }
 </script>
 <template>
-    <div class="w-full" style="aspect-ratio: 16 / 9">
-        <div id="youtube-player" class="w-full h-full"></div>
+    <div class="relative">
+        <template v-if="loading">
+            <div class="absolute inset-0 z-10">
+                <div class="w-full h-full flex items-center justify-center bg-gray-900">
+                    <div class="w-16 h-16 border-4 border-gray-700 border-t-gray-200 rounded-full animate-spin"></div>
+                </div>
+            </div>
+        </template>
+        <div class="w-full" style="aspect-ratio: 16 / 9">
+            <div id="youtube-player" class="w-full h-full"></div>
+        </div>
     </div>
 </template>
 <style></style>

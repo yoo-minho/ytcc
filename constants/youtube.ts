@@ -1,4 +1,4 @@
-export const MAX_TREND_VIDEO_COUNT = 200;
+export const MAX_TREND_VIDEO_COUNT = 100;
 
 export enum YouTubeCategory {
   FILM_ANIMATION = "1",

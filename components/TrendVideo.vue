@@ -13,48 +13,14 @@ watch(videos, () => {
 })
 
 const errorMessage = computed(() => (error.value?.data as any)?.statusMessage);
-
-const selectedDay = ref('어제');
-
 const trendVideoByDay = computed(() => {
-    return videoDataState.value.trendVideoData.filter(v => {
-        console.log(v.publishedAt, selectedDay.value)
-        return v.publishedAt === selectedDay.value
-    });
+    return videoDataState.value.trendVideoData;
 })
-
-function getLastSevenDays() {
-    const dates = [];
-    for (let i = 0; i < 7; i++) {
-        const date = dayjs().subtract(i, "day");
-        const weekdayIndex = date.day();
-        const koreanWeekdays = ['일', '월', '화', '수', '목', '금', '토'];
-        let formattedDate;
-        if (i === 0) {
-            formattedDate = '오늘';
-        } else if (i === 1) {
-            formattedDate = '어제';
-        } else {
-            formattedDate = date.format("MM/DD") + `(${koreanWeekdays[weekdayIndex]})`;
-        }
-        dates.push(formattedDate);
-    }
-    return dates;
-}
 
 
 </script>
 <template>
     <div class="w-full">
-        <div class="flex justify-between pt-4 px-4 py-2 sticky top-0 z-10 bg-black">
-            <template v-for="day in getLastSevenDays()">
-                <div class="text-center h-8 cursor-pointer text-xs"
-                    :class="[day === selectedDay ? 'text-primary-500 border-b-2 border-primary-500' : '']"
-                    @click="selectedDay = (day)">
-                    {{ day }}
-                </div>
-            </template>
-        </div>
         <template v-if="status === 'pending'">
             <div class="p-4 w-full">loading...</div>
         </template>

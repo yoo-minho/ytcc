@@ -18,8 +18,6 @@ export default defineEventHandler(async (event) => {
     throw new Error("비디오 길이를 가져오는데 실패했습니다.");
   }
 
-  console.log("formatDuration(videoDuration)", formatDuration(videoDuration));
-
   const maxHour = +formatDuration(videoDuration).split(":")[0];
   const timeStrings = generateTimeStrings(maxHour);
   const commentPromises = timeStrings.map((timeString) => fetchCommentsForTimeString(videoId, timeString));
@@ -101,10 +99,11 @@ function parseComments(item: any): CommentType[] {
     const [, hours, minutes, seconds, content] = match;
     // 초 단위로 시간 변환
     const sec = seconds ? +hours * 3600 + +minutes * 60 + +seconds : +hours * 60 + +minutes;
+    if (sec === 19) continue; // 19초 제외
     if ((content.trim() || "") === "") continue;
     comments.push({
       sec,
-      comment: content.trim() || "",
+      comment: content.trim().replace(/\*/g, "") || "", // *기호 제거
       likeCount: Math.floor(likeCount / matchCount),
     });
   }

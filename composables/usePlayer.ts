@@ -16,6 +16,7 @@ export function usePlayerProvider() {
   if (route.query.loop) {
     loop.value = Number(route.query.loop);
   }
+
   if (route.query.t) {
     t.value = Number(route.query.t);
   }
@@ -44,17 +45,30 @@ export function usePlayerProvider() {
     }
   };
 
-  const seekTo = async (sec: number) => {
+  const seekTo = async () => {
     if (player.value) {
-      if (sec > 0) {
-        t.value = sec;
+      if (t.value > 0) {
+        await player.value.playVideo?.();
 
-        player.value.playVideo();
-        player.value.seekTo(sec, true);
+        // 재생이 시작될 때까지 대기합니다.
+        await new Promise<void>((resolve) => {
+          const checkPlayingState = async () => {
+            const state = await player.value?.getPlayerState();
+            if (state === 1) {
+              // 1은 재생 중 상태
+              resolve();
+            } else {
+              setTimeout(checkPlayingState, 50); // 50ms 간격으로 재확인
+            }
+          };
+          checkPlayingState();
+        });
+
+        await player.value.seekTo(t.value, true);
 
         clearTimeout(playerTimer);
         playerTimer = setTimeout(() => {
-          seekTo(sec);
+          seekTo();
         }, loop.value * 1000);
       } else {
         player.value.stopVideo();

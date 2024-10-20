@@ -4,8 +4,8 @@ import type { TimelineCommentType } from "@/types/comm";
 const props = defineProps<{ comment: TimelineCommentType }>();
 
 const { currentTime, t, loop } = usePlayerProvider(); // 현재 재생 시간 추적
-const filterComments = computed(() => props.comment.comments.map((v) => v.comment.trim())
-    .filter(Boolean)
+const filterComments = computed(() => props.comment.comments
+    .filter((v) => Boolean(v.comment.trim()))
     .splice(0, 3));
 
 const progressWidth = ref(0);
@@ -39,9 +39,9 @@ watch(currentTime, () => {
                         </div>
                     </div>
                     <div class="w-full flex flex-col">
-                        <template v-for="(text) in filterComments">
+                        <template v-for="(c) in filterComments">
                             <p class="line-clamp-2 tracking-tighter text-[13px]">
-                                <Icon name="material-symbols:subdirectory-arrow-right" /> {{ text }}
+                                <Icon name="material-symbols:subdirectory-arrow-right" /> {{ c.comment }}
                             </p>
                         </template>
                     </div>

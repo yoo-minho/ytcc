@@ -11,9 +11,11 @@ watch(() => displayState.value.currentPage, (afterPage, beforePage) => {
 
     if (['video'].includes(beforePage) && scroll[afterPage] > 0) {
         nextTick(() => {
-            if (scrollContainer.value) {
-                scrollContainer.value.scrollTop = scroll[afterPage];
-            }
+            setTimeout(() => {
+                if (scrollContainer.value) {
+                    scrollContainer.value.scrollTop = scroll[afterPage];
+                }
+            }, 0);
         });
     } else {
         displayState.value.scroll = {

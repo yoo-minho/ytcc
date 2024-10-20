@@ -16,6 +16,7 @@ const toggleEditor = () => (isOpenEditor.value = !isOpenEditor.value);
 
 const videoId = ref();
 const route = useRoute();
+
 watch(
   () => route.query.v,
   () => {
@@ -47,36 +48,41 @@ const updateHeaderMessage = (comment: string = "댓글 누르면 순간 플레�
   headerMessage.value = comment;
 };
 
-const updateDataValues = () => {
+const findCommentAtCurrentTime = () => {
+  if (t.value === 0) return;
+
+  const targetComment = comments.value?.find((v: any) => v.sec === t.value);
+  return targetComment?.comments[0]?.comment;
+};
+
+const setTime = (sec: number) => {
+  t.value = sec;
+}
+
+watch(data, () => {
   if (data.value) {
     channelTitle.value = data.value.channelTitle || "채널이름";
     comments.value = data.value.comments;
-    t.value = comments.value?.[0]?.sec || 0;
-    updateHeaderMessage(comments.value?.[0]?.comments[0]?.comment);
+    setTime(comments.value?.[0]?.sec || 0);
   }
-};
-
-const findCommentAtCurrentTime = () => {
-  return comments.value?.find((v: any) => v.sec === t.value)?.comments[0]?.comment;
-};
-
-watch(data, updateDataValues);
+});
 
 watch(t, () => {
+  seekTo();
   updateHeaderMessage(findCommentAtCurrentTime());
   scrollToElement();
 });
 
 const toggleMute = () => {
-  if (player.value) {
-    if (isMuted.value) {
-      player.value.unMute();
-      isMuted.value = false;
-      seekTo(t.value);
-    } else {
-      player.value.mute();
-      isMuted.value = true;
-    }
+  if (!player.value) return;
+
+  isMuted.value = !isMuted.value;
+
+  if (isMuted.value) {
+    player.value.mute();
+  } else {
+    player.value.unMute();
+    seekTo();
   }
 };
 
@@ -85,15 +91,16 @@ const toggleLoop = () => {
   const currentIndex = loopTimes.indexOf(loop.value);
   const nextIndex = (currentIndex + 1) % loopTimes.length;
 
-  if (loop.value < loopTimes[nextIndex]) {
-    loop.value = loopTimes[nextIndex];
-  } else {
-    loop.value = loopTimes[nextIndex];
-    seekTo(t.value);
+  loop.value = loopTimes[nextIndex];
+
+  if (loop.value <= loopTimes[currentIndex]) {
+    seekTo();
   }
 
   scrollToElement();
 };
+
+route.query.loop && (loop.value = Number(route.query.loop));
 </script>
 
 <template>
@@ -104,21 +111,12 @@ const toggleLoop = () => {
       </div>
     </div>
 
-    <template v-if="['idle', 'pending'].includes(status)">
-      <div class="w-full" style="aspect-ratio: 16 / 9">
-        <div class="w-full aspect-video flex items-center justify-center bg-gray-900 h-full">
-          <div class="w-16 h-16 border-4 border-gray-700 border-t-gray-200 rounded-full animate-spin"></div>
-        </div>
-      </div>
-    </template>
-    <template v-else>
-      <YoutubePlayer :video-id="videoId" />
-    </template>
+    <YoutubePlayer :video-id="videoId" :loading="['idle', 'pending'].includes(status)" />
 
     <div class="h-[60px] flex w-full items-center justify-center px-2 gap-2 opacity-70 tracking-tighter">
-      <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="scrollToElement()">
+      <!-- <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="scrollToElement()">
         <MyIcon :show="true" name="ph:gps-fix-fill" size="20px" />
-      </UButton>
+      </UButton> -->
       <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="toggleLoop()">
         <div class="flex items-center">
           <UIcon name="i-ph-repeat" size="20px" />
@@ -174,10 +172,7 @@ const toggleLoop = () => {
         <template v-else>
           <div class="flex flex-col">
             <template v-for="comment in comments">
-              <WatchCommentItem :id="`comment-${comment.sec}`" :comment="comment" @click="
-                seekTo(comment.sec);
-              scrollToElement();
-              " />
+              <WatchCommentItem :id="`comment-${comment.sec}`" :comment="comment" @click="setTime(comment.sec)" />
             </template>
           </div>
         </template>

@@ -10,6 +10,17 @@ defineProps<{ video: TrendingVideoType; idx?: number }>();
                 <div class="absolute bottom-2 right-2 bg-black bg-opacity-75 text-white rounded px-1 font-bold text-xs">
                     {{ video.duration }}
                 </div>
+                <div v-if="idx !== undefined"
+                    class="absolute top-2 left-2 bg-black bg-opacity-75  rounded px-1 font-bold ">
+                    <div v-if="idx < 3" class="text-red-red-500 text-2xl">
+                        {{ idx + 1 }}
+                    </div>
+                    <div v-else-if="idx < 10" class="text-white text-xl">
+                        {{ idx + 1 }}
+                    </div>
+                    <div v-else>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="p-1 w-1/2">

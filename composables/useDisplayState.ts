@@ -31,11 +31,9 @@ export const moveBack = () => {
 };
 
 export const moveVideoDetail = (videoId: string) => {
-  const { loop } = usePlayerProvider();
   const query = {
     page: "video",
     v: videoId,
-    loop: loop.value,
   } as any;
   navigateTo({ query });
 };
