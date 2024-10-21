@@ -1,4 +1,5 @@
 export type CommentType = { sec: number; comment: string; likeCount: number };
+export type TimelineCommentWrapType = { comments: TimelineCommentType[]; channelTitle: string };
 export type TimelineCommentType = {
   sec: number;
   totalLikeCount: number;

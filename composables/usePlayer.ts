@@ -1,3 +1,4 @@
+import PlayerStates from "youtube-player/dist/constants/PlayerStates";
 import type { YouTubePlayer } from "youtube-player/dist/types";
 
 let playerTimer: any = null;
@@ -7,7 +8,7 @@ const scrollContainer = ref<HTMLElement | null>(null);
 const currentTime = ref(0);
 const videoId = ref("");
 const isMuted = ref(true);
-const loop = ref(10);
+const loop = ref(5);
 const t = ref();
 
 export function usePlayerProvider() {
@@ -46,33 +47,36 @@ export function usePlayerProvider() {
   };
 
   const seekTo = async () => {
-    if (player.value) {
-      if (t.value > 0) {
-        await player.value.playVideo?.();
-
-        // 재생이 시작될 때까지 대기합니다.
-        await new Promise<void>((resolve) => {
-          const checkPlayingState = async () => {
-            const state = await player.value?.getPlayerState();
-            if (state === 1) {
-              // 1은 재생 중 상태
-              resolve();
-            } else {
-              setTimeout(checkPlayingState, 50); // 50ms 간격으로 재확인
-            }
-          };
-          checkPlayingState();
-        });
-
-        await player.value.seekTo(t.value, true);
-
-        clearTimeout(playerTimer);
-        playerTimer = setTimeout(() => {
-          seekTo();
-        }, loop.value * 1000);
-      } else {
+    if (player.value?.playVideo) {
+      if (t.value === 0) {
         player.value.stopVideo();
+        return;
       }
+
+      console.log("seekTo");
+
+      try {
+        await player.value.playVideo();
+      } catch (e) {
+        console.log("player.value.playVideo 1", player.value.playVideo);
+        console.log("player.value.playVideo 2", e);
+      }
+
+      // 재생이 시작될 때까지 대기합니다.
+      await new Promise<void>((resolve) => {
+        const checkPlayingState = async () => {
+          const state = await player.value?.getPlayerState();
+          if (state === PlayerStates.PLAYING) {
+            // 1은 재생 중 상태
+            resolve();
+          } else {
+            setTimeout(checkPlayingState, 50); // 50ms 간격으로 재확인
+          }
+        };
+        checkPlayingState();
+      });
+
+      await player.value.seekTo(t.value, true);
     }
   };
 

@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import type { TimelineCommentType } from "@/types/comm";
-
 const {
   player,
   t,
+  currentTime,
   isMuted,
   loop,
   scrollContainer,
@@ -25,13 +24,12 @@ watch(
   { immediate: true }
 );
 
-type CommentType = { comments: TimelineCommentType[]; channelTitle: string };
 
 const { data, status, error } = await useAsyncData(
   "time-comment",
-  () => {
-    if (!videoId.value) return Promise.resolve({ comments: [], channelTitle: "" });
-    return $fetch<CommentType>(`/api/time-comment/${videoId.value}`);
+  async () => {
+    if (!videoId.value) return { comments: [], channelTitle: "" };
+    return await $fetch<TimelineCommentWrapType>(`/api/time-comment/${videoId.value}`);
   },
   {
     lazy: true,
@@ -59,6 +57,8 @@ const setTime = (sec: number) => {
   t.value = sec;
 }
 
+const 루프경과시간 = computed(() => Math.ceil(Math.max((currentTime.value - t.value), 0)));
+
 watch(data, () => {
   if (data.value) {
     channelTitle.value = data.value.channelTitle || "채널이름";
@@ -68,9 +68,17 @@ watch(data, () => {
 });
 
 watch(t, () => {
+  console.log('tttt', t.value)
   seekTo();
   updateHeaderMessage(findCommentAtCurrentTime());
   scrollToElement();
+});
+
+watch(루프경과시간, () => {
+  if (루프경과시간.value > loop.value) {
+    console.log('루프경과시간', 루프경과시간.value)
+    seekTo();
+  }
 });
 
 const toggleMute = () => {
@@ -87,20 +95,17 @@ const toggleMute = () => {
 };
 
 const toggleLoop = () => {
-  const loopTimes = [10, 15, 30, 60];
+  const loopTimes = [5, 10, 15, 30, 60];
   const currentIndex = loopTimes.indexOf(loop.value);
   const nextIndex = (currentIndex + 1) % loopTimes.length;
-
   loop.value = loopTimes[nextIndex];
-
-  if (loop.value <= loopTimes[currentIndex]) {
-    seekTo();
-  }
-
-  scrollToElement();
 };
 
 route.query.loop && (loop.value = Number(route.query.loop));
+
+const loading = computed(() => {
+  return ['idle', 'pending'].includes(status.value)
+})
 </script>
 
 <template>
@@ -111,12 +116,13 @@ route.query.loop && (loop.value = Number(route.query.loop));
       </div>
     </div>
 
-    <YoutubePlayer :video-id="videoId" :loading="['idle', 'pending'].includes(status)" />
+    <YoutubePlayer :video-id="videoId" :loading="loading" />
 
     <div class="h-[60px] flex w-full items-center justify-center px-2 gap-2 opacity-70 tracking-tighter">
       <!-- <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="scrollToElement()">
         <MyIcon :show="true" name="ph:gps-fix-fill" size="20px" />
       </UButton> -->
+      <span>{{ formatSeconds(루프경과시간) }}</span>
       <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="toggleLoop()">
         <div class="flex items-center">
           <UIcon name="i-ph-repeat" size="20px" />
