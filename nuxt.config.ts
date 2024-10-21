@@ -33,40 +33,11 @@ export default defineNuxtConfig({
     },
   },
 
+  imports: {
+    dirs: ["types"],
+  },
+
   pwa: {
-    // workbox: {
-    //   navigateFallback: "/",
-    //   globPatterns: ["**/*.{js,css,html,png,svg,ico,json}"],
-    //   cacheId: `calcreator-${version}`,
-    //   cleanupOutdatedCaches: true,
-    //   skipWaiting: true,
-    //   clientsClaim: true,
-    //   runtimeCaching: [
-    //     {
-    //       urlPattern: /\.(?:png|jpg|jpeg|svg|gif|woff|ico)$/,
-    //       handler: "CacheFirst",
-    //       options: {
-    //         cacheName: "asset-cache",
-    //         expiration: {
-    //           maxEntries: 50,
-    //           maxAgeSeconds: 60 * 60 * 24 * 30, // 30일
-    //         },
-    //       },
-    //     },
-    //     {
-    //       urlPattern: "https://calcreator.cc/.*",
-    //       handler: "NetworkFirst",
-    //       options: {
-    //         cacheName: "domain-cache",
-    //         expiration: {
-    //           maxEntries: 100,
-    //           maxAgeSeconds: 60 * 60 * 24 * 7, // 7일
-    //         },
-    //         networkTimeoutSeconds: 3,
-    //       },
-    //     },
-    //   ],
-    // },
     client: {
       installPrompt: true,
       periodicSyncForUpdates: 3600,

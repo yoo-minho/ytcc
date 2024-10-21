@@ -11,7 +11,12 @@ const openYouTubeApp = (videoCode?: string) => {
     if (isMobile) {
         if (isPWA) {
             // PWA 모바일 웹일 경우
-            window.open(youtubeUrl, '_blank');
+            const newWindow = window.open(youtubeUrl, '_blank');
+            if (newWindow) {
+                newWindow.addEventListener('load', () => {
+                    window.close(); // 새 창이 로드된 후 기존 PWA 창 닫기
+                });
+            }
         } else {
             // 일반 모바일 웹일 경우
             const youtubeAppUrl = videoCode ? `vnd.youtube:${videoCode}` : 'vnd.youtube://';
