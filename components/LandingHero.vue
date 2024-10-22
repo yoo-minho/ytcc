@@ -95,17 +95,12 @@ const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
 <template>
     <div class="w-full flex flex-col justify-between">
         <div class="p-4 w-full flex flex-col gap-4">
-            <div>
-
-                <div class="text-3xl tracking-tight font-bold pb-2">
-                    영상 <span class="text-red-red-500">최고의 순간</span>을 즐기는 방법
+            <div class="text-sm tracking-tight text-center">
+                <div class="text-3xl tracking-tighter font-bold pb-2">
+                    영상 <span class="text-red-red-500">최고의 순간</span>을 즐기세요 🎉
                 </div>
-                <div class="text-xs tracking-tight">
-                    1️⃣ 타임라인 댓글을 인기순으로 모아본다.
-                </div>
-                <div class="text-xs tracking-tight">
-                    2️⃣ 타임라인 댓글을 친구들에게 공유한다.
-                </div>
+                <div>타임라인 댓글을 <span class="text-red-red-400">인기순</span>으로 모아보고 🔥</div>
+                <div>타임라인 댓글을 <span class="text-red-red-400">친구들</span>에게 공유하고 📢</div>
             </div>
 
             <div class="flex gap-2 items-center justify-between">

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TrendingVideoType } from "@/types/comm";
 import { useYoutubeApi } from "@/composables/api/useYoutubeApi";
+import YoutubeAppBtn from "./ui/YoutubeAppBtn.vue";
 
 const videoDataState = useVideoDataState();
 const youtubeApi = useYoutubeApi();
@@ -24,6 +25,9 @@ const playlist = computed(() => playlists.value?.find(p => p.playlistId === list
     <div class="w-full absolute">
         <div class="p-4">
             <PlaylistItem v-if="playlist" :playlist="playlist" :thumbnail="false" />
+        </div>
+        <div class="px-4 pb-2">
+            <YoutubeAppBtn :playlist-id="String(listId)" text="앱에서 재생목록 열기" />
         </div>
         <template v-if="status === 'pending'">
             <div class="p-4">로딩중...</div>

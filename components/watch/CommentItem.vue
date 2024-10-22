@@ -46,14 +46,11 @@ watch(currentTime, () => {
                     <div class="flex justify-between w-full gap-2 items-center">
                         <div v-if="comment.totalLikeCount > 0" class="flex items-center gap-1 flex-1"
                             :class="{ 'animate-bounce': comment.sec === t }">
-                            <UIcon name="i-heroicons-hand-thumb-up" class="like-icon" />
+                            <Icon name="heroicons:hand-thumb-up" class="like-icon" />
                             <div>{{ formatCount(comment.totalLikeCount) }}</div>
                         </div>
-                        <div v-else></div>
-                        <div>
+                        <div class="flex gap-2">
                             <UiYoutubeAppBtn :video-id="videoId" :time="comment.sec" />
-                        </div>
-                        <div>
                             <ShareIcon :t="comment.sec" />
                         </div>
                     </div>

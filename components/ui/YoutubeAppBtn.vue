@@ -1,39 +1,46 @@
 <script setup lang="ts">
-defineProps<{ videoId?: string; text?: string; time?: number }>();
+const props = defineProps<{ videoId?: string; playlistId?: string; text?: string; time?: number }>();
 
-const openYouTubeApp = (videoId?: string, time?: number) => {
-    const youtubeUrl = videoId ? `https://www.youtube.com/watch?v=${videoId}${time ? `&t=${time}` : ''}` : "https://www.youtube.com/";
+const isMobile = ref(/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent));
+const isPWA = ref(window.matchMedia('(display-mode: standalone)').matches);
 
-    // 모바일 웹 또는 PWA 모바일 웹 확인
-    const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-    const isPWA = window.matchMedia('(display-mode: standalone)').matches;
+const youtubeUrl = computed(() => {
+    let baseUrl = "https://www.youtube.com/";
+    if (props.videoId) {
+        baseUrl += `watch?v=${props.videoId}`;
+    } else if (props.playlistId) {
+        baseUrl += `playlist?list=${props.playlistId}`;
+    }
+    return props.time ? `${baseUrl}&t=${props.time}` : baseUrl;
+});
 
-    if (isMobile) {
-        if (isPWA) {
-            // PWA 모바일 웹일 경우
-            const newWindow = window.open(youtubeUrl, '_blank');
+const youtubeAppUrl = computed(() => {
+    let baseUrl = 'vnd.youtube://';
+    if (props.videoId) {
+        baseUrl += props.videoId;
+    } else if (props.playlistId) {
+        baseUrl += `www.youtube.com/playlist?list=${props.playlistId}`;
+    }
+    return props.time ? `${baseUrl}?t=${props.time}` : baseUrl;
+});
+
+const openYouTubeApp = () => {
+    if (isMobile.value) {
+        if (isPWA.value) {
+            const newWindow = window.open(youtubeUrl.value, '_blank');
             if (newWindow) {
-                newWindow.addEventListener('load', () => {
-                    window.close(); // 새 창이 로드된 후 기존 PWA 창 닫기
-                });
+                newWindow.addEventListener('load', () => window.close());
             }
         } else {
-            // 일반 모바일 웹일 경우
-            const youtubeAppUrl = videoId ? `vnd.youtube:${videoId}${time ? `?t=${time}` : ''}` : 'vnd.youtube://';
-
-            // 딥링크로 앱 열기 시도
-            window.location.href = youtubeAppUrl;
-
-            // 앱이 열리지 않았을 경우 웹 페이지로 이동
+            window.location.href = youtubeAppUrl.value;
             setTimeout(() => {
                 if (document.hasFocus()) {
-                    window.location.href = youtubeUrl;
+                    window.location.href = youtubeUrl.value;
                 }
-            }, 2000); // 2초 후 확인
+            }, 2000);
         }
     } else {
-        // 일반 웹일 경우
-        navigateTo(youtubeUrl, {
+        navigateTo(youtubeUrl.value, {
             external: true,
             open: { target: "youtube" },
         });
@@ -44,11 +51,11 @@ const openYouTubeApp = (videoId?: string, time?: number) => {
 
 <template>
     <template v-if="time">
-        <Icon name="openmoji:youtube" size="20px" @click="openYouTubeApp(videoId, time)" />
+        <Icon name="openmoji:youtube" size="24px" @click="openYouTubeApp" class="flex" />
     </template>
     <template v-else>
-        <UButton color="black" class="flex items-center justify-center gap-1" @click="openYouTubeApp(videoId)">
-            <Icon name="openmoji:youtube" size="20px" s />
+        <UButton color="black" class="flex items-center justify-center gap-1" @click="openYouTubeApp">
+            <Icon name="openmoji:youtube" class="w-5 h-5" />
             <div class="tracking-tighter">{{ text || "앱 열기" }}</div>
         </UButton>
     </template>

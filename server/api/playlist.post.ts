@@ -6,11 +6,13 @@ export default defineEventHandler(async (event) => {
   const { listId } = body;
 
   const playlistItems = await getPlayListItemsById(listId);
-  if (!playlistItems) throw new Error("동영상 데이터를 가져오는데 실패했습니다. (1)");
+  if (!playlistItems || playlistItems.length === 0) throw new Error("동영상 데이터를 가져오는데 실패했습니다. (1)");
 
   const formattedPlaylistItems = playlistItems
     .filter((item) => item.snippet?.title !== "Private video")
     .map((item) => formatYoutubePlayListItem(item));
+
+  console.log(formattedPlaylistItems.map((v) => v.id));
 
   const videos = await getVideosByIds(formattedPlaylistItems.map((v) => v.id));
   if (!videos) throw new Error("동영상 데이터를 가져오는데 실패했습니다. (2)");
