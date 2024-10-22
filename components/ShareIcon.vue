@@ -64,6 +64,4 @@ const shareTimelineComment = (sec?: number) => {
     </div>
 </template>
 
-<style lang='scss' scoped>
-.class {}
-</style>
+<style lang='scss' scoped></style>

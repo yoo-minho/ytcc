@@ -1,8 +1,8 @@
 <script setup lang="ts">
-defineProps<{ videoId?: string; text?: string }>();
+defineProps<{ videoId?: string; text?: string; time?: number }>();
 
-const openYouTubeApp = (videoCode?: string) => {
-    const youtubeUrl = videoCode ? `https://www.youtube.com/watch?v=${videoCode}` : "https://www.youtube.com/";
+const openYouTubeApp = (videoId?: string, time?: number) => {
+    const youtubeUrl = videoId ? `https://www.youtube.com/watch?v=${videoId}${time ? `&t=${time}` : ''}` : "https://www.youtube.com/";
 
     // 모바일 웹 또는 PWA 모바일 웹 확인
     const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
@@ -19,7 +19,7 @@ const openYouTubeApp = (videoCode?: string) => {
             }
         } else {
             // 일반 모바일 웹일 경우
-            const youtubeAppUrl = videoCode ? `vnd.youtube:${videoCode}` : 'vnd.youtube://';
+            const youtubeAppUrl = videoId ? `vnd.youtube:${videoId}${time ? `?t=${time}` : ''}` : 'vnd.youtube://';
 
             // 딥링크로 앱 열기 시도
             window.location.href = youtubeAppUrl;
@@ -43,10 +43,15 @@ const openYouTubeApp = (videoCode?: string) => {
 </script>
 
 <template>
-    <UButton color="black" class="flex items-center justify-center gap-1" @click="openYouTubeApp(videoId)">
-        <Icon name="openmoji:youtube" size="20px" />
-        <div class="tracking-tighter">{{ text || "앱 열기" }}</div>
-    </UButton>
+    <template v-if="time">
+        <Icon name="openmoji:youtube" size="20px" @click="openYouTubeApp(videoId, time)" />
+    </template>
+    <template v-else>
+        <UButton color="black" class="flex items-center justify-center gap-1" @click="openYouTubeApp(videoId)">
+            <Icon name="openmoji:youtube" size="20px" s />
+            <div class="tracking-tighter">{{ text || "앱 열기" }}</div>
+        </UButton>
+    </template>
 </template>
 
 <style scoped></style>

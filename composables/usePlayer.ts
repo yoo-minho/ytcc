@@ -8,7 +8,7 @@ const scrollContainer = ref<HTMLElement | null>(null);
 const currentTime = ref(0);
 const videoId = ref("");
 const isMuted = ref(true);
-const loop = ref(5);
+const loop = ref(10);
 const t = ref();
 
 export function usePlayerProvider() {

@@ -95,7 +95,7 @@ const toggleMute = () => {
 };
 
 const toggleLoop = () => {
-  const loopTimes = [5, 10, 15, 30, 60];
+  const loopTimes = [10, 15, 30, 60];
   const currentIndex = loopTimes.indexOf(loop.value);
   const nextIndex = (currentIndex + 1) % loopTimes.length;
   loop.value = loopTimes[nextIndex];
@@ -178,7 +178,8 @@ const loading = computed(() => {
         <template v-else>
           <div class="flex flex-col">
             <template v-for="comment in comments">
-              <WatchCommentItem :id="`comment-${comment.sec}`" :comment="comment" @click="setTime(comment.sec)" />
+              <WatchCommentItem :id="`comment-${comment.sec}`" :video-id="videoId" :comment="comment"
+                @click="setTime(comment.sec)" />
             </template>
           </div>
         </template>

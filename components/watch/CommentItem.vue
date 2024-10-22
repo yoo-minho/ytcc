@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import type { TimelineCommentType } from "@/types/comm";
-
-const props = defineProps<{ comment: TimelineCommentType }>();
+const props = defineProps<{ videoId: string; comment: TimelineCommentType }>();
 
 const { currentTime, t, loop } = usePlayerProvider(); // 현재 재생 시간 추적
 const filterComments = computed(() => props.comment.comments
@@ -45,13 +43,16 @@ watch(currentTime, () => {
                             </p>
                         </template>
                     </div>
-                    <div class="flex justify-between w-full">
-                        <div v-if="comment.totalLikeCount > 0" class="flex items-center gap-1"
+                    <div class="flex justify-between w-full gap-2 items-center">
+                        <div v-if="comment.totalLikeCount > 0" class="flex items-center gap-1 flex-1"
                             :class="{ 'animate-bounce': comment.sec === t }">
                             <UIcon name="i-heroicons-hand-thumb-up" class="like-icon" />
                             <div>{{ formatCount(comment.totalLikeCount) }}</div>
                         </div>
                         <div v-else></div>
+                        <div>
+                            <UiYoutubeAppBtn :video-id="videoId" :time="comment.sec" />
+                        </div>
                         <div>
                             <ShareIcon :t="comment.sec" />
                         </div>
