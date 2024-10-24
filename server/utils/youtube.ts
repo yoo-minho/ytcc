@@ -94,20 +94,6 @@ export async function getPlaylistsInfo(playlistIds: string[]) {
   return response.data.items;
 }
 
-export async function getPlayListItemsById(playlistId: string, maxResults = 200) {
-  const firstData = await fetchPlaylistDataById(playlistId);
-  console.log(firstData.items?.length);
-  let allItems: any[] = [];
-  let nextPageToken = firstData.nextPageToken;
-
-  while (nextPageToken && allItems.length < maxResults) {
-    const data = await fetchPlaylistDataById(playlistId, nextPageToken);
-    allItems = [...allItems, ...(data.items || [])];
-    nextPageToken = data.nextPageToken;
-  }
-  return allItems.slice(0, maxResults);
-}
-
 export async function fetchPlaylistDataById(playlistId: string, pageToken?: string) {
   const params: any = {
     part: ["snippet", "contentDetails"],

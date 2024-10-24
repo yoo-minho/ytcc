@@ -25,7 +25,9 @@ defineProps<{ video: TrendingVideoType; idx?: number }>();
         </div>
         <div class="p-1 w-1/2">
             <div>
-                <p class="text-white text-sm leading-tight line-clamp-3 tracking-tight">{{ video.title }}</p>
+                <p class="text-white text-sm leading-tight line-clamp-3 tracking-tight">
+                    {{ video.title }}
+                </p>
                 <p class="text-gray-400 text-xs truncate">
                     {{ video.channelTitle }}
                 </p>

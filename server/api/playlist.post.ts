@@ -5,27 +5,37 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const { listId } = body;
 
-  const playlistItems = await getPlayListItemsById(listId);
-  if (!playlistItems || playlistItems.length === 0) throw new Error("동영상 데이터를 가져오는데 실패했습니다. (1)");
+  let allItems: any[] = [];
+  let nextToken = "";
 
-  const formattedPlaylistItems = playlistItems
-    .filter((item) => item.snippet?.title !== "Private video")
-    .map((item) => formatYoutubePlayListItem(item));
+  while (allItems.length < 100) {
+    const { items, nextPageToken } = await fetchPlaylistDataById(listId, nextToken);
 
-  console.log(formattedPlaylistItems.map((v) => v.id));
+    if (!items) break;
 
-  const videos = await getVideosByIds(formattedPlaylistItems.map((v) => v.id));
-  if (!videos) throw new Error("동영상 데이터를 가져오는데 실패했습니다. (2)");
+    const formattedPlaylistItems = items
+      .filter((item) => item.snippet?.title !== "Private video")
+      .map((item) => formatYoutubePlayListItem(item));
 
-  const formattedVideos = videos.map((v) => formatYoutubeVideo(v));
+    const videos = await getVideosByIds(formattedPlaylistItems.map((v) => v.id));
 
-  const mergedItems = formattedPlaylistItems
-    .map((fv) => ({
-      ...formattedVideos.find((v) => v.id === fv.id),
-      ...fv,
-    }))
-    .filter((v) => v.durationSec > 60)
-    .toSorted((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+    if (!videos) break;
 
-  return mergedItems;
+    const formattedVideos = videos.map((v) => formatYoutubeVideo(v));
+
+    const mergedItems = formattedPlaylistItems
+      .map((fv) => ({
+        ...formattedVideos.find((v) => v.id === fv.id),
+        ...fv,
+      }))
+      .filter((v) => v.durationSec > 60);
+
+    allItems = [...allItems, ...mergedItems];
+
+    if (!nextPageToken) break;
+
+    nextToken = nextPageToken;
+  }
+
+  return allItems.toSorted((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
 });

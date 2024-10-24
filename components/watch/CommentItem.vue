@@ -49,8 +49,9 @@ watch(currentTime, () => {
                             <Icon name="heroicons:hand-thumb-up" class="like-icon" />
                             <div>{{ formatCount(comment.totalLikeCount) }}</div>
                         </div>
+                        <div v-else></div>
                         <div class="flex gap-2">
-                            <UiYoutubeAppBtn :video-id="videoId" :time="comment.sec" />
+                            <!-- <UiYoutubeAppBtn :video-id="videoId" :time="comment.sec" /> -->
                             <ShareIcon :t="comment.sec" />
                         </div>
                     </div>

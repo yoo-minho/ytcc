@@ -12,6 +12,12 @@ export default defineNuxtConfig({
     googleApiKey: process.env.GOOGLE_API_KEY,
   },
 
+  colorMode: {
+    preference: "dark", // 디폴트 컬러모드 다크
+    fallback: "light",
+    classSuffix: "",
+  },
+
   gtag: {
     enabled: process.env.NODE_ENV === "production",
     id: "G-B9HSLQ7KY1",
@@ -44,13 +50,13 @@ export default defineNuxtConfig({
     },
     includeAssets: ["favicon.ico", "apple-touch-icon.png"],
     manifest: {
-      name: "유튜브",
+      name: "Youtube Moments",
       short_name: "Youtube Moments",
-      description: "YouTube 영상의 최고의 순간을 타임라인 댓글로 즐기고 공유하세요.",
+      description: "YouTube 영상 최고의 순간을 즐기고 공유하세요",
       start_url: "/",
       display: "standalone",
-      background_color: "#ff0000",
-      theme_color: "#000000",
+      background_color: "#000000", // 배경색 (빨간색)
+      theme_color: "#000000", // 테마색 (검은색)
       icons: [
         {
           src: "icon-192.png",
@@ -80,18 +86,18 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: "YouTube Moments - 영상의 최고의 순간을 즐기세요",
+      title: "YouTube Moments - 영상 최고의순간을 즐기세요",
       meta: [
         { charset: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0" },
         {
           hid: "description",
           name: "description",
-          content: "YouTube 영상의 최고의 순간을 타임라인 댓글로 즐기고 공유하세요.",
+          content: "YouTube 영상 최고의 순간을 즐기고 공유하세요.",
         },
         { property: "og:title", content: "YouTube Moments" },
-        { property: "og:description", content: "YouTube 영상의 최고의 순간을 타임라인 댓글로 즐기고 공유하세요." },
-        { property: "og:image", content: "/icon-512.png" },
+        { property: "og:description", content: "YouTube 영상 최고의 순간을 즐기고 공유하세요." },
+        { property: "og:image", content: "/og-image.png" },
         { property: "og:url", content: "https://youtube-moments.make1k.app" },
         { property: "og:type", content: "website" },
       ],

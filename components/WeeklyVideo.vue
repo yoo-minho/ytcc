@@ -12,10 +12,12 @@ const formattedPlaylists = computed(() => playlists.value?.filter(p => {
     return p.day?.includes(selectedDayOfWeek.value)
 }))
 
-const today = new Date().getDay();
+const yesterday = new Date();
+yesterday.setDate(yesterday.getDate() - 1);
+const yesterdayDay = yesterday.getDay();
 const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 const daysLabel = ['월', '화', '수', '목', '금', '토', '일', '완결'];
-const selectedDayOfWeek = ref(daysOfWeek[today]);
+const selectedDayOfWeek = ref(daysOfWeek[yesterdayDay]);
 
 const selectDayOfWeek = (day: string) => {
     selectedDayOfWeek.value = day;

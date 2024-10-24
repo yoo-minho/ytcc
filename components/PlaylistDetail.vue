@@ -2,6 +2,7 @@
 import type { TrendingVideoType } from "@/types/comm";
 import { useYoutubeApi } from "@/composables/api/useYoutubeApi";
 import YoutubeAppBtn from "./ui/YoutubeAppBtn.vue";
+import { WEEKLY_PLAYLIST_ARR } from "~/constants/youtube";
 
 const videoDataState = useVideoDataState();
 const youtubeApi = useYoutubeApi();
@@ -16,7 +17,19 @@ const { data: videos, status } = useAsyncData("playlist", () =>
     $fetch<TrendingVideoType[]>("/api/playlist", {
         method: "POST",
         body: { listId: listId },
-    })
+    }),
+    {
+        transform: (videos) => {
+            return videos?.map((v) => {
+                const matchingData = WEEKLY_PLAYLIST_ARR.find((v) => v.id === listId);
+                let title = v.title;
+                if (typeof matchingData?.prettyTitle === 'function') {
+                    title = matchingData.prettyTitle(v.title);
+                }
+                return { ...v, title };
+            });
+        },
+    }
 );
 
 const playlist = computed(() => playlists.value?.find(p => p.playlistId === listId));

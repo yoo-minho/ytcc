@@ -10,7 +10,7 @@ defineProps<{ playlist: any; thumbnail: boolean }>();
                 </div>
                 <div class="text-xs tracking-tight">
                     <p>{{ playlist.cycle }}</p>
-                    <p class="text-white font-bold leading-tight line-clamp-1 ">{{ playlist.title }}</p>
+                    <p class="text-white font-bold leading-tight line-clamp-1 text-base">{{ playlist.title }}</p>
                     <p class="text-gray-300 line-clamp-1 break-keep"> {{ playlist.description }}</p>
                     <p v-if="playlist.actor" class="text-gray-400 mt-1"> 출연 : {{ playlist.actor }} </p>
                     <p class="text-gray-400 line-clamp-1"> 제작채널 : {{ playlist.channelTitle }}</p>
