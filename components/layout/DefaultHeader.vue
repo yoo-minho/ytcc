@@ -50,7 +50,7 @@ onMounted(
                 </div>
             </template>
         </div>
-        <UButton v-if="isPWAUnInstalled && $route.path === '/'" color="white" @click="install()">
+        <UButton v-if="isPWAUnInstalled && $route.query.page === undefined" color="white" @click="install()">
             <span class="text-sm">앱설치</span>
         </UButton>
         <UiShareIcon :t="0" class="flex text-[24px]" />
