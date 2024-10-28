@@ -1,6 +1,5 @@
 <script setup lang='ts'>
 const displayState = useDisplayState();
-const toast = useToast();
 
 const moveMain = () => navigateTo({ path: '/' });
 

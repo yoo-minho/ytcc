@@ -4,7 +4,7 @@ const isOpen = defineModel<boolean>();
 
 <template>
     <div>
-        <UModal :v-model="isOpen">
+        <UModal v-model="isOpen">
             <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-300' }">
                 <template #header>
                     <div class="flex items-center justify-between">
@@ -14,8 +14,11 @@ const isOpen = defineModel<boolean>();
                     </div>
                 </template>
                 <div class="flex flex-col gap-2 tracking-tighter text-sm">
+                    <div class="flex items-center gap-2 pb-1">
+                        <span>0. 카톡 인앱 브라우저일시, "Chrome에서 열기" 이후 진행</span>
+                    </div>
                     <div class="flex items-center gap-2">
-                        <span>1. 브라우저</span>
+                        <span>1. 브라우저 </span>
                         <UButton variant="outline">
                             <UIcon name="i-mingcute-upload-line" />
                         </UButton>

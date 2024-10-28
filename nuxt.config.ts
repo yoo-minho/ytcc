@@ -55,8 +55,8 @@ export default defineNuxtConfig({
       description: "YouTube 영상 최고의 순간을 즐기고 공유하세요",
       start_url: "/",
       display: "standalone",
-      background_color: "#000000", // 배경색 (빨간색)
-      theme_color: "#000000", // 테마색 (검은색)
+      background_color: "#000000",
+      theme_color: "#000000",
       icons: [
         {
           src: "icon-192.png",
@@ -86,7 +86,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: "YouTube Moments - 영상 최고의순간을 즐기세요",
+      title: "YouTube Moments - 영상 최고의 순간을 즐기세요",
       meta: [
         { charset: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0" },
