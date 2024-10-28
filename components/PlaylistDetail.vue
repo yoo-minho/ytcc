@@ -7,8 +7,10 @@ import { WEEKLY_PLAYLIST_ARR } from "~/constants/youtube";
 const videoDataState = useVideoDataState();
 const youtubeApi = useYoutubeApi();
 
-const { data: playlists } = youtubeApi.fetchWeeklyVideos();
-videoDataState.value.weeklyVideoData = playlists.value || [];
+const { data: playlists, status: playlistsStatus } = youtubeApi.fetchWeeklyVideos();
+watch(playlists, () => {
+    videoDataState.value.weeklyVideoData = playlists.value || [];
+})
 
 const route = useRoute();
 const { list: listId } = route.query;
@@ -36,22 +38,9 @@ const playlist = computed(() => playlists.value?.find(p => p.playlistId === list
 </script>
 <template>
     <div class="w-full absolute">
-        <div class="p-4">
-            <PlaylistItem v-if="playlist" :playlist="playlist" :thumbnail="false" />
-        </div>
-        <div class="px-4 pb-2">
-            <YoutubeAppBtn :playlist-id="String(listId)" text="앱에서 재생목록 열기" />
-        </div>
-        <template v-if="status === 'pending'">
-            <div class="p-4">로딩중...</div>
-        </template>
-        <template v-else>
-            <template v-if="videos">
-                <div class="px-4">
-                    <PlaylistPlayListItem v-for="video in videos" :video="video" @click="moveVideoDetail(video.id)" />
-                </div>
-            </template>
-        </template>
+        <SharedPlaylistList :playlists="[playlist]" :status="playlistsStatus" :thumbnail="false" class="m-4" />
+        <YoutubeAppBtn :playlist-id="String(listId)" text="앱에서 재생목록 열기" class="mx-4 mb-2" />
+        <SharedVideoList :videos="videos || []" :status="status" class="px-4" />
     </div>
 </template>
 

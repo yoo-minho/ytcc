@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const props = defineProps<{ videoId: string; comment: TimelineCommentType }>();
 
-const { currentTime, t, loop } = usePlayerProvider(); // 현재 재생 시간 추적
+const { currentTime, t, loop } = usePlayerProvider();
 const filterComments = computed(() => props.comment.comments
     .filter((v) => Boolean(v.comment.trim()))
     .splice(0, 3));
@@ -52,7 +52,7 @@ watch(currentTime, () => {
                         <div v-else></div>
                         <div class="flex gap-2">
                             <!-- <UiYoutubeAppBtn :video-id="videoId" :time="comment.sec" /> -->
-                            <ShareIcon :t="comment.sec" />
+                            <UiShareIcon :t="comment.sec" />
                         </div>
                     </div>
                 </div>

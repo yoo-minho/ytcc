@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import TrendVideo from "@/components/TrendVideo.vue";
 import WeeklyVideo from "@/components/WeeklyVideo.vue";
-import VideoDetail from "@/components/VideoDetail.vue";
 import PlaylistDetail from "@/components/PlaylistDetail.vue";
 
 const displayState = useDisplayState();
@@ -20,10 +19,10 @@ const currentComponent = computed(
 <template>
     <div class="relative flex flex-wrap justify-center h-full">
         <Transition name="fade">
-            <LandingHero v-if="displayState.currentPage === ''" class="absolute inset-0 z-10" />
+            <LandingHero v-if="displayState.currentPage === '' && !$route.query.v" class="absolute inset-0 z-10" />
         </Transition>
         <Transition name="slide-up">
-            <VideoDetail v-show="displayState.currentPage === 'video'" class="absolute inset-0 z-30 bg-black" />
+            <WatchPage v-show="$route.query.v" class="absolute inset-0 z-30 bg-black" />
         </Transition>
         <Transition name="slide">
             <component :is="currentComponent" v-if="currentComponent" class="abolute inset-0 z-20 bg-black" />

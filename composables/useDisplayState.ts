@@ -10,11 +10,15 @@ export const useDisplayState = () => {
   if (!watchInitialized) {
     watchInitialized = true;
     watch(
-      () => route.query.page,
-      (newPage) => {
-        state.value.currentPage = (newPage as string) || "";
+      () => route.query,
+      () => {
+        if (!!route.query.v) {
+          state.value.currentPage = "video";
+        } else {
+          state.value.currentPage = (route.query.page as string) || "";
+        }
       },
-      { immediate: true }
+      { immediate: true, deep: true }
     );
   }
 
@@ -31,11 +35,7 @@ export const moveBack = () => {
 };
 
 export const moveVideoDetail = (videoId: string) => {
-  const query = {
-    page: "video",
-    v: videoId,
-  } as any;
-  navigateTo({ query });
+  navigateTo({ query: { v: videoId } });
 };
 
 export const movePlaylistDetail = (listId: string) => {

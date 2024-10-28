@@ -2,21 +2,30 @@
 const displayState = useDisplayState();
 const toast = useToast();
 
-
 const moveMain = () => navigateTo({ path: '/' });
 
-const copyLink = async () => {
-    await navigator.clipboard.writeText(location.href);
-    toast.add({
-        id: "copyLink",
-        title: "링크 복사! 공유를 시작하세요!",
-        icon: "i-heroicons-check-circle",
-    });
-} 
+const isOpen = ref(false);
+const install = async () => {
+    localStorage.removeItem("true");
+    const nuxtApp = useNuxtApp();
+    if (nuxtApp.$pwa && nuxtApp.$pwa.showInstallPrompt) {
+        nuxtApp.$pwa.install();
+    } else {
+        isOpen.value = true;
+    }
+};
+
+const isPWAUnInstalled = ref(false);
+onMounted(
+    () => {
+        const nuxtApp = useNuxtApp();
+        isPWAUnInstalled.value = nuxtApp.$pwa?.isPWAInstalled === false;
+    }
+);
 </script>
 <template>
-    <div v-if="displayState.currentPage !== 'video'"
-        class="px-4 flex items-center gap-3 h-[60px] border-b border-gray-800 w-full">
+    <div v-if="$route.query.v"></div>
+    <div v-else class="px-4 flex items-center gap-3 h-[60px] border-b border-gray-800 w-full">
         <div v-if="String(displayState.currentPage) !== ''" @click="moveBack()"
             class="flex items-center cursor-pointer">
             <UIcon name="i-ph-arrow-left-bold" size="28px" />
@@ -41,11 +50,12 @@ const copyLink = async () => {
                 </div>
             </template>
         </div>
-        <!-- <MyIcon :show="displayState.currentPage === ''" name="ph:compass" size="28px" @click="openTrendVideo()" />
-        <MyIcon :show="displayState.currentPage === ''" name="ph:calendar-blank" size="28px"
-            @click="openWeeklyVideo()" /> -->
-        <MyIcon :show="true" name="ph:share-network" size="24px" @click="copyLink()" />
+        <UButton v-if="isPWAUnInstalled && $route.path === '/'" color="white" @click="install()">
+            <span class="text-sm">앱설치</span>
+        </UButton>
+        <UiShareIcon :t="0" class="flex text-[24px]" />
     </div>
+    <ModalPwaInstall v-model="isOpen" />
 </template>
 
 <style lang='scss' scoped></style>

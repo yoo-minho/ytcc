@@ -9,7 +9,8 @@ const {
     clear,
 } = usePlayerProvider();
 
-const props = defineProps<{ videoId?: string, loading: boolean }>();
+const props = defineProps<{ videoId?: string, status: string }>();
+const loading = computed(() => ['pending', 'idle', ''].includes(props.status));
 
 onMounted(() => {
     setYoutubePlayer();

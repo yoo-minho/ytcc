@@ -1,5 +1,6 @@
 <script setup lang="ts">
 </script>
+
 <template>
     <div class="dark">
         <UCard class="w-full flex gap-2 relative overflow-hidden rounded-none cursor-pointer" :ui="{
@@ -23,7 +24,7 @@
                             <div>-</div>
                         </div>
                         <div>
-                            <ShareIcon :t="0" />
+                            <UiShareIcon :t="0" />
                         </div>
                     </div>
                 </div>
@@ -32,4 +33,4 @@
     </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style scoped></style>

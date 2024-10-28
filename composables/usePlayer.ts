@@ -9,7 +9,7 @@ const currentTime = ref(0);
 const videoId = ref("");
 const isMuted = ref(true);
 const loop = ref(10);
-const t = ref();
+const t = ref(0);
 
 export function usePlayerProvider() {
   const route = useRoute();
@@ -26,6 +26,10 @@ export function usePlayerProvider() {
     if (player.value?.getCurrentTime) {
       currentTime.value = await player.value.getCurrentTime();
     }
+  };
+
+  const setT = (sec: number) => {
+    t.value = sec;
   };
 
   const clear = () => {
@@ -52,8 +56,6 @@ export function usePlayerProvider() {
         player.value.stopVideo();
         return;
       }
-
-      console.log("seekTo");
 
       try {
         await player.value.playVideo();
@@ -88,6 +90,7 @@ export function usePlayerProvider() {
     isMuted,
     loop,
     scrollContainer,
+    setT,
     updateTime,
     seekTo,
     scrollToElement,

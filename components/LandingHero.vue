@@ -112,28 +112,16 @@ const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
                 <div class="flex gap-2 items-center justify-between">
                     <div>
                         <div class="text-xl font-bold flex items-center gap-1">
-                            <MyIcon name="ph:calendar-blank" /> {{ daysOfWeek[yesterdayDay] }}요웹예능
+                            <Icon name="ph:calendar-blank" /> {{ daysOfWeek[yesterdayDay] }}요웹예능
                         </div>
                     </div>
                     <div class="cursor-pointer text-sm text-gray-400 flex items-center" @click="openWeeklyVideo()">
                         전체 보기
-                        <MyIcon name="ph:caret-right-bold" />
+                        <Icon name="ph:caret-right-bold" />
                     </div>
                 </div>
-                <div>
-                    <div class="grid grid-cols-2 py-2 gap-4">
-                        <template v-if="playlistsStatus !== 'success'">
-                            <template v-for="n in 2 ">
-                                <PlaylistSkeletonItem />
-                            </template>
-                        </template>
-                        <template v-else>
-                            <template v-for="(playlist) in todayPlaylists">
-                                <PlaylistItem :playlist="playlist" :thumbnail="true" />
-                            </template>
-                        </template>
-                    </div>
-                </div>
+                <SharedPlaylistList :playlists="todayPlaylists" :status="playlistsStatus" :thumbnail="true"
+                    class="py-2" />
             </div>
 
             <UDivider class="dark" />
@@ -149,25 +137,16 @@ const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
                         전체 보기 <Icon name="ph:caret-right-bold"></Icon>
                     </div>
                 </div>
-                <div>
-                    <template v-if="videoStatus === 'pending'">
-                        <div v-for="n in 3 ">
-                            <PlaylistPlayListSkeletonItem />
-                        </div>
-                    </template>
-                    <template v-else>
-                        <div v-for="(video, idx) in trend3Videos">
-                            <PlaylistPlayListItem :video="video" :idx="idx" />
-                        </div>
-                    </template>
-                </div>
+                <SharedVideoList :videos="trend3Videos" :status="videoStatus" class="pt-2" />
             </div>
 
             <UDivider class="dark" />
-
-
         </div>
-        <div class="flex flex-col items-center p-4 pb-12">
+        <div class="flex flex-col items-center px-4 pb-12 gap-1">
+            <UButton color="white" to="https://www.threads.net/@irontaek" target="blog" variant="ghost">
+                <UIcon name="i-ph-threads-logo-bold" class="text-base" />
+                <div class="text-base underline">만든이 유철택</div>
+            </UButton>
             <div>Powered by <span class="underline" @click="openApiSite()">YouTubeDataAPI</span></div>
             <div>© 2024 Make1k. All rights reserved.</div>
         </div>
