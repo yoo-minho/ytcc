@@ -3,7 +3,9 @@
 
 <template>
     <div>
-        플레이리스트가 없네요!
+        🚫 Youtube Data API 할당량을 초과하였습니다.
+        <br>
+        ⏰ 매일 한국시간 오후 5시 초기화됩니다.
     </div>
 </template>
 
