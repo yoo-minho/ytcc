@@ -29,8 +29,12 @@ export default defineEventHandler(async (event) => {
     .filter((c) => c.sec < formatDuration2sec(videoDuration) - 5) //최대 재생시간 이하로 뽑히는
     .map((c) => ({ ...c, totalLikeCount: c.totalLikeCount }));
 
+  console.log(response.data?.items?.[0]?.snippet);
+
   return {
     channelTitle: response.data?.items?.[0]?.snippet?.channelTitle,
+    videoTitle: response.data?.items?.[0]?.snippet?.title,
+    thumbnail: response.data?.items?.[0]?.snippet?.thumbnails?.maxres?.url,
     comments: _items.splice(0, 20),
   };
 });

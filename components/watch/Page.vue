@@ -18,13 +18,13 @@ watch(
 const { data, status, error } = await useAsyncData(
   "time-comment",
   async () => {
-    if (!videoId.value) return { comments: [], channelTitle: "" };
+    if (!videoId.value) return { comments: [], channelTitle: "", thumbnail: "", title: "" };
     return await $fetch<TimelineCommentWrapType>(`/api/time-comment/${videoId.value}`);
   },
   {
-    lazy: true,
-    server: false,
-    watch: [videoId],
+    // lazy: true,
+    // server: false,
+    // watch: [videoId],
   }
 );
 
@@ -37,7 +37,7 @@ watch(data, () => {
     comments.value = data.value.comments;
     setT(comments.value?.[0]?.sec || 0);
   }
-});
+}, { immediate: true });
 
 watch(t, () => {
   if (t.value === 0) return;
@@ -47,6 +47,15 @@ watch(t, () => {
 
   const currentTimelineComment = comments.value.find((v: any) => v.sec === t.value)?.comments[0].comment;
   updateHeaderMessage(currentTimelineComment);
+}, { immediate: true });
+
+useSeoMeta({
+  title: headerMessage,
+  ogTitle: headerMessage,
+  description: data.value?.title,
+  ogDescription: data.value?.title,
+  twitterCard: "summary_large_image",
+  ogImage: data.value?.thumbnail || '/og-image.png'
 });
 </script>
 <template>

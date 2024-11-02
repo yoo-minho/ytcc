@@ -57,12 +57,14 @@ function extractYouTubeInfo(url: string) {
     return { videoId, playlistId, empty: videoId === '' && playlistId === '' };
 }
 
-const openApiSite = () => {
-    navigateTo('https://developers.google.com/youtube/v3?hl=ko', {
-        external: true,
-        open: { target: 'developers.google.com/youtube' }
-    });
+const openExternalUrl = (url: string) => {
+    navigateTo(url, { external: true, open: { target: url } });
 }
+
+const openApiSite = () => {
+    openExternalUrl('https://developers.google.com/youtube/v3?hl=ko');
+}
+
 
 // 최근 클립보드 내용을 가져와 URL 입력란에 붙여넣는 함수
 const pasteFromClipboard = async () => {
@@ -79,6 +81,7 @@ const pasteFromClipboard = async () => {
 
 const openTrendVideo = () => navigateTo({ query: { page: 'trend' } });
 const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
+
 
 </script>
 <template>
@@ -143,10 +146,11 @@ const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
             <UDivider class="dark" />
         </div>
         <div class="flex flex-col items-center px-4 pb-12 gap-1">
-            <UButton color="white" to="https://www.threads.net/@irontaek" target="blog" variant="ghost">
+            <div class="cursor-pointer flex items-center gap-1"
+                @click="openExternalUrl('https://www.threads.net/@irontaek')">
                 <UIcon name="i-ph-threads-logo-bold" class="text-base" />
                 <div class="text-base underline">만든이 유철택</div>
-            </UButton>
+            </div>
             <div>Powered by <span class="underline" @click="openApiSite()">YouTubeDataAPI</span></div>
             <div>© 2024 Make1k. All rights reserved.</div>
         </div>

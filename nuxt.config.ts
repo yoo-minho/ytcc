@@ -4,9 +4,9 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
 
-  ssr: false,
+  ssr: true,
 
-  modules: ["@nuxt/ui", "nuxt-gtag", "@nuxt/icon", "@vite-pwa/nuxt"],
+  modules: ["@nuxt/ui", "nuxt-gtag", "@nuxt/icon", "@vite-pwa/nuxt", "@nuxtjs/seo"],
 
   runtimeConfig: {
     googleApiKey: process.env.GOOGLE_API_KEY,
@@ -113,5 +113,15 @@ export default defineNuxtConfig({
         },
       ],
     },
+  },
+
+  site: {
+    url: "https://youtube-moments.make1k.app",
+    defaultLocale: "ko",
+  },
+
+  sitemap: {
+    xsl: false,
+    exclude: ["/*/components/**", "/*/data/**"],
   },
 });
