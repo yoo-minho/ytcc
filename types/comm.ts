@@ -10,6 +10,7 @@ export type TimelineCommentWrapType = {
   title: string;
 };
 export type TimelineCommentType = {
+  time: string;
   sec: number;
   totalLikeCount: number;
   comments: { comment: string; likeCount: number }[];

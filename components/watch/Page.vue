@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { NuxtError } from '#app';
+
 const { t, setT, seekTo, scrollToElement } = usePlayerProvider();
 
 const videoId = ref();
@@ -21,11 +23,7 @@ const { data, status, error } = await useAsyncData(
     if (!videoId.value) return { comments: [], channelTitle: "", thumbnail: "", title: "" };
     return await $fetch<TimelineCommentWrapType>(`/api/time-comment/${videoId.value}`);
   },
-  {
-    // lazy: true,
-    // server: false,
-    // watch: [videoId],
-  }
+  { watch: [videoId] }
 );
 
 const comments = ref<TimelineCommentType[]>([]);
