@@ -14,8 +14,21 @@ export default defineEventHandler(async (event) => {
   const timeStrings = generateTimeStrings(maxHour);
   const isTimeSearching = timeStrings.length < minCycles;
 
-  const { channelTitle, title, thumbnails } = response.data?.items?.[0]?.snippet || {};
-  const videoInfo = { channelTitle: channelTitle, videoTitle: title, thumbnail: thumbnails?.maxres?.url };
+  const { channelTitle, title, thumbnails, channelId } = response.data?.items?.[0]?.snippet || {};
+
+  // 채널 정보 가져오기
+  const channelResponse = await youtube.channels.list({
+    part: ["snippet"],
+    id: [channelId || ""],
+  });
+  const channelThumbnail = channelResponse.data?.items?.[0]?.snippet?.thumbnails?.default?.url;
+
+  const videoInfo = {
+    channelTitle: channelTitle,
+    videoTitle: title,
+    thumbnail: thumbnails?.maxres?.url,
+    channelThumbnail,
+  };
 
   let _items;
   let totalFetchedCount = 0;

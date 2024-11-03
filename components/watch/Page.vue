@@ -1,18 +1,15 @@
 <script setup lang="ts">
-import type { NuxtError } from '#app';
-
-const { t, setT, seekTo, scrollToElement } = usePlayerProvider();
+const { headerMessage, changeT } = usePlayerProvider();
 
 const videoId = ref();
+const comments = ref<TimelineCommentType[]>([]);
 const route = useRoute();
-const headerMessage = ref("");
-const updateHeaderMessage = (title: string = "댓글 누르면 순간 플레이") => (headerMessage.value = title)
 
 watch(
   () => route.query.v,
   () => {
     videoId.value = route.query.v ? String(route.query.v) : undefined;
-    updateHeaderMessage();
+    headerMessage.value = "댓글 누르면 순간 플레이";
   },
   { immediate: true }
 );
@@ -26,32 +23,17 @@ const { data, status, error } = await useAsyncData(
   { watch: [videoId] }
 );
 
-const comments = ref<TimelineCommentType[]>([]);
-const channelTitle = ref("채널이름");
-
 watch(data, () => {
-  if (data.value) {
-    channelTitle.value = data.value.channelTitle || "채널이름";
-    comments.value = data.value.comments;
-    setT(comments.value?.[0]?.sec || 0);
-  }
-}, { immediate: true });
-
-watch(t, () => {
-  if (t.value === 0) return;
-
-  seekTo();
-  scrollToElement();
-
-  const currentTimelineComment = comments.value.find((v: any) => v.sec === t.value)?.comments[0].comment;
-  updateHeaderMessage(currentTimelineComment);
+  comments.value = data.value?.comments || [];
+  const firstSec = comments.value[0]?.sec || 0;
+  changeT(firstSec, comments.value);
 }, { immediate: true });
 
 useSeoMeta({
   title: headerMessage,
   ogTitle: headerMessage,
-  description: data.value?.title,
-  ogDescription: data.value?.title,
+  description: data.value?.videoTitle,
+  ogDescription: data.value?.videoTitle,
   twitterCard: "summary_large_image",
   ogImage: data.value?.thumbnail || '/og-image.png'
 });
@@ -65,12 +47,14 @@ useSeoMeta({
     </div>
     <WatchYoutubePlayer :video-id="videoId" :status="status" />
     <template v-if="videoId">
-      <WatchVideoFooter :video-id="videoId" />
+      <WatchVideoFooter :video-id="videoId" :video-title="data?.videoTitle" :channel-title="data?.channelTitle"
+        :channel-thumbnail="data?.channelThumbnail" />
     </template>
     <div class="flex-1 flex flex-col h-0 bg-gray-900">
       <div class="flex items-center justify-between gap-2 p-4 border-b border-gray-800 h-[60px]">
         <div class="flex-1 tracking-tight flex items-center gap-2 font-bold">
           타임라인 댓글
+          <div>{{ data?.commentCount }}</div>
           <div class="bg-white text-black rounded-md px-2 py-1 text-sm">인기순</div>
         </div>
         <div class="flex cursor-pointer" @click="moveBack()">
@@ -78,7 +62,8 @@ useSeoMeta({
         </div>
       </div>
       <template v-if="videoId">
-        <WatchCommentList :comments="comments" :video-id="videoId" :status="status" :error="error" />
+        <WatchCommentList :comments="comments" :video-id="videoId" :status="status" :error="error"
+          @change-time="(sec) => changeT(sec, comments)" />
       </template>
     </div>
   </div>

@@ -4,10 +4,13 @@ export type CommentType = {
   likeCount: number;
 };
 export type TimelineCommentWrapType = {
-  comments: TimelineCommentType[];
   channelTitle: string;
+  videoTitle: string;
   thumbnail: string;
-  title: string;
+  method: string;
+  totalFetchedCount: number;
+  commentCount: number;
+  comments: TimelineCommentType[];
 };
 export type TimelineCommentType = {
   time: string;

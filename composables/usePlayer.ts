@@ -10,6 +10,7 @@ const videoId = ref("");
 const isMuted = ref(true);
 const loop = ref(10);
 const t = ref(0);
+const headerMessage = ref("");
 
 export function usePlayerProvider() {
   const route = useRoute();
@@ -22,14 +23,14 @@ export function usePlayerProvider() {
     t.value = Number(route.query.t);
   }
 
+  if (route.query.v) {
+    videoId.value = String(route.query.v);
+  }
+
   const updateTime = async () => {
     if (player.value?.getCurrentTime) {
       currentTime.value = await player.value.getCurrentTime();
     }
-  };
-
-  const setT = (sec: number) => {
-    t.value = sec;
   };
 
   const clear = () => {
@@ -65,20 +66,31 @@ export function usePlayerProvider() {
       }
 
       // 재생이 시작될 때까지 대기합니다.
-      await new Promise<void>((resolve) => {
-        const checkPlayingState = async () => {
-          const state = await player.value?.getPlayerState();
-          if (state === PlayerStates.PLAYING) {
-            // 1은 재생 중 상태
-            resolve();
-          } else {
-            setTimeout(checkPlayingState, 50); // 50ms 간격으로 재확인
-          }
-        };
-        checkPlayingState();
-      });
+      // await new Promise<void>((resolve) => {
+      //   const checkPlayingState = async () => {
+      //     const state = await player.value?.getPlayerState();
+      //     if (state === PlayerStates.PLAYING) {
+      //       // 1은 재생 중 상태
+      //       resolve();
+      //     } else {
+      //       setTimeout(checkPlayingState, 50); // 50ms 간격으로 재확인
+      //     }
+      //   };
+      //   checkPlayingState();
+      // });
 
       await player.value.seekTo(t.value, true);
+    }
+  };
+
+  const changeT = (sec: number, comments: TimelineCommentType[]) => {
+    t.value = sec;
+    seekTo();
+    scrollToElement();
+
+    const currentTimelineComment = comments.find((v) => v.sec === t.value)?.comments[0].comment;
+    if (currentTimelineComment) {
+      headerMessage.value = currentTimelineComment;
     }
   };
 
@@ -90,10 +102,11 @@ export function usePlayerProvider() {
     isMuted,
     loop,
     scrollContainer,
-    setT,
+    headerMessage,
     updateTime,
     seekTo,
     scrollToElement,
+    changeT,
     clear,
   };
   provide("playerContext", playerContext);

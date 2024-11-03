@@ -21,21 +21,17 @@ export function formatPublishedAt(publishedAt: string, format?: string): string 
   return `${diffYears}년 전`;
 }
 
-export function formatRelativeDate(publishedAt: string, format?: string): string {
+export function formatRelativeDate(publishedAt: string): string {
   const published = dayjs(publishedAt);
-  if (format) return replaceWeekdaysToKorean(published.format(format));
-
   const now = dayjs();
-  const diffDays = now.diff(published, "day");
+  const diffHours = now.diff(published, "hour");
+  const diffDays = Math.floor(diffHours / 24);
+  const remainingHours = diffHours % 24;
 
-  if (diffDays === 0) return "오늘";
-  if (diffDays === 1) return "어제";
-
-  const formattedDate = published.format("MM/DD(ddd)");
-  const koreanWeekdays = ["일", "월", "화", "수", "목", "금", "토"];
-  const weekdayIndex = published.day();
-
-  return formattedDate.replace(/\([a-zA-Z]+\)/, `(${koreanWeekdays[weekdayIndex]})`);
+  if (diffDays > 0) {
+    return `영상 업로드한지 ${diffDays}일 ${remainingHours}시간`;
+  }
+  return `영상 업로드한지 ${diffHours}시간`;
 }
 
 export function formatViewCount(viewCount: string, milestone: boolean = false): string {

@@ -30,8 +30,11 @@ async function getVideos(nextPageToken?: string) {
   const channels = await getChannelDetails(channelIds);
   if (!channels) throw new Error("채널 데이터를 가져오는데 실패했습니다.");
 
+  const _videos = videos.map((video) => formatYoutubeVideo(video, channels));
+  // .filter((video) => video.channelCountry === "KR");
+
   return {
     pageToken,
-    videos: videos.map((video) => formatYoutubeVideo(video, channels)).filter((video) => video.channelCountry === "KR"),
+    videos: _videos,
   };
 }

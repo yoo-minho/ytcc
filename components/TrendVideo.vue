@@ -12,7 +12,7 @@ watch(videos, () => {
 </script>
 <template>
     <div class="w-full px-4 pt-3">
-        <SharedVideoList :videos="videos || []" :status="status" :error="error" :rank="true" />
+        <SharedVideoList :videos="videos || []" :status="status" :error="error" :rank="true" :loading-item-count="8"/>
     </div>
 </template>
 <style lang="scss" scoped></style>

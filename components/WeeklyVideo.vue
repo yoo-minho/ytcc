@@ -36,7 +36,8 @@ const selectDayOfWeek = (day: string) => {
         </div>
         <div style="calc(100% - 40px)">
             <div class="py-2 px-4">
-                <SharedPlaylistList :playlists="formattedPlaylists || []" :status="status" :thumbnail="true" />
+                <SharedPlaylistList :playlists="formattedPlaylists || []" :status="status" :thumbnail="true"
+                    :loading-item-count="8" />
             </div>
         </div>
     </div>

@@ -1,8 +1,17 @@
 <script setup lang="ts">
-const props = defineProps<{ videoId: string; comments: TimelineCommentType[], status: string, error: any }>();
+const props = defineProps<{
+    videoId: string;
+    comments: TimelineCommentType[];
+    status: string;
+    error: any;
+}>();
 
-const loading = computed(() => ['pending', 'idle', ''].includes(props.status));
-const { scrollContainer, setT } = usePlayerProvider();
+const emit = defineEmits<{
+    (e: 'changeTime', sec: number): void
+}>()
+
+const loading = computed(() => ["pending", "idle", ""].includes(props.status));
+const { scrollContainer } = usePlayerProvider();
 </script>
 
 <template>
@@ -14,7 +23,7 @@ const { scrollContainer, setT } = usePlayerProvider();
             <template v-else>
                 <template v-for="comment in comments">
                     <WatchCommentListItem :id="`comment-${comment.sec}`" :video-id="videoId" :comment="comment"
-                        @click="setT(comment.sec)" />
+                        @click="emit('changeTime', comment.sec)" />
                 </template>
             </template>
         </div>
