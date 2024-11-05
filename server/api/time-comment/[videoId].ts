@@ -10,8 +10,8 @@ export default defineEventHandler(async (event) => {
   const commentCount = +(response.data?.items?.[0]?.statistics?.commentCount || 0); //댓글 + 대댓글
   const minCycles = Math.ceil(commentCount / 100);
   const { hours, minutes } = formatDurationJson(videoDuration);
-  const maxHour = Math.min(hours * 60 + minutes, 60); //1시간 넘는 것들
-  const timeStrings = generateTimeStrings(maxHour);
+  const maxMin = Math.min(hours * 60 + minutes, 9); //0~9로 search 접근
+  const timeStrings = generateTimeStrings(maxMin); //timeStrings.length는 max 10
   const isTimeSearching = timeStrings.length < minCycles;
 
   const { channelTitle, title, thumbnails, channelId } = response.data?.items?.[0]?.snippet || {};
@@ -32,13 +32,6 @@ export default defineEventHandler(async (event) => {
 
   let _items;
   let totalFetchedCount = 0;
-
-  if (timeStrings.length > 20 && minCycles > 20) {
-    throw createError({
-      statusCode: 429, // Too Many Requests
-      message: "댓글이 너무 많아 처리하기 어렵습니다!",
-    });
-  }
 
   if (isTimeSearching) {
     const commentPromises = timeStrings.map((timeString) => fetchComments(videoId, timeString));
@@ -78,7 +71,7 @@ async function fetchComments(videoId: string, searchTerms?: string) {
     items = [...items, ...res.items];
     totalCount += res.pageInfo.totalResults;
     fetchedCount++;
-    if (searchTerms) break;
+    if (searchTerms && fetchedCount > 1) break; //최대 2페이징까지만
     if (!res.nextPageToken) break;
     nextPageToken = res.nextPageToken;
   }

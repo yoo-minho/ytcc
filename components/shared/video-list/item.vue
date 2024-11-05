@@ -25,18 +25,14 @@ defineProps<{ video: TrendingVideoType; idx?: number }>();
         </div>
         <div class="w-1/2">
             <div>
-                <p class="text-white text-sm leading-tight line-clamp-3 tracking-tight">
+                <p class="text-white text-base leading-tight line-clamp-3 tracking-tight break-keep">
                     {{ video.title }}
                 </p>
                 <p class="text-gray-400 text-xs truncate">
                     {{ video.channelTitle }}
                 </p>
                 <p class="text-gray-400 text-xs">
-                    {{ video.publishedAt }}
-                </p>
-                <p class="text-gray-400 text-xs">
-                    조회수 {{ formatViewCount(video.viewCount) }} •
-                    댓글수 {{ formatViewCount(video.commentCount) }}
+                    조회수 {{ formatViewCount(video.viewCount) }} • {{ video.publishedAt }}
                 </p>
             </div>
         </div>

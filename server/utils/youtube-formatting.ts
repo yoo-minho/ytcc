@@ -1,6 +1,6 @@
 import { TrendingVideoType } from "@/types/comm";
 import { YOUTUBE_CATEGORY_MAP, YouTubeCategory } from "@/constants/youtube";
-import { formatDuration, formatDuration2sec, formatPublishedAt, formatRelativeDate } from "@/utils/formatting";
+import { formatDuration, formatDuration2sec, formatPublishedAt } from "@/utils/formatting";
 import { youtube_v3 } from "googleapis";
 
 export const getChannelDetailByChannels = (channels: youtube_v3.Schema$Channel[], channelId: string) => {
@@ -44,7 +44,7 @@ export const formatYoutubeVideo = (
     categoryId: v.categoryId,
     viewCount: v.viewCount,
     commentCount: v.commentCount,
-    publishedAt: formatRelativeDate(v.publishedAt),
+    publishedAt: formatPublishedAt(v.publishedAt),
     duration: formatDuration(v.duration),
     durationSec: formatDuration2sec(v.duration),
     categoryName: YOUTUBE_CATEGORY_MAP[v.categoryId as YouTubeCategory] || "알 수 없음",

@@ -21,19 +21,6 @@ export function formatPublishedAt(publishedAt: string, format?: string): string 
   return `${diffYears}년 전`;
 }
 
-export function formatRelativeDate(publishedAt: string): string {
-  const published = dayjs(publishedAt);
-  const now = dayjs();
-  const diffHours = now.diff(published, "hour");
-  const diffDays = Math.floor(diffHours / 24);
-  const remainingHours = diffHours % 24;
-
-  if (diffDays > 0) {
-    return `영상 업로드한지 ${diffDays}일 ${remainingHours}시간`;
-  }
-  return `영상 업로드한지 ${diffHours}시간`;
-}
-
 export function formatViewCount(viewCount: string, milestone: boolean = false): string {
   const count = parseInt(viewCount, 10);
   if (milestone) {

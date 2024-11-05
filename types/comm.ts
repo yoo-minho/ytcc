@@ -7,6 +7,7 @@ export type TimelineCommentWrapType = {
   channelTitle: string;
   videoTitle: string;
   thumbnail: string;
+  channelThumbnail: string;
   method: string;
   totalFetchedCount: number;
   commentCount: number;

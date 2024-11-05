@@ -17,7 +17,7 @@ watch(
 const { data, status, error } = await useAsyncData(
   "time-comment",
   async () => {
-    if (!videoId.value) return { comments: [], channelTitle: "", thumbnail: "", title: "" };
+    if (!videoId.value) return;
     return await $fetch<TimelineCommentWrapType>(`/api/time-comment/${videoId.value}`);
   },
   { watch: [videoId] }
