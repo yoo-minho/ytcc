@@ -24,6 +24,7 @@ export default defineEventHandler(async (event) => {
   const channelThumbnail = channelResponse.data?.items?.[0]?.snippet?.thumbnails?.default?.url;
 
   const videoInfo = {
+    channelId,
     channelTitle: channelTitle,
     videoTitle: title,
     thumbnail: thumbnails?.maxres?.url,
@@ -52,7 +53,7 @@ export default defineEventHandler(async (event) => {
   _items = convertCommentsToTimeline(_items);
 
   return {
-    ...videoInfo,
+    videoInfo,
     method: isTimeSearching ? "TIME_SEARCH" : "SEQUENCE",
     totalFetchedCount,
     commentCount: _items.length,

@@ -1,5 +1,6 @@
 import { google, youtube_v3 } from "googleapis";
 import { OAuth2Client } from "google-auth-library";
+import { RegionCode } from "@/types/comm";
 
 const { googleApiKey, googleClientId, googleClientSecret, googleRedirectUri } = useRuntimeConfig();
 
@@ -54,12 +55,12 @@ export const getVideoDetails = async (videoIds: string[], params: any = {}) => {
   return response.data.items || [];
 };
 
-export async function getTrendingVideos(pageToken?: string) {
+export async function getTrendingVideos(regionCode: RegionCode, pageToken?: string) {
   const maxResults = 200;
   const params: any = {
     part: ["snippet", "statistics", "contentDetails"],
     chart: "mostPopular",
-    regionCode: "KR",
+    regionCode,
     maxResults: maxResults,
   };
 

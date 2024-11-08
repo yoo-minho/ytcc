@@ -10,14 +10,13 @@ watch(videos, () => {
     videoDataState.value.trendVideoData = videos.value || [];
 })
 
-const trend3Videos = computed(() => {
-    return [...videoDataState.value.trendVideoData].splice(0, 3);
-});
+const trend3Videos = computed(() => [...videoDataState.value.trendVideoData].splice(0, 3));
 
 const yesterday = new Date();
 yesterday.setDate(yesterday.getDate() - 1);
 const yesterdayDay = yesterday.getDay();
 const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+
 const { data: playlists, status: playlistsStatus } = youtubeApi.fetchWeeklyVideos();
 watch(playlists, () => {
     videoDataState.value.weeklyVideoData = playlists.value || []
@@ -81,8 +80,6 @@ const pasteFromClipboard = async () => {
 
 const openTrendVideo = () => navigateTo({ query: { page: 'trend' } });
 const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
-
-
 </script>
 <template>
     <div class="w-full flex flex-col justify-between">
@@ -115,7 +112,7 @@ const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
                 <div class="flex gap-2 items-center justify-between">
                     <div>
                         <div class="text-xl font-bold flex items-center gap-1">
-                            <Icon name="ph:calendar-blank" /> {{ daysOfWeek[yesterdayDay] }}요웹예능
+                            <Icon name="ph:calendar-blank" /> 어제 올라온 웹예능
                         </div>
                     </div>
                     <div class="cursor-pointer text-sm text-gray-400 flex items-center" @click="openWeeklyVideo()">
@@ -124,7 +121,7 @@ const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
                     </div>
                 </div>
                 <SharedPlaylistList :playlists="todayPlaylists" :status="playlistsStatus" :thumbnail="true"
-                    class="py-2" />
+                    :loadingItemCount="2" class="pt-4" />
             </div>
 
             <UDivider class="dark" />
@@ -132,8 +129,8 @@ const openWeeklyVideo = () => navigateTo({ query: { page: 'weekly' } });
             <div>
                 <div class="flex gap-2 items-center justify-between">
                     <div>
-                        <div class="text-xl tracking-tighter font-bold flex items-center gap-1">
-                            <Icon name="ph:fire"></Icon> 인기 급상승 동영상
+                        <div class="text-xl font-bold flex items-center gap-1">
+                            <Icon name="ph:fire" /> 인기 급상승 동영상
                         </div>
                     </div>
                     <div class="cursor-pointer text-sm text-gray-400 flex items-center" @click="openTrendVideo()">

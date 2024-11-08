@@ -1,9 +1,7 @@
 <script setup lang="ts">
 defineProps<{
   videoId: string;
-  videoTitle?: string;
-  channelTitle?: string;
-  channelThumbnail?: string;
+  videoInfo?: VideoInfoType
 }>();
 
 const LOOP_TIMES = [10, 15, 30, 60];
@@ -36,67 +34,36 @@ const toggleLoop = () => {
 
 <template>
   <div class="h-[90px] w-full px-4">
-    <template v-if="videoTitle">
+    <template v-if="videoInfo">
       <div class="flex h-full">
         <div class="flex-1 flex flex-col justify-center gap-2">
           <span class="flex items-center gap-2 tracking-tight justify-between">
-            <div class="flex items-center gap-2">
-              <img :src="channelThumbnail" class="w-6 h-6 rounded-full" />
-              <span class="font-bold">@{{ channelTitle }}</span>
+            <div class="flex items-center gap-2 cursor-pointer"
+              @click="openYouTube({ channelId: videoInfo.channelId })">
+              <img :src="videoInfo.channelThumbnail" class="w-[30px] h-[30px] rounded-full border border-white/40" />
+              <span class="font-bold">@{{ videoInfo.channelTitle }}</span>
             </div>
             <div class="flex items-end gap-2">
               <div
                 class="flex items-center justify-center bg-gray-300 rounded-full w-[30px] h-[30px] cursor-pointer opacity-60"
-                @click="toggleLoop()"
-              >
+                @click="toggleLoop()">
                 <div class="text-gray-700 text-sm">{{ loop }}s</div>
               </div>
-              <div
-                class="flex items-center justify-center gap-1 bg-gray-300 rounded-full w-[30px] h-[30px] cursor-pointer opacity-60"
-                @click="toggleMute()"
-              >
-                <Icon
-                  v-if="isMuted"
-                  name="ph:speaker-simple-slash-fill"
-                  size="16px"
-                  class="text-black"
-                />
-                <Icon
-                  v-else
-                  name="ph:speaker-simple-high-fill"
-                  size="16px"
-                  class="text-gray-700"
-                />
+              <div class="flex items-center justify-center gap-1 rounded-full w-[30px] h-[30px] cursor-pointer"
+                :class="isMuted ? `bg-red-700` : `bg-gray-300 opacity-60`" @click="toggleMute()">
+                <Icon v-if="isMuted" name="ph:speaker-simple-slash-fill" size="16px" class="text-white" />
+                <Icon v-else name="ph:speaker-simple-high-fill" size="16px" class="text-gray-700" />
               </div>
             </div>
           </span>
-          <span class="ml-1 line-clamp-1 tracking-tighter cursor-pointer">
-            ▶<span class="ml-2"> {{ videoTitle }} </span>
+          <span class="ml-1 line-clamp-1 tracking-tighter cursor-pointer" @click="openYouTube({ videoId })">
+            ▶<span class="ml-2"> {{ videoInfo.videoTitle }} </span>
           </span>
         </div>
       </div>
     </template>
     <template v-else> </template>
   </div>
-  <!-- <div class="h-[60px] flex w-full items-center justify-center px-2 gap-2 opacity-70 tracking-tighter">
-        <span>{{ formatSeconds(루프경과시간) }}</span>
-        <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="toggleLoop()">
-            <div class="flex items-center">
-                <UIcon name="i-ph-repeat" size="20px" />
-                <div>{{ loop }}초</div>
-            </div>
-        </UButton>
-        <UiYoutubeAppBtn :video-id="videoId" :ui="{ rounded: 'rounded-full' }" text="원본 보기" />
-        <UButton color="black" :ui="{ rounded: 'rounded-full' }" @click="toggleMute()">
-            <div class="flex items-center justify-center gap-1">
-                <template v-if="isMuted">
-                    <Icon name="ph:speaker-simple-slash-fill" size="20px" />
-                    <div>음소거 해제</div>
-                </template>
-<Icon v-else name="ph:speaker-simple-high-fill" size="20px" />
-</div>
-</UButton>
-</div> -->
 </template>
 
 <style scoped></style>

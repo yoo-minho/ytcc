@@ -4,26 +4,34 @@ import { useYoutubeApi } from "@/composables/api/useYoutubeApi";
 import YoutubeAppBtn from "./ui/YoutubeAppBtn.vue";
 import { WEEKLY_PLAYLIST_ARR } from "~/constants/youtube";
 
-const videoDataState = useVideoDataState();
 const youtubeApi = useYoutubeApi();
 
-const { data: playlists, status: playlistsStatus } = youtubeApi.fetchWeeklyVideos();
-watch(playlists, () => {
-    videoDataState.value.weeklyVideoData = playlists.value || [];
-})
-
 const route = useRoute();
-const { list: listId } = route.query;
+const listId = ref();
+watch(
+    () => route.query.list,
+    () => {
+        listId.value = route.query.list ? String(route.query.list) : undefined;
+    },
+    { immediate: true }
+);
 
-const { data: videos, status } = useAsyncData("playlist", () =>
-    $fetch<TrendingVideoType[]>("/api/playlist", {
-        method: "POST",
-        body: { listId: listId },
-    }),
+const { data: playlists, status: playlistsStatus } = youtubeApi.fetchPlayListInfo(listId.value);
+
+const { data: videos, status } = useAsyncData(
+    "playlist",
+    async () => {
+        if (!listId.value) return;
+        return await $fetch<TrendingVideoType[]>("/api/playlist", {
+            method: "POST",
+            body: { listId: listId.value },
+        })
+    },
     {
+        watch: [listId],
         transform: (videos) => {
             return videos?.map((v) => {
-                const matchingData = WEEKLY_PLAYLIST_ARR.find((v) => v.id === listId);
+                const matchingData = WEEKLY_PLAYLIST_ARR.find((v) => v.id === listId.value);
                 let title = v.title;
                 if (typeof matchingData?.prettyTitle === 'function') {
                     title = matchingData.prettyTitle(v.title);
@@ -33,14 +41,13 @@ const { data: videos, status } = useAsyncData("playlist", () =>
         },
     }
 );
-
-const playlist = computed(() => playlists.value?.find(p => p.playlistId === listId));
 </script>
 <template>
     <div class="w-full absolute">
-        <SharedPlaylistList :playlists="[playlist]" :status="playlistsStatus" :thumbnail="false" class="m-4" />
+        <SharedPlaylistList :playlists="playlists || []" :status="playlistsStatus" :thumbnail="false"
+            :loading-item-count="1" class="m-4" />
         <YoutubeAppBtn :playlist-id="String(listId)" text="앱에서 재생목록 열기" class="mx-4 mb-2" />
-        <SharedVideoList :videos="videos || []" :status="status" class="px-4" />
+        <SharedVideoList :videos="videos || []" :status="status" :loading-item-count="8" class="px-4" />
     </div>
 </template>
 

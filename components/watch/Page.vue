@@ -29,13 +29,15 @@ watch(data, () => {
   changeT(firstSec, comments.value);
 }, { immediate: true });
 
+const videoInfo = computed(() => data.value?.videoInfo);
+
 useSeoMeta({
   title: headerMessage,
   ogTitle: headerMessage,
-  description: data.value?.videoTitle,
-  ogDescription: data.value?.videoTitle,
+  description: videoInfo.value?.videoTitle,
+  ogDescription: videoInfo.value?.videoTitle,
   twitterCard: "summary_large_image",
-  ogImage: data.value?.thumbnail || '/og-image.png'
+  ogImage: videoInfo.value?.thumbnail || '/og-image.png'
 });
 </script>
 <template>
@@ -47,8 +49,7 @@ useSeoMeta({
     </div>
     <WatchYoutubePlayer :video-id="videoId" :status="status" />
     <template v-if="videoId">
-      <WatchVideoFooter :video-id="videoId" :video-title="data?.videoTitle" :channel-title="data?.channelTitle"
-        :channel-thumbnail="data?.channelThumbnail" />
+      <WatchVideoFooter :video-id="videoId" :video-info="videoInfo" />
     </template>
     <div class="flex-1 flex flex-col h-0 bg-gray-900">
       <div class="flex items-center justify-between gap-2 p-4 border-b border-gray-800 h-[60px]">

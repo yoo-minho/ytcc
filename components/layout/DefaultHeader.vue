@@ -24,7 +24,8 @@ onMounted(
 </script>
 <template>
     <div v-if="$route.query.v"></div>
-    <div v-else class="px-4 flex items-center gap-3 h-[60px] border-b border-gray-800 w-full">
+    <div v-else class="px-4 flex items-center gap-3 h-[60px]  w-full"
+        :class="['weekly', 'trend'].includes(displayState.currentPage) ? `` : `border-b border-white/20`">
         <div v-if="String(displayState.currentPage) !== ''" @click="moveBack()"
             class="flex items-center cursor-pointer">
             <UIcon name="i-ph-arrow-left-bold" size="28px" />
@@ -34,7 +35,7 @@ onMounted(
                 <span class="text-xl font-bold tracking-tighter">인기 급상승 동영상</span>
             </template>
             <template v-else-if="displayState.currentPage === 'weekly'">
-                <span class="text-xl font-bold tracking-tighter">요일웹예능</span>
+                <span class="text-xl font-bold">요일웹예능</span>
             </template>
             <template v-else-if="displayState.currentPage === 'playlist'">
                 <span class="text-xl font-bold tracking-tighter">플레이리스트</span>
