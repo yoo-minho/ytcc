@@ -4,9 +4,9 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
 
-  ssr: false,
+  ssr: true,
 
-  modules: ["@nuxt/ui", "nuxt-gtag", "@nuxt/icon", "@vite-pwa/nuxt"],
+  modules: ["@nuxt/ui", "nuxt-gtag", "@nuxt/icon", "@vite-pwa/nuxt", "@nuxtjs/tailwindcss", "shadcn-nuxt"],
 
   runtimeConfig: {
     googleApiKey: process.env.GOOGLE_API_KEY,
@@ -113,5 +113,17 @@ export default defineNuxtConfig({
         },
       ],
     },
+  },
+
+  shadcn: {
+    /**
+     * Prefix for all the imported component
+     */
+    prefix: "", // 원하는 접두사 설정 가능
+    /**
+     * Directory that the component lives in.
+     * @default "./components/ui"
+     */
+    componentDir: "./components/ui",
   },
 });
