@@ -41,6 +41,15 @@ const { data: videos, status } = useAsyncData(
         },
     }
 );
+
+useSeoMeta({
+    title: playlists.value?.[0].title + ' | YouTube Moments',
+    ogTitle: playlists.value?.[0].title + ' | YouTube Moments',
+    description: playlists.value?.[0].description,
+    ogDescription: playlists.value?.[0].description,
+    twitterCard: "summary_large_image",
+    ogImage: '/og-image.png'
+});
 </script>
 <template>
     <div class="w-full absolute">

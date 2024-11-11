@@ -86,7 +86,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: "YouTube Moments - 영상 최고의 순간을 즐기세요",
+      title: "영상 최고의 순간을 즐기세요 | YouTube Moments",
       meta: [
         { charset: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0" },

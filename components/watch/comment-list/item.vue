@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const props = defineProps<{ videoId: string; comment: TimelineCommentType }>();
 
-const { currentTime, t, loop } = usePlayerProvider();
+const { currentTime, t, loop, scrollToElement } = usePlayerProvider();
 const filterComments = computed(() => props.comment.comments
     .filter((v) => Boolean(v.comment.trim()))
     .splice(0, 3));
@@ -13,6 +13,7 @@ watch(currentTime, () => {
         const elapsedTime = currentTime.value - props.comment.sec;
         if (elapsedTime > 0 && elapsedTime < loop.value) {
             progressWidth.value = Math.min((elapsedTime / loop.value) * 100, 100);
+            if (progressWidth.value < 10) scrollToElement();
         } else {
             progressWidth.value = 0;
         }

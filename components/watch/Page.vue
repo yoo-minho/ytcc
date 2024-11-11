@@ -5,15 +5,6 @@ const videoId = ref();
 const comments = ref<TimelineCommentType[]>([]);
 const route = useRoute();
 
-watch(
-  () => route.query.v,
-  () => {
-    videoId.value = route.query.v ? String(route.query.v) : undefined;
-    headerMessage.value = "댓글 누르면 순간 플레이";
-  },
-  { immediate: true }
-);
-
 const { data, status, error } = await useAsyncData(
   "time-comment",
   async () => {
@@ -23,22 +14,52 @@ const { data, status, error } = await useAsyncData(
   { watch: [videoId] }
 );
 
+watch(
+  () => route.query.v,
+  () => {
+    console.log('route.query.v', route.query.v, data.value)
+    if (route.query.v) {
+      videoId.value = String(route.query.v);
+      headerMessage.value = "댓글 누르면 순간 플레이";
+    }
+    if (data.value) {
+      const targetSec = comments.value[0]?.sec || 0
+      changeT(targetSec, comments.value);
+    }
+  },
+  { immediate: true }
+);
+
 watch(data, () => {
   comments.value = data.value?.comments || [];
-  const firstSec = comments.value[0]?.sec || 0;
-  changeT(firstSec, comments.value);
+  let targetSec;
+  if (route.query.t) {
+    targetSec = Number(route.query.t);
+  } else {
+    targetSec = comments.value[0]?.sec || 0
+  }
+  changeT(targetSec, comments.value);
 }, { immediate: true });
+
+// watch(() => route.query.t, () => {
+//   if (!route.query.t) {
+//     const targetSec = comments.value[0]?.sec || 0
+//     changeT(targetSec, comments.value);
+//   }
+// })
 
 const videoInfo = computed(() => data.value?.videoInfo);
 
-useSeoMeta({
-  title: headerMessage,
-  ogTitle: headerMessage,
-  description: videoInfo.value?.videoTitle,
-  ogDescription: videoInfo.value?.videoTitle,
-  twitterCard: "summary_large_image",
-  ogImage: videoInfo.value?.thumbnail || '/og-image.png'
-});
+if (route.query.v) {
+  useSeoMeta({
+    title: headerMessage,
+    ogTitle: headerMessage,
+    description: videoInfo.value?.videoTitle,
+    ogDescription: videoInfo.value?.videoTitle,
+    twitterCard: "summary_large_image",
+    ogImage: videoInfo.value?.thumbnail || '/og-image.png'
+  });
+}
 </script>
 <template>
   <div class="flex flex-col h-full w-full">

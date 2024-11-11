@@ -41,7 +41,7 @@ onMounted(
                 <span class="text-xl font-bold tracking-tighter">플레이리스트</span>
             </template>
             <template v-else>
-                <div class="flex items-center gap-2" @click="moveMain()">
+                <div class="flex items-center gap-2 cursor-pointer" @click="moveMain()">
                     <img src="/public/icon-192.png" width="24px" />
                     <div class="flex items-center">
                         <span class="font-bold mr-1 text-xl tracking-tighter">YouTube</span>

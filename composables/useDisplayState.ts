@@ -16,6 +16,7 @@ export const useDisplayState = () => {
           state.value.currentPage = "video";
         } else {
           state.value.currentPage = (route.query.page as string) || "";
+          usePlayerProvider().clear();
         }
       },
       { immediate: true, deep: true }
@@ -34,11 +35,27 @@ export const moveBack = () => {
   }
 };
 
-export const moveVideoDetail = (videoId: string) => {
+export const moveVideoDetail = (videoId: string, search?: boolean) => {
+  if (search) {
+    const { gtag } = useGtag();
+    gtag("event", "search_click", {
+      category: "Search",
+      action: "click",
+      label: `video-${videoId}`,
+    });
+  }
   navigateTo({ query: { v: videoId } });
 };
 
-export const movePlaylistDetail = (listId: string) => {
+export const movePlaylistDetail = (listId: string, search?: boolean) => {
+  if (search) {
+    const { gtag } = useGtag();
+    gtag("event", "search_click", {
+      category: "Search",
+      action: "click",
+      label: `playlist-${listId}`,
+    });
+  }
   const query = {
     page: "playlist",
     list: listId,

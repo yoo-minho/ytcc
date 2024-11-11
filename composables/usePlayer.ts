@@ -1,4 +1,3 @@
-import PlayerStates from "youtube-player/dist/constants/PlayerStates";
 import type { YouTubePlayer } from "youtube-player/dist/types";
 
 let playerTimer: any = null;
@@ -14,13 +13,10 @@ const headerMessage = ref("");
 
 export function usePlayerProvider() {
   const route = useRoute();
+  const router = useRouter();
 
   if (route.query.loop) {
     loop.value = Number(route.query.loop);
-  }
-
-  if (route.query.t) {
-    t.value = Number(route.query.t);
   }
 
   if (route.query.v) {
@@ -35,7 +31,12 @@ export function usePlayerProvider() {
 
   const clear = () => {
     player.value?.stopVideo();
+    currentTime.value = 0;
+    t.value = 0;
     clearTimeout(playerTimer);
+    const query = { ...route.query };
+    delete query.t;
+    router.push({ query });
   };
 
   const scrollToElement = () => {
@@ -58,35 +59,18 @@ export function usePlayerProvider() {
         return;
       }
 
-      try {
-        await player.value.playVideo();
-      } catch (e) {
-        console.log("player.value.playVideo 1", player.value.playVideo);
-        console.log("player.value.playVideo 2", e);
-      }
-
-      // 재생이 시작될 때까지 대기합니다.
-      // await new Promise<void>((resolve) => {
-      //   const checkPlayingState = async () => {
-      //     const state = await player.value?.getPlayerState();
-      //     if (state === PlayerStates.PLAYING) {
-      //       // 1은 재생 중 상태
-      //       resolve();
-      //     } else {
-      //       setTimeout(checkPlayingState, 50); // 50ms 간격으로 재확인
-      //     }
-      //   };
-      //   checkPlayingState();
-      // });
-
-      await player.value.seekTo(t.value, true);
+      await player.value?.seekTo(t.value, true);
     }
   };
 
   const changeT = (sec: number, comments: TimelineCommentType[]) => {
+    console.log("changeT", sec, comments);
+
+    if (sec === 0) return;
+
+    router.push({ replace: true, query: { ...route.query, t: sec } });
     t.value = sec;
     seekTo();
-    scrollToElement();
 
     const currentTimelineComment = comments.find((v) => v.sec === t.value)?.comments[0].comment;
     if (currentTimelineComment) {
