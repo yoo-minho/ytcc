@@ -12,7 +12,7 @@ export type VideoInfoType = {
   channelThumbnail: string;
 };
 export type TimelineCommentWrapType = {
-  videoInfo: VideoInfoType;
+  videoInfo?: VideoInfoType | null;
   method: string;
   totalFetchedCount: number;
   commentCount: number;

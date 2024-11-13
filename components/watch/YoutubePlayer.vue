@@ -3,16 +3,30 @@
 const { player, t, currentTime, updateTime, clear } = usePlayerProvider();
 
 const props = defineProps<{ videoId?: string, status: string }>();
-const loading = computed(() => ['pending', 'idle', ''].includes(props.status));
-//currentTime.value <= t.value 이건 약간 애매하다.
+const loading = computed(() => {
+    const dataLoading = ['pending', 'idle', ''].includes(props.status);
+    let playingLoading = false;
+    if (currentTime.value > 0) {
+        // 재생이 시작된 경우, 아직 원하는 시간대까지 영상이 로드되지 않은 상태
+        if (currentTime.value < 2) {
+            playingLoading = true;
+        } else {
+            playingLoading = currentTime.value < t.value;
+        }
+    } else {
+        // 재생이 시작되지 않은 경우
+        playingLoading = false;
+    }
+    return dataLoading || playingLoading;
+});
 
 onMounted(() => {
-    setYoutubePlayer();
+    player.value = setYoutubePlayer();
 });
 
 watch(() => props.videoId, async () => {
-    if (props.videoId && player.value) {
-        await player.value.cueVideoById(props.videoId);
+    if (props.videoId) {
+        await player.value?.cueVideoById(props.videoId);
     } else {
         clear();
     }
@@ -24,7 +38,7 @@ onUnmounted(() => {
 
 function setYoutubePlayer() {
     const { Player, PlayerState } = (window as any).YT;
-    player.value = new Player("youtube-player", {
+    return new Player("youtube-player", {
         videoId: props.videoId,
         playerVars: {
             controls: 0, // 0: 숨김, 1: 표시
@@ -38,9 +52,15 @@ function setYoutubePlayer() {
             hl: "none", // 플레이어 언어 설정: 한국어
             playsinline: 1, // 인라인 재생 활성화 (모바일에서 중요)
             start: t.value, // 시작 시간 지정 (초 단위)
+            enablejsapi: 1, // JavaScript API 활성화
         },
         events: {
             onReady: (event: any) => {
+                // iframe 클릭 이벤트 막기
+                const iframe = document.querySelector('iframe#youtube-player') as HTMLIFrameElement;
+                if (iframe) {
+                    iframe.style.pointerEvents = 'none';
+                }
             },
             onStateChange: (event: any) => {
                 let animationFrameId: number | null = null;
@@ -74,7 +94,8 @@ function setYoutubePlayer() {
         <template v-if="loading">
             <div class="absolute inset-0 z-10">
                 <div class="w-full h-full flex items-center justify-center bg-gray-900">
-                    <div class="w-16 h-16 border-4 border-gray-700 border-t-gray-200 rounded-full animate-spin"></div>
+                    <div class="w-16 h-16 border-4 border-gray-700 border-t-gray-200 rounded-full animate-spin">
+                    </div>
                 </div>
             </div>
         </template>

@@ -30,10 +30,14 @@ export function usePlayerProvider() {
   };
 
   const clear = () => {
-    player.value?.stopVideo();
+    player.value?.pauseVideo();
     currentTime.value = 0;
-    t.value = 0;
     clearTimeout(playerTimer);
+    headerMessage.value = "댓글 누르면 순간 플레이";
+
+    if (!!route.query.v) return;
+
+    t.value = 0;
     const query = { ...route.query };
     delete query.t;
     router.push({ query });
@@ -52,30 +56,16 @@ export function usePlayerProvider() {
     }
   };
 
-  const seekTo = async () => {
-    if (player.value?.playVideo) {
-      if (t.value === 0) {
-        player.value.stopVideo();
-        return;
-      }
-
-      await player.value?.seekTo(t.value, true);
-    }
+  const seekTo = () => {
+    player.value?.seekTo?.(t.value, true);
   };
 
-  const changeT = (sec: number, comments: TimelineCommentType[]) => {
-    console.log("changeT", sec, comments);
-
-    if (sec === 0) return;
+  const changeT = (sec: number) => {
+    if (!sec) return;
 
     router.push({ replace: true, query: { ...route.query, t: sec } });
     t.value = sec;
     seekTo();
-
-    const currentTimelineComment = comments.find((v) => v.sec === t.value)?.comments[0].comment;
-    if (currentTimelineComment) {
-      headerMessage.value = currentTimelineComment;
-    }
   };
 
   const playerContext = {
