@@ -13,7 +13,7 @@ watch(currentTime, () => {
         const elapsedTime = currentTime.value - props.comment.sec;
         if (elapsedTime > 0 && elapsedTime < loop.value) {
             progressWidth.value = Math.min((elapsedTime / loop.value) * 100, 100);
-            if (elapsedTime <= 1) scrollToElement();
+            if (elapsedTime <= 0.5) scrollToElement();
         } else {
             progressWidth.value = 0;
         }
@@ -31,10 +31,13 @@ watch(currentTime, () => {
                 :style="{ width: `${progressWidth}%` }"></div>
             <div class="flex gap-2">
                 <div class="flex-1 flex flex-col items-start gap-1" style="width: 100%">
-                    <div class="flex justify-between w-full">
-                        <div class="flex gap-2" style="color: #3ea6ff">
-                            <span> {{ formatSeconds(comment.sec) }}</span>
-                            <span class="opacity-30">~ {{ formatSeconds(comment.sec + loop) }}</span>
+                    <div style="color: #3ea6ff">
+                        <div class="tracking-tight text-[13px]">{{ comment.videoTitle }}</div>
+                        <div class="flex justify-between w-full">
+                            <div class="flex gap-2">
+                                <span> {{ formatSeconds(comment.sec) }}</span>
+                                <span class="opacity-30">~ {{ formatSeconds(comment.sec + loop) }}</span>
+                            </div>
                         </div>
                     </div>
                     <div class="w-full flex flex-col">

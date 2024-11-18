@@ -7,7 +7,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-    (e: 'changeTime', sec: number): void
+    (e: 'changeTime', sec: number, videoId: string): void
 }>()
 
 const loading = computed(() => ["pending", "idle", ""].includes(props.status));
@@ -23,7 +23,7 @@ const { scrollContainer } = usePlayerProvider();
             <template v-else>
                 <template v-for="comment in comments">
                     <WatchCommentListItem :id="`comment-${comment.sec}`" :video-id="videoId" :comment="comment"
-                        @click="emit('changeTime', comment.sec)" />
+                        @click="emit('changeTime', comment.sec, comment.videoId || '')" />
                 </template>
             </template>
         </div>

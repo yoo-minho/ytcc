@@ -48,6 +48,7 @@ if (false) {
 
     for (const id of (videos.value || [])?.map(v => v.id)) {
         await fetch(`http://localhost:3000/api/time-comment/${id}`);
+        await new Promise(res => setTimeout(res, 2000));
         completedCount++;
         console.log(`진행률: ${Math.round((completedCount / totalVideos) * 100)}% (${completedCount}/${totalVideos})`);
     }

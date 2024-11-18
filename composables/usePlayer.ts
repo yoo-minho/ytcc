@@ -19,10 +19,6 @@ export function usePlayerProvider() {
     loop.value = Number(route.query.loop);
   }
 
-  if (route.query.v) {
-    videoId.value = String(route.query.v);
-  }
-
   const updateTime = async () => {
     if (player.value?.getCurrentTime) {
       currentTime.value = await player.value.getCurrentTime();
@@ -30,12 +26,12 @@ export function usePlayerProvider() {
   };
 
   const clear = () => {
-    player.value?.pauseVideo();
+    player.value?.pauseVideo?.();
     currentTime.value = 0;
     clearTimeout(playerTimer);
     headerMessage.value = "댓글 누르면 순간 플레이";
 
-    if (!!route.query.v) return;
+    if (!!route.query.v || !!route.query.thanks) return;
 
     t.value = 0;
     const query = { ...route.query };
@@ -60,14 +56,6 @@ export function usePlayerProvider() {
     player.value?.seekTo?.(t.value, true);
   };
 
-  const changeT = (sec: number) => {
-    if (!sec) return;
-
-    router.push({ replace: true, query: { ...route.query, t: sec } });
-    t.value = sec;
-    seekTo();
-  };
-
   const playerContext = {
     player,
     videoId,
@@ -80,7 +68,6 @@ export function usePlayerProvider() {
     updateTime,
     seekTo,
     scrollToElement,
-    changeT,
     clear,
   };
   return playerContext;

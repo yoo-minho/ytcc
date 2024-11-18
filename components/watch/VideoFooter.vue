@@ -10,7 +10,9 @@ const { player, t, currentTime, isMuted, loop, seekTo } = usePlayerProvider();
 const 루프경과시간 = computed(() => Math.ceil(Math.max(currentTime.value - t.value, 0)));
 
 watch(루프경과시간, () => {
-  if (루프경과시간.value > loop.value) seekTo();
+  if (루프경과시간.value > loop.value && 루프경과시간.value <= loop.value + 1) {
+    seekTo();
+  }
 });
 
 const toggleMute = () => {

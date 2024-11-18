@@ -1,8 +1,8 @@
 <script setup lang="ts">
 
-const { player, t, currentTime, updateTime, clear } = usePlayerProvider();
+const { player, videoId, t, currentTime, updateTime, clear } = usePlayerProvider();
 
-const props = defineProps<{ videoId?: string, status: string }>();
+const props = defineProps<{ status: string }>();
 const loading = computed(() => {
     const dataLoading = ['pending', 'idle', ''].includes(props.status);
     let playingLoading = false;
@@ -24,22 +24,18 @@ onMounted(() => {
     player.value = setYoutubePlayer();
 });
 
-watch(() => props.videoId, async () => {
-    if (props.videoId) {
-        await player.value?.cueVideoById(props.videoId);
+watch(() => videoId.value, async () => {
+    if (videoId.value) {
+        player.value?.loadVideoById(videoId.value, t.value);
     } else {
         clear();
     }
 });
 
-onUnmounted(() => {
-    clear();
-});
-
 function setYoutubePlayer() {
     const { Player, PlayerState } = (window as any).YT;
     return new Player("youtube-player", {
-        videoId: props.videoId,
+        videoId: videoId.value,
         playerVars: {
             controls: 0, // 0: 숨김, 1: 표시
             autoplay: 1, // 0: 비활성화, 1: 활성화 
@@ -77,9 +73,10 @@ function setYoutubePlayer() {
                         animationFrameId = null;
                     }
 
-                    if (event.data === PlayerState.PAUSED || event.data === PlayerState.ENDED) {
-                        clear();
-                    }
+                    // if (event.data === PlayerState.PAUSED || event.data === PlayerState.ENDED) {
+                    //     console.log('clear 3')
+                    //     clear();
+                    // }
                 }
             },
             onError: (event: any) => {

@@ -23,6 +23,8 @@ export type TimelineCommentType = {
   sec: number;
   totalLikeCount: number;
   comments: { comment: string; likeCount: number }[];
+  videoId?: string;
+  videoTitle?: string;
 };
 export type TrendingVideoType = {
   id: string;

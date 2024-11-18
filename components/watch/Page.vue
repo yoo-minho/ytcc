@@ -1,48 +1,83 @@
 <script setup lang="ts">
-const { headerMessage, t, seekTo } = usePlayerProvider();
+const { headerMessage, t, videoId, seekTo } = usePlayerProvider();
 
 const route = useRoute();
 const router = useRouter();
 
-const videoId = computed(() => (route.query.v ? String(route.query.v) : ""));
+const id = computed(() => {
+  if (route.query.thanks) return String(route.query.thanks).split("-")[0];
+  return route.query.v ? String(route.query.v) : "";
+});
 
 const { data, status, error } = await useAsyncData(
-  `time-comment-${videoId.value}`,
+  `time-comment-${id.value}`,
   async () => {
-    if (!videoId.value) return { comments: [], commentCount: 0, videoInfo: undefined };
-    return await $fetch<TimelineCommentWrapType>(`/api/time-comment/${videoId.value}`);
+    if (!id.value) return { comments: [], commentCount: 0, videoInfo: undefined };
+
+    const specialThanks = String(route.query.thanks).split("-");
+    if (specialThanks.length === 2) {
+      return await $fetch<TimelineCommentWrapType>(`/api/time-comment/${id.value}`, {
+        query: { thanks: specialThanks[1] },
+      });
+    } else {
+      return await $fetch<TimelineCommentWrapType>(`/api/time-comment/${id.value}`);
+    }
   },
-  { watch: [videoId] }
+  { watch: [id] }
 );
 
 // 1. t가 있는 상태로 새로고침 ( route.query.t => sec => refresh => t 동일 )
 // 2. 메인에서 들어오면서 t가 갱신됨 ( data.value => sec => refresh => t 동일 )
 // 3. 댓글을 눌러서 t 변경 ( refresh => t 새로 => sec => refresh )
 
-const sec = computed(() => route.query.t ? Number(route.query.t) : data.value?.comments[0]?.sec || 0);
+const sec = computed(() =>
+  route.query.t ? Number(route.query.t) : data.value?.comments[0]?.sec || 0
+);
 const comments = computed(() => data.value?.comments || []);
 
-watch(comments, () => {
-  seekToSec(sec.value);
-}, { immediate: true });
+watch(
+  () => route.query.v,
+  () => {
+    if (route.query.v) {
+      videoId.value = String(route.query.v);
+    } else {
+      videoId.value = comments.value[0]?.videoId || "";
+    }
+  },
+  { immediate: true }
+);
 
-function seekToSec(sec: number) {
+watch(
+  comments,
+  () => {
+    seekToSec(sec.value);
+  },
+  { immediate: true }
+);
+
+function seekToSec(sec: number, _videoId?: string) {
   headerMessage.value =
     comments.value.find((v) => v.sec === sec)?.comments[0].comment ||
     "댓글 누르면 순간 플레이";
 
   if (sec && sec !== t.value) {
-    router.push({ replace: true, query: { ...route.query, t: sec } });
-    t.value = sec;
+    if (_videoId) {
+      router.push({ replace: true, query: { ...route.query, v: _videoId, t: sec } });
+      t.value = sec;
+      videoId.value = _videoId;
+    } else {
+      router.push({ replace: true, query: { ...route.query, t: sec } });
+      t.value = sec;
+    }
   }
 
   seekTo();
-};
+}
 
 const videoInfo = computed(() => data.value?.videoInfo);
 
 // SEO 메타 데이터 설정
-if (route.query.v) {
+if (route.query.v || route.query.thanks) {
   useSeoMeta({
     title: headerMessage,
     ogTitle: headerMessage,
@@ -75,9 +110,9 @@ if (route.query.v) {
           <UIcon name="i-ph-x" size="28px" />
         </div>
       </div>
-      <template v-if="videoId">
+      <template v-if="id">
         <WatchCommentList :comments="comments" :video-id="videoId" :status="status" :error="error"
-          @change-time="(sec) => seekToSec(sec)" />
+          @change-time="(sec, videoId) => seekToSec(sec, videoId)" />
       </template>
     </div>
   </div>
