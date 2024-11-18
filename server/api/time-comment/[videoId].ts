@@ -1,6 +1,12 @@
 import { youtube } from "@/server/utils/youtube";
 import { formatDurationJson, formatDuration2sec, formatSeconds } from "@/utils/formatting";
 import { CommentType, TimelineCommentType } from "@/types/comm";
+
+// 결과를 실제 파일로 저장
+import { writeFile, readFile, mkdir } from "node:fs/promises";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
 export default defineEventHandler(async (event) => {
   const videoId = getRouterParam(event, "videoId");
   if (!videoId) throw "비디오 ID가 필요합니다";
@@ -52,13 +58,58 @@ export default defineEventHandler(async (event) => {
   });
   _items = convertCommentsToTimeline(_items);
 
-  return {
+  const result = {
     videoInfo,
     method: isTimeSearching ? "TIME_SEARCH" : "SEQUENCE",
     totalFetchedCount,
     commentCount: _items.length,
     comments: _items,
   };
+
+  if (false) {
+    const resultForJson = {
+      videoId,
+      videoInfo,
+      comments: _items
+        .filter((item: any) => item.totalLikeCount > 0)
+        .map((item: any) => ({ ...item, videoId, videoTitle: videoInfo.videoTitle })),
+      createdAt: new Date().toISOString().replace(/[:.]/g, "-"),
+    };
+
+    const __dirname = dirname(fileURLToPath(import.meta.url));
+    const saveDir = join(__dirname, "..", "..", "data", "comments");
+
+    try {
+      await mkdir(saveDir, { recursive: true });
+
+      const filename = `turnover.json`;
+      const filePath = join(saveDir, filename);
+
+      let dataArr = [];
+      try {
+        const fileContent = await readFile(filePath, "utf-8");
+        dataArr = JSON.parse(fileContent);
+      } catch (err) {
+        dataArr = [];
+      }
+
+      if (dataArr.find((data: any) => data.videoId === videoId)) {
+        dataArr = dataArr.map((data: any) => {
+          if (data.videoId === videoId) return resultForJson;
+          return data;
+        });
+      } else {
+        dataArr = [...dataArr, resultForJson];
+      }
+
+      // 파일 저장
+      await writeFile(filePath, JSON.stringify(dataArr, null, 2));
+    } catch (error) {
+      console.error("파일 저장 중 에러 발생:", error);
+    }
+  }
+
+  return result;
 });
 
 async function fetchComments(videoId: string, searchTerms?: string) {

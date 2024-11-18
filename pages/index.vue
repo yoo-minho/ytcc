@@ -18,15 +18,9 @@ const currentComponent = computed(
 
 <template>
     <div class="relative flex flex-wrap justify-center h-full">
-        <Transition name="fade">
-            <LandingHero v-if="displayState.currentPage === '' && !$route.query.v" class="absolute inset-0 z-10" />
-        </Transition>
-        <Transition name="slide-up">
-            <WatchPage v-show="$route.query.v" class="absolute inset-0 z-30 bg-black" />
-        </Transition>
-        <Transition name="slide">
-            <component :is="currentComponent" v-if="currentComponent" class="abolute inset-0 z-20 bg-black" />
-        </Transition>
+        <LandingHero v-if="displayState.currentPage === '' && !$route.query.v" class="absolute inset-0 z-10" />
+        <WatchPage v-show="$route.query.v" class="absolute inset-0 z-30 bg-black" />
+        <component :is="currentComponent" v-if="currentComponent" class="abolute inset-0 z-20 bg-black" />
     </div>
 </template>
 

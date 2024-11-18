@@ -83,14 +83,5 @@ export function usePlayerProvider() {
     changeT,
     clear,
   };
-  provide("playerContext", playerContext);
   return playerContext;
-}
-
-export function usePlayer() {
-  const context = inject<any>("playerContext");
-  if (!context) {
-    throw new Error("usePlayer는 PlayerProvider 내에서 사용되어야 합니다");
-  }
-  return context;
 }

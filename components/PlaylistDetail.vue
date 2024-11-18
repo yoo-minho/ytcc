@@ -42,6 +42,17 @@ const { data: videos, status } = useAsyncData(
     }
 );
 
+if (false) {
+    const totalVideos = (videos.value || [])?.length;
+    let completedCount = 0;
+
+    for (const id of (videos.value || [])?.map(v => v.id)) {
+        await fetch(`http://localhost:3000/api/time-comment/${id}`);
+        completedCount++;
+        console.log(`진행률: ${Math.round((completedCount / totalVideos) * 100)}% (${completedCount}/${totalVideos})`);
+    }
+}
+
 useSeoMeta({
     title: playlists.value?.[0].title + ' | YouTube Moments',
     ogTitle: playlists.value?.[0].title + ' | YouTube Moments',

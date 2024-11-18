@@ -13,7 +13,7 @@ watch(currentTime, () => {
         const elapsedTime = currentTime.value - props.comment.sec;
         if (elapsedTime > 0 && elapsedTime < loop.value) {
             progressWidth.value = Math.min((elapsedTime / loop.value) * 100, 100);
-            if (progressWidth.value < 10) scrollToElement();
+            if (elapsedTime <= 1) scrollToElement();
         } else {
             progressWidth.value = 0;
         }
@@ -39,8 +39,11 @@ watch(currentTime, () => {
                     </div>
                     <div class="w-full flex flex-col">
                         <template v-for="(c) in filterComments">
-                            <p class="line-clamp-2 tracking-tighter text-[13px]">
-                                <Icon name="material-symbols:subdirectory-arrow-right" /> {{ c.comment }}
+                            <p class="flex gap-1">
+                                <span class="w-[16px]">
+                                    <Icon name="iconamoon:slightly-smiling-face-thin" />
+                                </span>
+                                <span class="text-[13px] line-clamp-2 tracking-tighter"> {{ c.comment }}</span>
                             </p>
                         </template>
                     </div>
