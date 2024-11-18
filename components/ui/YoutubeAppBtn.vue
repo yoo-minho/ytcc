@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const props = defineProps<{ videoId?: string; playlistId?: string; text?: string; time?: number }>();
 
-const isMobile = ref(/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent));
-const isPWA = ref(window.matchMedia('(display-mode: standalone)').matches);
+const isMobile = ref(false);
+const isPWA = ref(false);
 
 const youtubeUrl = computed(() => {
     let baseUrl = "https://www.youtube.com/";
@@ -47,6 +47,10 @@ const openYouTubeApp = () => {
     }
 };
 
+onMounted(() => {
+    isMobile.value = /Mobi|Android|iPhone|iPad/i.test(window.navigator.userAgent);
+    isPWA.value = (window.matchMedia('(display-mode: standalone)').matches);
+})
 </script>
 
 <template>

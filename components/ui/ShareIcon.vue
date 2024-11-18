@@ -44,6 +44,13 @@ const shareContent = async (url: string) => {
 const shareTimelineComment = (sec?: number) => {
   const url = getShareUrl(sec);
   sharable.value ? shareContent(url) : copyToClipboard(url);
+
+  const { gtag } = useGtag();
+  gtag("event", "share_click", {
+    category: "Share",
+    action: "click",
+    label: url,
+  });
 };
 </script>
 

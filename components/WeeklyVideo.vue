@@ -22,13 +22,26 @@ const selectedDayOfWeek = ref(daysOfWeek[yesterdayDay]);
 const selectDayOfWeek = (day: string) => {
     selectedDayOfWeek.value = day;
 }
+
+useHead({
+    title: '요일웹예능 | YouTube Moments',
+})
+
+useSeoMeta({
+    title: '요일웹예능 | YouTube Moments',
+    ogTitle: '요일웹예능 | YouTube Moments',
+    description: "요일별 준비된 웹예능의 인상 깊은 순간을 즐기고 공유하세요.",
+    ogDescription: "요일별 준비된 웹예능의 인상 깊은 순간을 즐기고 공유하세요.",
+    twitterCard: "summary_large_image",
+    ogImage: '/og-image.png'
+});
 </script>
 <template>
     <div class="w-full flex flex-col">
-        <div class="flex justify-between gap-2 pt-4 px-4 py-2 sticky top-0 z-10 bg-black">
+        <div class="flex justify-between gap-2 px-4 pt-2 mb-2 sticky top-0 z-10 border-b border-white/20 bg-black">
             <template v-for="day in daysLabel">
-                <div class="text-center w-10 h-8 cursor-pointer"
-                    :class="[day === selectedDayOfWeek ? 'text-primary-500 border-b-2 border-primary-500' : '']"
+                <div class="text-center w-8 h-8 cursor-pointer"
+                    :class="[day === selectedDayOfWeek ? 'text-white border-b-2' : 'text-white/50']"
                     @click="selectDayOfWeek(day)">
                     {{ day }}
                 </div>
@@ -36,7 +49,8 @@ const selectDayOfWeek = (day: string) => {
         </div>
         <div style="calc(100% - 40px)">
             <div class="py-2 px-4">
-                <SharedPlaylistList :playlists="formattedPlaylists || []" :status="status" :thumbnail="true" />
+                <SharedPlaylistList :playlists="formattedPlaylists || []" :status="status" :thumbnail="true"
+                    :loading-item-count="8" />
             </div>
         </div>
     </div>

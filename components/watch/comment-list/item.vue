@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const props = defineProps<{ videoId: string; comment: TimelineCommentType }>();
 
-const { currentTime, t, loop } = usePlayerProvider();
+const { currentTime, t, loop, scrollToElement } = usePlayerProvider();
 const filterComments = computed(() => props.comment.comments
     .filter((v) => Boolean(v.comment.trim()))
     .splice(0, 3));
@@ -13,6 +13,7 @@ watch(currentTime, () => {
         const elapsedTime = currentTime.value - props.comment.sec;
         if (elapsedTime > 0 && elapsedTime < loop.value) {
             progressWidth.value = Math.min((elapsedTime / loop.value) * 100, 100);
+            if (elapsedTime <= 0.5) scrollToElement();
         } else {
             progressWidth.value = 0;
         }
@@ -30,16 +31,22 @@ watch(currentTime, () => {
                 :style="{ width: `${progressWidth}%` }"></div>
             <div class="flex gap-2">
                 <div class="flex-1 flex flex-col items-start gap-1" style="width: 100%">
-                    <div class="flex justify-between w-full">
-                        <div class="flex gap-2" style="color: #3ea6ff">
-                            <span> {{ formatSeconds(comment.sec) }}</span>
-                            <span class="opacity-30">~ {{ formatSeconds(comment.sec + loop) }}</span>
+                    <div style="color: #3ea6ff">
+                        <div class="tracking-tight text-[13px]">{{ comment.videoTitle }}</div>
+                        <div class="flex justify-between w-full">
+                            <div class="flex gap-2">
+                                <span> {{ formatSeconds(comment.sec) }}</span>
+                                <span class="opacity-30">~ {{ formatSeconds(comment.sec + loop) }}</span>
+                            </div>
                         </div>
                     </div>
                     <div class="w-full flex flex-col">
                         <template v-for="(c) in filterComments">
-                            <p class="line-clamp-2 tracking-tighter text-[13px]">
-                                <Icon name="material-symbols:subdirectory-arrow-right" /> {{ c.comment }}
+                            <p class="flex gap-1">
+                                <span class="w-[16px]">
+                                    <Icon name="iconamoon:slightly-smiling-face-thin" />
+                                </span>
+                                <span class="text-[13px] line-clamp-2 tracking-tighter"> {{ c.comment }}</span>
                             </p>
                         </template>
                     </div>

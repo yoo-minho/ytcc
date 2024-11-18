@@ -1,11 +1,11 @@
 <script setup lang="ts">
-defineProps<{ playlist: any; thumbnail: boolean }>();
+defineProps<{ playlist?: any; thumbnail: boolean }>();
 </script>
 <template>
-    <div class="cursor-pointer" @click="movePlaylistDetail(playlist.playlistId)">
+    <div v-if="playlist" class="cursor-pointer" @click="movePlaylistDetail(playlist.playlistId)">
         <div class="flex flex-col gap-2">
             <template v-if="thumbnail">
-                <div class="relative rounded-lg overflow-hidden border border-black-900">
+                <div class="relative rounded-lg overflow-hidden border border-white/20">
                     <img class="w-full" :src="playlist.thumbnail" alt="Video Thumbnail" style="aspect-ratio: 16 / 9;">
                 </div>
                 <div class="text-xs tracking-tight">

@@ -21,23 +21,6 @@ export function formatPublishedAt(publishedAt: string, format?: string): string 
   return `${diffYears}년 전`;
 }
 
-export function formatRelativeDate(publishedAt: string, format?: string): string {
-  const published = dayjs(publishedAt);
-  if (format) return replaceWeekdaysToKorean(published.format(format));
-
-  const now = dayjs();
-  const diffDays = now.diff(published, "day");
-
-  if (diffDays === 0) return "오늘";
-  if (diffDays === 1) return "어제";
-
-  const formattedDate = published.format("MM/DD(ddd)");
-  const koreanWeekdays = ["일", "월", "화", "수", "목", "금", "토"];
-  const weekdayIndex = published.day();
-
-  return formattedDate.replace(/\([a-zA-Z]+\)/, `(${koreanWeekdays[weekdayIndex]})`);
-}
-
 export function formatViewCount(viewCount: string, milestone: boolean = false): string {
   const count = parseInt(viewCount, 10);
   if (milestone) {
@@ -65,16 +48,21 @@ export function formatViewCount(viewCount: string, milestone: boolean = false): 
 }
 
 export function formatDuration(duration: string): string {
-  const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
-  const hours = parseInt(match?.[1] ?? "0") || 0;
-  const minutes = parseInt(match?.[2] ?? "0") || 0;
-  const seconds = parseInt(match?.[3] ?? "0") || 0;
+  const { hours, minutes, seconds } = formatDurationJson(duration);
 
   if (hours > 0) {
     return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   } else {
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   }
+}
+
+export function formatDurationJson(duration: string): any {
+  const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+  const hours = parseInt(match?.[1] ?? "0") || 0;
+  const minutes = parseInt(match?.[2] ?? "0") || 0;
+  const seconds = parseInt(match?.[3] ?? "0") || 0;
+  return { hours, minutes, seconds };
 }
 
 export function formatDuration2sec(duration: string): number {

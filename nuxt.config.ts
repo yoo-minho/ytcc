@@ -4,9 +4,9 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
 
-  ssr: false,
+  ssr: true,
 
-  modules: ["@nuxt/ui", "nuxt-gtag", "@nuxt/icon", "@vite-pwa/nuxt"],
+  modules: ["@nuxt/ui", "nuxt-gtag", "@nuxt/icon", "@vite-pwa/nuxt", "@nuxtjs/seo"],
 
   runtimeConfig: {
     googleApiKey: process.env.GOOGLE_API_KEY,
@@ -86,7 +86,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: "YouTube Moments - 영상 최고의 순간을 즐기세요",
+      title: "영상 최고의 순간을 즐기세요 | YouTube Moments",
       meta: [
         { charset: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0" },
@@ -113,5 +113,15 @@ export default defineNuxtConfig({
         },
       ],
     },
+  },
+
+  site: {
+    url: "https://youtube-moments.make1k.app",
+    defaultLocale: "ko",
+  },
+
+  sitemap: {
+    xsl: false,
+    exclude: ["/*/components/**", "/*/data/**"],
   },
 });

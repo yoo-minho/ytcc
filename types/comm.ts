@@ -1,9 +1,30 @@
-export type CommentType = { sec: number; comment: string; likeCount: number };
-export type TimelineCommentWrapType = { comments: TimelineCommentType[]; channelTitle: string };
+export type RegionCode = "KR" | "US" | "JP" | "GB" | "FR" | "DE" | "IN" | "BR" | "CA" | "AU";
+export type CommentType = {
+  sec: number;
+  comment: string;
+  likeCount: number;
+};
+export type VideoInfoType = {
+  videoTitle: string;
+  thumbnail: string;
+  channelId: string;
+  channelTitle: string;
+  channelThumbnail: string;
+};
+export type TimelineCommentWrapType = {
+  videoInfo?: VideoInfoType | null;
+  method: string;
+  totalFetchedCount: number;
+  commentCount: number;
+  comments: TimelineCommentType[];
+};
 export type TimelineCommentType = {
+  time: string;
   sec: number;
   totalLikeCount: number;
   comments: { comment: string; likeCount: number }[];
+  videoId?: string;
+  videoTitle?: string;
 };
 export type TrendingVideoType = {
   id: string;

@@ -217,6 +217,20 @@ export const WEEKLY_PLAYLIST_ARR = [
     },
   },
   {
+    id: "PL66MG8U7dL9r_22t5G5GI2NGyXUC_U9jD",
+    // title: "조동아리",
+    actor: "대성",
+    cycle: "매주 금요일 오후 6시",
+    day: "금",
+  },
+  {
+    id: "PLehGL5C3_2C4c9NP8XA3CdBn2mMKYvvao",
+    title: "조동아리",
+    actor: "김용만, 지석진, 김수용",
+    cycle: "매주 금요일 오후 6시",
+    day: "금",
+  },
+  {
     id: "PLHqqPM2t7weIMhLb_1_xa7qyPOKW8OCiq",
     title: "",
     actor: "장성규",
@@ -274,12 +288,6 @@ export const WEEKLY_PLAYLIST_ARR = [
       return `${y} ${x}`;
     },
   },
-  // {
-  //   id: "PL4nhDXRzk6q1Fc1OFhK8OcVWk4yDUs-Ua",
-  //   title: "띱?",
-  //   cycle: "매주 토요일 12시",
-  //   day: "토",
-  // },
   {
     id: "PLZHuNVGYrlkvFwUOIPcJnAITdo9n6WllN",
     title: "🥄토요일은 밥이 쏜다 🥄",
@@ -297,7 +305,6 @@ export const WEEKLY_PLAYLIST_ARR = [
       return `${y} ${x}`;
     },
   },
-
   {
     id: "PL7MQjbfOyOE00FrDWwrbaTtH7mSZOKnvO",
     day: "시즌",
