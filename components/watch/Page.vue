@@ -5,7 +5,7 @@ const route = useRoute();
 const router = useRouter();
 
 const id = computed(() => {
-  if (route.query.thanks) return String(route.query.thanks).split("-")[0];
+  if (route.query.f) return String(route.query.f).split("-")[0];
   return route.query.v ? String(route.query.v) : "";
 });
 
@@ -14,10 +14,10 @@ const { data, status, error } = await useAsyncData(
   async () => {
     if (!id.value) return { comments: [], commentCount: 0, videoInfo: undefined };
 
-    const specialThanks = String(route.query.thanks).split("-");
-    if (specialThanks.length === 2) {
+    const specialFor = String(route.query.f).split("-");
+    if (specialFor.length === 2) {
       return await $fetch<TimelineCommentWrapType>(`/api/time-comment/${id.value}`, {
-        query: { thanks: specialThanks[1] },
+        query: { f: specialFor[1] },
       });
     } else {
       return await $fetch<TimelineCommentWrapType>(`/api/time-comment/${id.value}`);
@@ -77,7 +77,7 @@ function seekToSec(sec: number, _videoId?: string) {
 const videoInfo = computed(() => data.value?.videoInfo);
 
 // SEO 메타 데이터 설정
-if (route.query.v || route.query.thanks) {
+if (route.query.v || route.query.f) {
   useSeoMeta({
     title: headerMessage,
     ogTitle: headerMessage,

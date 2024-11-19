@@ -12,7 +12,7 @@ export const useDisplayState = () => {
     watch(
       () => route.query,
       () => {
-        if (!!route.query.v || !!route.query.thanks) {
+        if (!!route.query.v || !!route.query.f) {
           state.value.currentPage = "video";
         } else {
           state.value.currentPage = (route.query.page as string) || "";

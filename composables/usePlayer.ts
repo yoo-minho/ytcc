@@ -31,7 +31,7 @@ export function usePlayerProvider() {
     clearTimeout(playerTimer);
     headerMessage.value = "댓글 누르면 순간 플레이";
 
-    if (!!route.query.v || !!route.query.thanks) return;
+    if (!!route.query.v || !!route.query.f) return;
 
     t.value = 0;
     const query = { ...route.query };

@@ -18,9 +18,9 @@ const currentComponent = computed(
 
 <template>
     <div class="relative flex flex-wrap justify-center h-full">
-        <LandingHero v-if="displayState.currentPage === '' && !($route.query.thanks || $route.query.v)"
+        <LandingHero v-if="displayState.currentPage === '' && !($route.query.f || $route.query.v)"
             class="absolute inset-0 z-10" />
-        <WatchPage v-show="$route.query.thanks || $route.query.v" class="absolute inset-0 z-30 bg-black" />
+        <WatchPage v-show="$route.query.f || $route.query.v" class="absolute inset-0 z-30 bg-black" />
         <component :is="currentComponent" v-if="currentComponent" class="abolute inset-0 z-20 bg-black" />
     </div>
 </template>

@@ -23,7 +23,7 @@ onMounted(
 );
 </script>
 <template>
-    <div v-if="$route.query.v || $route.query.thanks"></div>
+    <div v-if="$route.query.v || $route.query.f"></div>
     <div v-else class="px-4 flex items-center gap-3 h-[60px]  w-full"
         :class="['weekly', 'trend'].includes(displayState.currentPage) ? `` : `border-b border-white/20`">
         <div v-if="String(displayState.currentPage) !== ''" @click="moveBack()"
