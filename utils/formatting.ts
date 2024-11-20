@@ -2,23 +2,30 @@ import dayjs from "dayjs";
 
 export function formatPublishedAt(publishedAt: string, format?: string): string {
   const published = dayjs(publishedAt);
-  if (format) return replaceWeekdaysToKorean(published.format(format));
+  if (format === "fromNow") {
+    const now = dayjs();
+    const diffMinutes = now.diff(published, "minute");
+    if (diffMinutes < 60) return `${diffMinutes}분 전`;
 
-  const now = dayjs();
-  const diffMinutes = now.diff(published, "minute");
-  if (diffMinutes < 60) return `${diffMinutes}분 전`;
+    const diffHours = now.diff(published, "hour");
+    if (diffHours < 24) return `${diffHours}시간 전`;
 
-  const diffHours = now.diff(published, "hour");
-  if (diffHours < 24) return `${diffHours}시간 전`;
+    const diffDays = now.diff(published, "day");
+    if (diffDays < 30) return `${diffDays}일 전`;
 
-  const diffDays = now.diff(published, "day");
-  if (diffDays < 30) return `${diffDays}일 전`;
+    const diffMonths = now.diff(published, "month");
+    if (diffMonths < 12) return `${diffMonths}개월 전`;
 
-  const diffMonths = now.diff(published, "month");
-  if (diffMonths < 12) return `${diffMonths}개월 전`;
+    const diffYears = now.diff(published, "year");
+    return `${diffYears}년 전`;
+  }
 
-  const diffYears = now.diff(published, "year");
-  return `${diffYears}년 전`;
+  if (format === "minFromNow") {
+    const now = dayjs();
+    return `${now.diff(published, "minute")}`;
+  }
+
+  return publishedAt;
 }
 
 export function formatViewCount(viewCount: string, milestone: boolean = false): string {

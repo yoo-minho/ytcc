@@ -17,13 +17,17 @@ const tabs = [
 const selectedTabId = ref(tabs[0].id);
 const selectTab = (id: string) => selectedTabId.value = id;
 
-const formattedVideos = computed(() => videos.value?.filter(v => {
-    if (selectedTabId.value === 'yesterday') return v.publishedAt === '1일 전';
-    if (selectedTabId.value === 'music') return v.categoryName === '음악';
-    if (selectedTabId.value === 'trip') return v.categoryName === '여행';
-    if (selectedTabId.value === 'top') return true;
-    return true;
-}) || [])
+const formattedVideos = computed(() => {
+    return (videos.value || []).filter(v => {
+        if (selectedTabId.value === 'yesterday') return +formatPublishedAt(v.publishedAt, "minFromNow") < 60 * 48;
+        if (selectedTabId.value === 'music') return v.categoryName === '음악';
+        if (selectedTabId.value === 'trip') return v.categoryName === '여행';
+        if (selectedTabId.value === 'top') return true;
+        return true;
+    }).map(v => {
+        return { ...v, publishedAt: formatPublishedAt(v.publishedAt, "fromNow") }
+    })
+})
 
 useSeoMeta({
     title: '인기 급상승 동영상 | YouTube Moments',

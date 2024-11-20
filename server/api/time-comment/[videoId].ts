@@ -166,9 +166,9 @@ function generateTimeStrings(hour = 60): string[] {
 
 function extractTimeStampedComments(item: any): CommentType[] {
   const { comment, likeCount } = item;
-  const comments = [];
 
-  const regex = /(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(.*?)(?=\d{1,2}:\d{2}(?::\d{2})?|$)/g;
+  const comments = [];
+  const regex = /(\d{1,2}):(\d{2})(?::(\d{2}))?\s*([\s\S]*?)(?=(?:\d{1,2}:\d{2}(?::\d{2})?)|$)/g;
   const matchCount = (comment.match(regex) || []).length;
 
   let match;

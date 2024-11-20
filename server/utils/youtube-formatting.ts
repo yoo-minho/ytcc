@@ -44,7 +44,7 @@ export const formatYoutubeVideo = (
     categoryId: v.categoryId,
     viewCount: v.viewCount,
     commentCount: v.commentCount,
-    publishedAt: formatPublishedAt(v.publishedAt),
+    publishedAt: v.publishedAt,
     duration: formatDuration(v.duration),
     durationSec: formatDuration2sec(v.duration),
     categoryName: YOUTUBE_CATEGORY_MAP[v.categoryId as YouTubeCategory] || "알 수 없음",
