@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MAX_TREND_VIDEO_COUNT } from "@/constants/youtube";
+import { MAX_TREND_VIDEO_COUNT } from "@/constants/youtube"; //gogo
 import { useYoutubeApi } from "@/composables/api/useYoutubeApi";
 
 const youtubeApi = useYoutubeApi();
