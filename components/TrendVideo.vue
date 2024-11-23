@@ -31,7 +31,6 @@ const formattedVideos = computed(() => {
 });
 
 useSeoMeta({
-    ogUrl: location.href,
     title: "인기 급상승 동영상 | YouTube Moments",
     ogTitle: "인기 급상승 동영상 | YouTube Moments",
     description: "최고의 영상 속 최고의 순간을 즐기고 공유하세요.",

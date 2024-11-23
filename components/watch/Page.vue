@@ -79,7 +79,7 @@ const videoInfo = computed(() => data.value?.videoInfo);
 // SEO 메타 데이터 설정
 if (route.query.v || route.query.f) {
   useSeoMeta({
-    ogUrl: location.href,
+    ogUrl: useRequestURL().href,
     title: headerMessage,
     ogTitle: headerMessage,
     description: videoInfo.value?.videoTitle,
