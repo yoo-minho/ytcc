@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useYoutubeApi } from '~/composables/api/useYoutubeApi';
+import { useYoutubeApi } from "~/composables/api/useYoutubeApi";
 
 const { headerMessage, t, videoId, seekTo } = usePlayerProvider();
 const route = useRoute();
@@ -10,10 +10,6 @@ const { data, status, error } = await youtubeApi.fetchTimeComments();
 
 const comments = computed(() => data.value?.comments || []);
 const videoInfo = computed(() => data.value?.videoInfo);
-
-// 1. t가 있는 상태로 새로고침 ( route.query.t => sec => refresh => t 동일 )
-// 2. 메인에서 들어오면서 t가 갱신됨 ( data.value => sec => refresh => t 동일 )
-// 3. 댓글을 눌러서 t 변경 ( refresh => t 새로 => sec => refresh )
 
 const sec = computed(() =>
   route.query.t ? Number(route.query.t) : comments.value[0]?.sec || 0
@@ -26,13 +22,16 @@ watch(
     : comments.value[0]?.videoId || ""),
   { immediate: true }
 );
-watch(comments, () => seekToSec(sec.value), { immediate: true });
+
+watch(comments, (newComments) => {
+  if (newComments.length === 0) return;
+  seekToSec(sec.value, videoId.value);
+}, { immediate: true });
 
 function seekToSec(sec: number, _videoId?: string) {
   headerMessage.value =
     comments.value.find((v) => v.sec === sec)?.comments[0].comment ||
     "댓글 누르면 순간 플레이";
-
 
   if (sec && sec !== t.value) {
     if (_videoId) {
@@ -45,15 +44,15 @@ function seekToSec(sec: number, _videoId?: string) {
     }
   }
 
-  seekTo();
+  seekTo(sec, _videoId);
 }
 
 // SEO 메타 데이터 설정
 if (route.query.v || route.query.f) {
   const getTitle = (title: string) =>
-    title.length > 10 ? title.slice(0, 10) + "..." : title;
+    title.length > 20 ? title.slice(0, 20) + "..." : title;
   useCustomSeoMeta({
-    title: `[✨공유하고픈순간] "${getTitle(headerMessage.value)}"`,
+    title: `[공유하고픈순간❤️] ${getTitle(headerMessage.value)}`,
     description: videoInfo.value?.videoTitle || "",
     image: videoInfo.value?.thumbnail || "/og-image.png",
   });

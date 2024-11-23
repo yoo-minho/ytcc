@@ -1,35 +1,9 @@
 <script setup lang="ts">
 
-const { player, videoId, t, currentTime, updateTime, clear } = usePlayerProvider();
-
-const props = defineProps<{ status: string }>();
-const loading = computed(() => {
-    const dataLoading = ['pending', 'idle', ''].includes(props.status);
-    let playingLoading = false;
-    if (currentTime.value > 0) {
-        // 재생이 시작된 경우, 아직 원하는 시간대까지 영상이 로드되지 않은 상태
-        if (currentTime.value < 2) {
-            playingLoading = true;
-        } else {
-            playingLoading = currentTime.value < t.value;
-        }
-    } else {
-        // 재생이 시작되지 않은 경우
-        playingLoading = false;
-    }
-    return dataLoading || playingLoading;
-});
+const { player, playerLoading, videoId, t, updateTime } = usePlayerProvider();
 
 onMounted(() => {
     player.value = setYoutubePlayer();
-});
-
-watch(() => videoId.value, async () => {
-    if (videoId.value) {
-        player.value?.loadVideoById(videoId.value, t.value);
-    } else {
-        clear();
-    }
 });
 
 function setYoutubePlayer() {
@@ -67,7 +41,6 @@ function setYoutubePlayer() {
                     }
 
                     // if (event.data === PlayerState.PAUSED || event.data === PlayerState.ENDED) {
-                    //     console.log('clear 3')
                     //     clear();
                     // }
                 }
@@ -81,14 +54,14 @@ function setYoutubePlayer() {
 </script>
 <template>
     <div class="relative">
-        <!-- <template v-if="loading">
+        <template v-if="playerLoading">
             <div class="absolute inset-0 z-10">
                 <div class="w-full h-full flex items-center justify-center bg-gray-900">
                     <div class="w-16 h-16 border-4 border-gray-700 border-t-gray-200 rounded-full animate-spin">
                     </div>
                 </div>
             </div>
-        </template> -->
+        </template>
         <div class="w-full" style="aspect-ratio: 16 / 9">
             <div id="youtube-player" class="w-full h-full"></div>
         </div>

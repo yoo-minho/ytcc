@@ -9,17 +9,35 @@ export const useDisplayState = () => {
 
   if (!watchInitialized) {
     watchInitialized = true;
+
     watch(
       () => route.query,
       () => {
+        const route = useRoute();
         if (!!route.query.v || !!route.query.f) {
           state.value.currentPage = "video";
         } else {
           state.value.currentPage = (route.query.page as string) || "";
-          usePlayerProvider().clear();
         }
       },
       { immediate: true, deep: true }
+    );
+
+    watch(
+      () => route.query.v,
+      () => {
+        const route = useRoute();
+        const { player, playerLoading, headerMessage } = usePlayerProvider();
+        if (!!route.query.v || !!route.query.f) {
+          state.value.currentPage = "video";
+          playerLoading.value = true;
+        } else {
+          state.value.currentPage = (route.query.page as string) || "";
+          headerMessage.value = "댓글 누르면 순간 플레이";
+          player.value?.pauseVideo?.();
+        }
+      },
+      { immediate: true }
     );
   }
 

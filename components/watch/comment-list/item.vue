@@ -43,8 +43,8 @@ watch(currentTime, () => {
                     <div class="w-full flex flex-col">
                         <template v-for="(c) in filterComments">
                             <p class="flex gap-1">
-                                <span class="w-[16px]">
-                                    <Icon name="iconamoon:slightly-smiling-face-thin" />
+                                <span class="w-[16px] text-gray-400">
+                                    <Icon name="iconamoon:comment-dots-thin" />
                                 </span>
                                 <span class="text-[13px] line-clamp-2 tracking-tighter text-gray-400">
                                     {{ c.comment }}
@@ -53,10 +53,15 @@ watch(currentTime, () => {
                         </template>
                     </div>
                     <div class="flex justify-between w-full gap-2 items-center">
-                        <div v-if="comment.totalLikeCount > 0" class="flex items-center gap-1 flex-1"
+                        <div v-if="comment.totalLikeCount > 0" class="flex items-center gap-1"
                             :class="{ 'animate-bounce': comment.sec === t }">
                             <Icon name="heroicons:hand-thumb-up" class="like-icon" />
                             <div>{{ formatCount(comment.totalLikeCount) }}</div>
+                        </div>
+                        <div v-else></div>
+                        <div v-if="comment.comments.length > 1" class="flex items-center gap-1 flex-1">
+                            <Icon name="iconamoon:comment-dots-thin" />
+                            <div>{{ formatCount(comment.comments.length) }}</div>
                         </div>
                         <div v-else></div>
                         <div class="flex gap-2">

@@ -44,8 +44,8 @@ onMounted(
                 <div class="flex items-center gap-2 cursor-pointer" @click="moveMain()">
                     <img src="/public/icon-192.png" width="24px" />
                     <div class="flex items-center">
-                        <span class="font-bold mr-1 text-xl tracking-tighter">YouTube</span>
-                        <span class="font-bold text-xl text-red-500 tracking-tighter">Moments</span>
+                        <span class="font-bold text-xl tracking-tight">YouTube</span>
+                        <span class="font-bold text-xl text-red-500 tracking-tight">Moments</span>
                     </div>
                 </div>
             </template>
