@@ -51,13 +51,6 @@ function setYoutubePlayer() {
             enablejsapi: 1, // JavaScript API 활성화
         },
         events: {
-            onReady: (event: any) => {
-                // iframe 클릭 이벤트 막기
-                const iframe = document.querySelector('iframe#youtube-player') as HTMLIFrameElement;
-                if (iframe) {
-                    iframe.style.pointerEvents = 'none';
-                }
-            },
             onStateChange: (event: any) => {
                 let animationFrameId: number | null = null;
 
@@ -88,14 +81,14 @@ function setYoutubePlayer() {
 </script>
 <template>
     <div class="relative">
-        <template v-if="loading">
+        <!-- <template v-if="loading">
             <div class="absolute inset-0 z-10">
                 <div class="w-full h-full flex items-center justify-center bg-gray-900">
                     <div class="w-16 h-16 border-4 border-gray-700 border-t-gray-200 rounded-full animate-spin">
                     </div>
                 </div>
             </div>
-        </template>
+        </template> -->
         <div class="w-full" style="aspect-ratio: 16 / 9">
             <div id="youtube-player" class="w-full h-full"></div>
         </div>

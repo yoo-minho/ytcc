@@ -30,15 +30,7 @@ const formattedVideos = computed(() => {
     });
 });
 
-useSeoMeta({
-    title: "인기 급상승 동영상 | YouTube Moments",
-    ogTitle: "인기 급상승 동영상 | YouTube Moments",
-    description: "최고의 영상 속 최고의 순간을 즐기고 공유하세요.",
-    ogDescription: "최고의 영상 속 최고의 순간을 즐기고 공유하세요.",
-    twitterCard: "summary_large_image",
-    ogImage: "/og-image.png",
-    ogSiteName: "YouTube Moments",
-});
+useCustomSeoMeta('trend');
 </script>
 <template>
     <div class="w-full flex flex-col">

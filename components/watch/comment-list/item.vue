@@ -46,7 +46,9 @@ watch(currentTime, () => {
                                 <span class="w-[16px]">
                                     <Icon name="iconamoon:slightly-smiling-face-thin" />
                                 </span>
-                                <span class="text-[13px] line-clamp-2 tracking-tighter"> {{ c.comment }}</span>
+                                <span class="text-[13px] line-clamp-2 tracking-tighter text-gray-400">
+                                    {{ c.comment }}
+                                </span>
                             </p>
                         </template>
                     </div>

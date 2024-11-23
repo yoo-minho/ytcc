@@ -2,6 +2,30 @@ import type { TrendingVideoType } from "~/types/comm";
 import { WEEKLY_PLAYLIST_ARR } from "@/constants/youtube";
 
 export const useYoutubeApi = () => {
+  const fetchTimeComments = async () => {
+    const route = useRoute();
+    const id = computed(() => {
+      if (route.query.f) return String(route.query.f).split("-")[0];
+      return route.query.v ? String(route.query.v) : "";
+    });
+    return await useAsyncData(
+      `time-comment-${id.value}`,
+      async () => {
+        if (!id.value) return { comments: [], commentCount: 0, videoInfo: undefined };
+
+        const query = {} as { f?: string };
+        if (route.query.f) {
+          const [_, forId] = String(route.query.f).split("-");
+          if (forId) query.f = forId;
+        }
+        return await $fetch<TimelineCommentWrapType>(`/api/time-comment/${id.value}`, {
+          query,
+        });
+      },
+      { watch: [id] }
+    );
+  };
+
   const fetchTrendingVideos = (max: number = 50) =>
     useAsyncData<TrendingVideoType[]>(
       "trendingVideos",
@@ -60,6 +84,7 @@ export const useYoutubeApi = () => {
     );
 
   return {
+    fetchTimeComments,
     fetchTrendingVideos,
     fetchWeeklyVideos,
     fetchPlayListInfo,

@@ -85,16 +85,7 @@ const pasteFromClipboard = async () => {
 const openTrendVideo = () => navigateTo({ query: { page: "trend" } });
 const openWeeklyVideo = () => navigateTo({ query: { page: "weekly" } });
 
-useHead({
-    title: "영상 최고의 순간을 즐기세요 | YouTube Moments",
-    meta: [
-        { name: 'description', content: "YouTube 영상 최고의 순간을 즐기고 공유하세요." },
-        { property: 'og:title', content: "영상 최고의 순간을 즐기세요 | YouTube Moments" },
-        { property: 'og:description', content: "YouTube 영상 최고의 순간을 즐기고 공유하세요." },
-        { name: 'twitter:card', content: 'summary_large_image' },
-        { property: 'og:image', content: '/og-image.png' }
-    ]
-});
+useCustomSeoMeta('landing');
 </script>
 <template>
     <div class="w-full flex flex-col justify-between">

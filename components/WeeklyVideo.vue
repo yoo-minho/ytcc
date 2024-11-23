@@ -23,18 +23,7 @@ const selectDayOfWeek = (day: string) => {
     selectedDayOfWeek.value = day;
 }
 
-useHead({
-    title: '요일웹예능 | YouTube Moments',
-})
-
-useSeoMeta({
-    title: '요일웹예능 | YouTube Moments',
-    ogTitle: '요일웹예능 | YouTube Moments',
-    description: "요일별 준비된 웹예능의 인상 깊은 순간을 즐기고 공유하세요.",
-    ogDescription: "요일별 준비된 웹예능의 인상 깊은 순간을 즐기고 공유하세요.",
-    twitterCard: "summary_large_image",
-    ogImage: '/og-image.png'
-});
+useCustomSeoMeta('weekly');
 </script>
 <template>
     <div class="w-full flex flex-col">

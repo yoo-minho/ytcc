@@ -60,7 +60,7 @@ const shareTimelineComment = (sec?: number) => {
       <UButton color="black" :ui="{ rounded: 'rounded-full' }"> 공유 </UButton>
     </template>
     <template v-else-if="sharable">
-      <Icon name="ph:share-fat" />
+      <Icon name="lucide:send" />
     </template>
     <template v-else>
       <Icon :name="`heroicons:clipboard-document${copyCheck}`" />

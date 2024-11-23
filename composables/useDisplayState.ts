@@ -31,6 +31,15 @@ export const moveBack = () => {
   if (history.state.back) {
     router.back();
   } else {
+    const route = useRoute();
+    const query: { page?: string } = {};
+    if (route.query.v) {
+      if (route.query.page) {
+        query.page = route.query.page as string;
+      }
+      navigateTo({ path: "/", query, replace: true });
+      return;
+    }
     navigateTo({ path: "/", replace: true });
   }
 };

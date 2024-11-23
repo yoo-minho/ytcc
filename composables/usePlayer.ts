@@ -53,6 +53,7 @@ export function usePlayerProvider() {
   };
 
   const seekTo = () => {
+    player.value?.playVideo?.();
     player.value?.seekTo?.(t.value, true);
   };
 
