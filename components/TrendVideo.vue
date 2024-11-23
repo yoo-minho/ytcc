@@ -5,37 +5,40 @@ import { useYoutubeApi } from "@/composables/api/useYoutubeApi";
 const youtubeApi = useYoutubeApi();
 const videoDataState = useVideoDataState();
 
-const { data: videos, error, status } = youtubeApi.fetchTrendingVideos(MAX_TREND_VIDEO_COUNT);
+const { data: videos, error, status } = youtubeApi.fetchTrendingVideos(
+    MAX_TREND_VIDEO_COUNT
+);
 videoDataState.value.trendVideoData = videos.value || [];
 
 const tabs = [
-    { id: 'top', label: '전체' },
-    { id: 'yesterday', label: '최신', badge: 'N' },
-    { id: 'music', label: '음악' },
-    { id: 'trip', label: '여행' }
+    { id: "top", label: "전체" },
+    { id: "yesterday", label: "최신", badge: "N" },
+    { id: "music", label: "음악" },
+    { id: "trip", label: "여행" },
 ];
 const selectedTabId = ref(tabs[0].id);
-const selectTab = (id: string) => selectedTabId.value = id;
+const selectTab = (id: string) => (selectedTabId.value = id);
 
 const formattedVideos = computed(() => {
-    return (videos.value || []).filter(v => {
-        if (selectedTabId.value === 'yesterday') return +formatPublishedAt(v.publishedAt, "minFromNow") < 60 * 48;
-        if (selectedTabId.value === 'music') return v.categoryName === '음악';
-        if (selectedTabId.value === 'trip') return v.categoryName === '여행';
-        if (selectedTabId.value === 'top') return true;
+    return (videos.value || []).filter((v) => {
+        if (selectedTabId.value === "yesterday")
+            return +formatPublishedAt(v.publishedAt, "minFromNow") < 60 * 48;
+        if (selectedTabId.value === "music") return v.categoryName === "음악";
+        if (selectedTabId.value === "trip") return v.categoryName === "여행";
+        if (selectedTabId.value === "top") return true;
         return true;
-    }).map(v => {
-        return { ...v, publishedAt: formatPublishedAt(v.publishedAt, "fromNow") }
-    })
-})
+    });
+});
 
 useSeoMeta({
-    title: '인기 급상승 동영상 | YouTube Moments',
-    ogTitle: '인기 급상승 동영상 | YouTube Moments',
+    ogUrl: location.href,
+    title: "인기 급상승 동영상 | YouTube Moments",
+    ogTitle: "인기 급상승 동영상 | YouTube Moments",
     description: "최고의 영상 속 최고의 순간을 즐기고 공유하세요.",
     ogDescription: "최고의 영상 속 최고의 순간을 즐기고 공유하세요.",
     twitterCard: "summary_large_image",
-    ogImage: '/og-image.png'
+    ogImage: "/og-image.png",
+    ogSiteName: "YouTube Moments",
 });
 </script>
 <template>

@@ -9,9 +9,7 @@ const { data: videos, status: videoStatus } = youtubeApi.fetchTrendingVideos(
     MAX_TREND_VIDEO_COUNT
 );
 watch(videos, () => {
-    videoDataState.value.trendVideoData = (videos.value || []).map(v => {
-        return { ...v, publishedAt: formatPublishedAt(v.publishedAt, "fromNow") }
-    });
+    videoDataState.value.trendVideoData = (videos.value || []);
 });
 
 const trend3Videos = computed(() =>

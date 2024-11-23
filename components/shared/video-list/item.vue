@@ -21,7 +21,7 @@ defineProps<{ video: TrendingVideoType; idx?: number }>();
                     {{ video.channelTitle }}
                 </p>
                 <p class="text-gray-400 text-xs">
-                    조회수 {{ formatViewCount(video.viewCount) }} • {{ video.publishedAt }}
+                    조회수 {{ formatViewCount(video.viewCount) }} • {{ formatPublishedAt(video.publishedAt, "fromNow") }}
                 </p>
             </div>
         </div>

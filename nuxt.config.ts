@@ -100,6 +100,7 @@ export default defineNuxtConfig({
         { property: "og:image", content: "/og-image.png" },
         { property: "og:url", content: "https://youtube-moments.make1k.app" },
         { property: "og:type", content: "website" },
+        { property: "og:site_name", content: "YouTube Moments" },
       ],
       link: [
         { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
@@ -113,11 +114,6 @@ export default defineNuxtConfig({
         },
       ],
     },
-  },
-
-  site: {
-    url: "https://youtube-moments.make1k.app",
-    defaultLocale: "ko",
   },
 
   sitemap: {
