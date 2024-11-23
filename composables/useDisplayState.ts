@@ -28,11 +28,14 @@ export const useDisplayState = () => {
       () => {
         const route = useRoute();
         const { player, playerLoading, headerMessage } = usePlayerProvider();
-        if (!!route.query.v || !!route.query.f) {
-          state.value.currentPage = "video";
-          playerLoading.value = true;
+        if (!!route.query.v) {
+          if (!!route.query.f) {
+            // console.log("playerLoading.value = pass;");
+          } else {
+            playerLoading.value = true;
+            // console.log("playerLoading.value = true;");
+          }
         } else {
-          state.value.currentPage = (route.query.page as string) || "";
           headerMessage.value = "댓글 누르면 순간 플레이";
           player.value?.pauseVideo?.();
         }

@@ -39,9 +39,11 @@ export function usePlayerProvider() {
   const seekTo = async (sec?: number, videoId?: string) => {
     if (videoId) {
       await player.value?.loadVideoById?.(videoId, sec);
+      // console.log("playerLoading.value = loadVideoById;");
     } else {
       await player.value?.seekTo?.(sec || t.value, true);
       await player.value?.playVideo?.();
+      // console.log("playerLoading.value = false;");
     }
     playerLoading.value = false;
   };
