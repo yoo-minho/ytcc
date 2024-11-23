@@ -14,6 +14,7 @@ const videoInfo = computed(() => data.value?.videoInfo);
 const sec = computed(() =>
   route.query.t ? Number(route.query.t) : comments.value[0]?.sec || 0
 );
+
 watch(
   () => route.query.v,
   () =>

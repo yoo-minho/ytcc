@@ -122,6 +122,22 @@ useCustomSeoMeta('landing');
                 <div class="flex gap-2 items-center justify-between">
                     <div>
                         <div class="text-xl font-bold flex items-center gap-1">
+                            <Icon name="ph:fire" /> 인기 급상승 동영상
+                        </div>
+                    </div>
+                    <div class="cursor-pointer text-sm text-gray-400 flex items-center" @click="openTrendVideo()">
+                        전체 보기 <Icon name="ph:caret-right-bold"></Icon>
+                    </div>
+                </div>
+                <SharedVideoList :videos="trend3Videos" :status="videoStatus" class="pt-2" />
+            </div>
+
+            <UDivider class="dark" />
+
+            <div>
+                <div class="flex gap-2 items-center justify-between">
+                    <div>
+                        <div class="text-xl font-bold flex items-center gap-1">
                             <Icon name="ph:calendar-blank" /> 어제 올라온 웹예능
                         </div>
                     </div>
@@ -136,21 +152,7 @@ useCustomSeoMeta('landing');
 
             <UDivider class="dark" />
 
-            <div>
-                <div class="flex gap-2 items-center justify-between">
-                    <div>
-                        <div class="text-xl font-bold flex items-center gap-1">
-                            <Icon name="ph:fire" /> 인기 급상승 동영상
-                        </div>
-                    </div>
-                    <div class="cursor-pointer text-sm text-gray-400 flex items-center" @click="openTrendVideo()">
-                        전체 보기 <Icon name="ph:caret-right-bold"></Icon>
-                    </div>
-                </div>
-                <SharedVideoList :videos="trend3Videos" :status="videoStatus" class="pt-2" />
-            </div>
 
-            <UDivider class="dark" />
         </div>
         <div class="flex flex-col items-center px-4 pb-12 gap-1">
             <div class="cursor-pointer flex items-center gap-1"

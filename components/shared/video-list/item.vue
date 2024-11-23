@@ -6,7 +6,8 @@ defineProps<{ video: TrendingVideoType; idx?: number }>();
     <div class="cursor-pointer flex gap-4 py-2" @click="moveVideoDetail(video.id)">
         <div class="w-1/2">
             <div class="relative">
-                <img class="w-full" :src="video.thumbnail" alt="Video Thumbnail" style="aspect-ratio: 16 / 9;">
+                <img class="w-full rounded-md" :src="video.thumbnail" alt="Video Thumbnail"
+                    style="aspect-ratio: 16 / 9;">
                 <div class="absolute bottom-2 right-2 bg-black bg-opacity-75 text-white rounded px-1 font-bold text-xs">
                     {{ video.duration }}
                 </div>

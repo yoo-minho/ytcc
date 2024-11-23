@@ -14,23 +14,23 @@ const FILTER = {
   윤아: { search: ["윤아"], label: "턴오버 최윤아 🏀 사랑 받았던 순간 ❤️" },
 };
 
-// https://yt.make1k.app/?f=turnover-승진
-// https://yt.make1k.app/?f=turnover-태풍
-// https://yt.make1k.app/?f=turnover-윤아
-// https://yt.make1k.app/?f=turnover-성현
-// https://yt.make1k.app/?f=turnover-연우
-// https://yt.make1k.app/?f=turnover-승구
-// https://yt.make1k.app/?f=turnover-세찬
-// https://yt.make1k.app/?f=turnover-희현
-// https://yt.make1k.app/?f=turnover-정민
-// https://yt.make1k.app/?f=turnover-현석
-// https://yt.make1k.app/?f=turnover-승윤
-// https://yt.make1k.app/?f=turnover-성훈
-// https://yt.make1k.app/?f=turnover-상현
+// https://ytm.make1k.app/?f=turnover&q=승진
+// https://ytm.make1k.app/?f=turnover&q=태풍
+// https://ytm.make1k.app/?f=turnover&q=윤아
+// https://ytm.make1k.app/?f=turnover&q=성현
+// https://ytm.make1k.app/?f=turnover&q=연우
+// https://ytm.make1k.app/?f=turnover&q=승구
+// https://ytm.make1k.app/?f=turnover&q=세찬
+// https://ytm.make1k.app/?f=turnover&q=희현
+// https://ytm.make1k.app/?f=turnover&q=정민
+// https://ytm.make1k.app/?f=turnover&q=현석
+// https://ytm.make1k.app/?f=turnover&q=승윤
+// https://ytm.make1k.app/?f=turnover&q=성훈
+// https://ytm.make1k.app/?f=turnover&q=상현
 
 export default defineEventHandler(async (event) => {
-  const { f } = getQuery(event) as { f: keyof typeof FILTER };
-  const { search, label } = FILTER[f];
+  const { q } = getQuery(event) as { q: keyof typeof FILTER };
+  const { search, label } = FILTER[q];
 
   const turnoverComments = await import("~/data/comments/turnover.json");
 

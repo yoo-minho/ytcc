@@ -5,7 +5,7 @@ export const useYoutubeApi = () => {
   const fetchTimeComments = async () => {
     const route = useRoute();
     const id = computed(() => {
-      if (route.query.f) return String(route.query.f).split("-")[0];
+      if (route.query.f) return String(route.query.f);
       return route.query.v ? String(route.query.v) : "";
     });
     return await useAsyncData(
@@ -13,10 +13,9 @@ export const useYoutubeApi = () => {
       async () => {
         if (!id.value) return { comments: [], commentCount: 0, videoInfo: undefined };
 
-        const query = {} as { f?: string };
-        if (route.query.f) {
-          const [_, forId] = String(route.query.f).split("-");
-          if (forId) query.f = forId;
+        const query = {} as { q?: string };
+        if (route.query.q) {
+          query.q = String(route.query.q);
         }
         return await $fetch<TimelineCommentWrapType>(`/api/time-comment/${id.value}`, {
           query,
