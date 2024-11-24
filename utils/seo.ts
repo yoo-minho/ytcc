@@ -1,7 +1,7 @@
 type SeoBasicType = {
-  title: string;
-  description: string;
-  image: string;
+  title?: string;
+  description?: string;
+  image?: string;
 };
 
 const metaArr = [
@@ -38,8 +38,10 @@ export function useCustomSeoMeta(metaParam: string | SeoBasicType) {
   } else {
     meta = metaParam;
   }
-  const title = meta.title + " | YouTubeMoments";
-  const { description, image } = meta;
+
+  const title = (meta.title || metaArr[0].meta.title) + " | YouTubeMoments";
+  const description = meta.description || metaArr[0].meta.description;
+  const image = meta.image || metaArr[0].meta.image;
 
   useHead({ title });
   useSeoMeta({

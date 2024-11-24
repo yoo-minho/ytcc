@@ -1,9 +1,19 @@
 <script setup lang="ts">
 
-const { player, playerLoading, videoId, t, updateTime } = usePlayerProvider();
+const { player, playerLoading, videoId, currentTime, t, loop, updateTime, seekTo } = usePlayerProvider();
 
 onMounted(() => {
     player.value = setYoutubePlayer();
+});
+
+const 루프경과시간 = computed(() => Math.ceil(Math.max(currentTime.value - t.value, 0)));
+
+watch(루프경과시간, () => {
+    //max 조건을 안 붙이면 뒷시간 댓글에서 앞시간 댓글 누르면 이슈
+    //max 를 + 1로 정하면 60초에서 10초로 넘어갈때 이슈
+    if (루프경과시간.value > loop.value && 루프경과시간.value <= loop.value * 2) {
+        seekTo();
+    }
 });
 
 function setYoutubePlayer() {
@@ -39,10 +49,6 @@ function setYoutubePlayer() {
                         cancelAnimationFrame(animationFrameId);
                         animationFrameId = null;
                     }
-
-                    // if (event.data === PlayerState.PAUSED || event.data === PlayerState.ENDED) {
-                    //     clear();
-                    // }
                 }
             },
             onError: (event: any) => {

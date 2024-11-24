@@ -13,7 +13,6 @@ watch(currentTime, () => {
         const elapsedTime = currentTime.value - props.comment.sec;
         if (elapsedTime > 0 && elapsedTime < loop.value) {
             progressWidth.value = Math.min((elapsedTime / loop.value) * 100, 100);
-            if (elapsedTime <= 0.5) scrollToElement();
         } else {
             progressWidth.value = 0;
         }
@@ -52,20 +51,17 @@ watch(currentTime, () => {
                             </p>
                         </template>
                     </div>
-                    <div class="flex justify-between w-full gap-2 items-center">
-                        <div v-if="comment.totalLikeCount > 0" class="flex items-center gap-1"
-                            :class="{ 'animate-bounce': comment.sec === t }">
+                    <div class="flex w-full gap-3">
+                        <div v-if="comment.totalLikeCount > 0" class="flex items-center gap-1">
                             <Icon name="heroicons:hand-thumb-up" class="like-icon" />
                             <div>{{ formatCount(comment.totalLikeCount) }}</div>
                         </div>
                         <div v-else></div>
-                        <div v-if="comment.comments.length > 1" class="flex items-center gap-1 flex-1">
+                        <div class="flex items-center gap-1">
                             <Icon name="iconamoon:comment-dots-thin" />
                             <div>{{ formatCount(comment.comments.length) }}</div>
                         </div>
-                        <div v-else></div>
-                        <div class="flex gap-2">
-                            <!-- <UiYoutubeAppBtn :video-id="videoId" :time="comment.sec" /> -->
+                        <div class="flex items-center gap-1">
                             <UiShareIcon :t="comment.sec" />
                         </div>
                     </div>

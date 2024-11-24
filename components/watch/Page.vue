@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useYoutubeApi } from "~/composables/api/useYoutubeApi";
 
-const { headerMessage, t, videoId, seekTo } = usePlayerProvider();
+const { headerMessage, t, videoId, seekTo, scrollToElement } = usePlayerProvider();
 const route = useRoute();
 const router = useRouter();
 
@@ -16,23 +16,24 @@ const sec = computed(() =>
 );
 
 watch(
-  () => route.query.v,
-  () =>
-  (videoId.value = route.query.v
-    ? String(route.query.v)
-    : comments.value[0]?.videoId || ""),
+  comments,
+  (newComments) => {
+    if (newComments.length === 0) return;
+
+    videoId.value = route.query.v
+      ? String(route.query.v)
+      : comments.value[0]?.videoId || "";
+    seekToSec(sec.value, videoId.value);
+  },
   { immediate: true }
 );
-
-watch(comments, (newComments) => {
-  if (newComments.length === 0) return;
-  seekToSec(sec.value, videoId.value);
-}, { immediate: true });
 
 function seekToSec(sec: number, _videoId?: string) {
   headerMessage.value =
     comments.value.find((v) => v.sec === sec)?.comments[0].comment ||
     "댓글 누르면 순간 플레이";
+
+  // console.log('seekToSec', { sec, _videoId, t: t.value })
 
   if (sec && sec !== t.value) {
     if (_videoId) {
@@ -46,6 +47,9 @@ function seekToSec(sec: number, _videoId?: string) {
   }
 
   seekTo(sec, _videoId);
+  setTimeout(() => {
+    scrollToElement();
+  }, 0);
 }
 
 // SEO 메타 데이터 설정

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{ playlist?: any; thumbnail: boolean }>();
+defineProps<{ playlist: PlaylistType; thumbnail: boolean }>();
 </script>
 <template>
     <div v-if="playlist" class="cursor-pointer" @click="movePlaylistDetail(playlist.playlistId)">
@@ -20,7 +20,7 @@ defineProps<{ playlist?: any; thumbnail: boolean }>();
                 <div class="text-sm tracking-tight">
                     <p>{{ playlist.cycle }}</p>
                     <p class="text-xl text-white font-bold leading-tight line-clamp-1 ">{{ playlist.title }}</p>
-                    <p class="text-gray-300 line-clamp-1 break-keep"> {{ playlist.description }}</p>
+                    <p class="text-gray-300 line-clamp-3 whitespace-pre-wrap"> {{ playlist.description }}</p>
                     <p v-if="playlist.actor" class="text-gray-400 mt-1"> 출연 : {{ playlist.actor }} </p>
                     <p class="text-gray-400 line-clamp-1"> 제작채널 : {{ playlist.channelTitle }}</p>
                 </div>

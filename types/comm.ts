@@ -41,3 +41,13 @@ export type TrendingVideoType = {
   categoryId: string;
   categoryName: string;
 };
+export type PlaylistType = {
+  channelTitle: string;
+  title: string;
+  description: string;
+  publishedAt: string;
+  thumbnail: string;
+  playlistId: string;
+  cycle?: string;
+  actor?: string;
+};

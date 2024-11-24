@@ -27,7 +27,6 @@ defineProps<{ video: TrendingVideoType; idx?: number }>();
             </div>
         </div>
     </div>
-
 </template>
 
 <style scoped></style>

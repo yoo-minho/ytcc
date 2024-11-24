@@ -4,24 +4,25 @@ import { WEEKLY_PLAYLIST_ARR } from "@/constants/youtube";
 export const useYoutubeApi = () => {
   const fetchTimeComments = async () => {
     const route = useRoute();
+
     const id = computed(() => {
       if (route.query.f) return String(route.query.f);
       return route.query.v ? String(route.query.v) : "";
     });
+
     return await useAsyncData(
       `time-comment-${id.value}`,
       async () => {
         if (!id.value) return { comments: [], commentCount: 0, videoInfo: undefined };
+        if (route.query.f && !route.query.q) return { comments: [], commentCount: 0, videoInfo: undefined };
 
         const query = {} as { q?: string };
         if (route.query.q) {
           query.q = String(route.query.q);
         }
-        return await $fetch<TimelineCommentWrapType>(`/api/time-comment/${id.value}`, {
-          query,
-        });
+        return await $fetch<TimelineCommentWrapType>(`/api/time-comment/${id.value}`, { query });
       },
-      { watch: [id] }
+      { watch: [id, () => route.query.q] }
     );
   };
 
@@ -41,22 +42,22 @@ export const useYoutubeApi = () => {
     );
 
   const fetchPlayListInfo = (playlistId: string) =>
-    useAsyncData<any[]>("fetchPlayListInfo", async () => {
-      return await $fetch<any[]>("/api/weekly", {
+    useAsyncData("fetchPlayListInfo", async () => {
+      return await $fetch<PlaylistType[]>("/api/weekly", {
         method: "POST",
         body: { playlistIds: [playlistId] },
       });
     });
 
   const fetchWeeklyVideos = () =>
-    useAsyncData<any[]>(
+    useAsyncData(
       "weeklyVideos",
       async () => {
         const videoDataState = useVideoDataState();
         if (videoDataState.value.weeklyVideoData.length > 0) {
           return videoDataState.value.weeklyVideoData;
         }
-        return await $fetch<any[]>("/api/weekly", {
+        return await $fetch<PlaylistType[]>("/api/weekly", {
           method: "POST",
           body: { playlistIds: WEEKLY_PLAYLIST_ARR.map((v) => v.id) },
         });

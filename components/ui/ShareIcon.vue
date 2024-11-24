@@ -55,7 +55,7 @@ const shareTimelineComment = (sec?: number) => {
 </script>
 
 <template>
-  <div class="cursor-pointer" @click.stop="shareTimelineComment(t)">
+  <div class="cursor-pointer flex" @click.stop="shareTimelineComment(t)">
     <template v-if="t === undefined">
       <UButton color="black" :ui="{ rounded: 'rounded-full' }"> 공유 </UButton>
     </template>

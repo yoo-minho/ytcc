@@ -1,9 +1,23 @@
 let watchInitialized = false;
 
+const getPage = () => {
+  const route = useRoute();
+
+  if (route.query.v) {
+    return "video";
+  }
+
+  if (route.query.f && !route.query.page) {
+    return "video";
+  }
+
+  return String(route.query.page || "");
+};
+
 export const useDisplayState = () => {
   const route = useRoute();
   const state = useState("display", () => ({
-    currentPage: String(route.query.page || ""),
+    currentPage: getPage(),
     scroll: {} as any,
   }));
 
@@ -13,12 +27,7 @@ export const useDisplayState = () => {
     watch(
       () => route.query,
       () => {
-        const route = useRoute();
-        if (!!route.query.v || !!route.query.f) {
-          state.value.currentPage = "video";
-        } else {
-          state.value.currentPage = (route.query.page as string) || "";
-        }
+        state.value.currentPage = getPage();
       },
       { immediate: true, deep: true }
     );
@@ -30,12 +39,13 @@ export const useDisplayState = () => {
         const { player, playerLoading, headerMessage } = usePlayerProvider();
         if (!!route.query.v) {
           if (!!route.query.f) {
-            // console.log("playerLoading.value = pass;");
+            console.log("playerLoading.value = pass;", route.query);
           } else {
             playerLoading.value = true;
-            // console.log("playerLoading.value = true;");
+            console.log("playerLoading.value = true;", route.query);
           }
         } else {
+          console.log("pauseVideo", route.query);
           headerMessage.value = "댓글 누르면 순간 플레이";
           player.value?.pauseVideo?.();
         }

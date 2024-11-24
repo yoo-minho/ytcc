@@ -122,6 +122,27 @@ useCustomSeoMeta('landing');
                 <div class="flex gap-2 items-center justify-between">
                     <div>
                         <div class="text-xl font-bold flex items-center gap-1">
+                            <Icon name="ph:fire" /> Special Thanks To
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-2">
+                    <div class="bg-gradient-to-r from-orange-600/30 via-orange-500/30 to-yellow-600/30 p-4 rounded-lg cursor-pointer hover:from-orange-600/40 hover:via-orange-500/40 hover:to-yellow-600/40 transition-all duration-300"
+                        @click="navigateTo({ query: { page: 'special', f: 'turnover' } })">
+                        <div class="flex flex-col tracking-tight text-center">
+                            <span class="text-2xl font-bold">Turnover 🏀</span>
+                            <span class="text-sm text-gray-300">2024 KBL 드래프트 도전기</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <UDivider class="dark" />
+
+            <div>
+                <div class="flex gap-2 items-center justify-between">
+                    <div>
+                        <div class="text-xl font-bold flex items-center gap-1">
                             <Icon name="ph:fire" /> 인기 급상승 동영상
                         </div>
                     </div>
