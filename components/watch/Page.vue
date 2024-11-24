@@ -53,7 +53,8 @@ function seekToSec(sec: number, _videoId?: string) {
 }
 
 // SEO 메타 데이터 설정
-if (route.query.v || route.query.f) {
+const displayState = useDisplayState();
+if (displayState.value.currentPage === "video") {
   const getTitle = (title: string) =>
     title.length > 20 ? title.slice(0, 20) + "..." : title;
   useCustomSeoMeta({

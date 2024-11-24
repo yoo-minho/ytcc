@@ -122,7 +122,7 @@ useCustomSeoMeta('landing');
                 <div class="flex gap-2 items-center justify-between">
                     <div>
                         <div class="text-xl font-bold flex items-center gap-1">
-                            <Icon name="ph:fire" /> Special Thanks To
+                            <Icon name="ph:heart" /> Special Thanks To
                         </div>
                     </div>
                 </div>
