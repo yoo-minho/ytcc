@@ -14,6 +14,10 @@ const install = async () => {
     }
 };
 
+const isRemoveTopLine = computed(() => {
+    return ['weekly', 'trend', 'special'].includes(displayState.value.currentPage)
+})
+
 const isPWAUnInstalled = ref(false);
 onMounted(
     () => {
@@ -27,7 +31,7 @@ onMounted(
     </template>
     <template v-else>
         <div class="px-4 flex items-center gap-3 h-[60px] w-full"
-            :class="['weekly', 'trend'].includes(displayState.currentPage) ? `` : `border-b border-white/20`">
+            :class="isRemoveTopLine ? `` : `border-b border-white/20`">
             <div v-if="String(displayState.currentPage) !== ''" @click="moveBack()"
                 class="flex items-center cursor-pointer">
                 <UIcon name="i-ph-arrow-left-bold" size="28px" />

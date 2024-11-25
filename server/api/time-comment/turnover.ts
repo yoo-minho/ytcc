@@ -2,7 +2,7 @@ const FILTER = {
   정희현: { search: ["희현", "말왕"] },
   서문세찬: { search: ["세찬", "지성", "모잉"] },
   이승구: { search: ["승구"] },
-  정연우: { search: ["연우"] },
+  정연우: { search: ["연우", "연 우"] },
   전정민: { search: ["정민", "카더가든"] },
   하승윤: { search: ["승윤"] },
   하승진: { search: ["승진"] },
@@ -12,6 +12,7 @@ const FILTER = {
   정현석: { search: ["현석"] },
   정성훈: { search: ["성훈"] },
   최윤아: { search: ["윤아"] },
+  TOP100: { search: [""] },
 };
 
 export default defineEventHandler(async (event) => {
@@ -32,6 +33,11 @@ export default defineEventHandler(async (event) => {
         .match(new RegExp(search.join("|")))
     )
     .sort((b: any, a: any) => a.totalLikeCount - b.totalLikeCount);
+
+  // q가 TOP일 때 totalLikeCount 순으로 10개만 뽑기
+  if (q === "TOP100") {
+    arr = arr.filter((v) => !v.videoTitle.includes("EP33")).slice(0, 100);
+  }
 
   return {
     videoInfo: {

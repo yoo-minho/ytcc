@@ -27,30 +27,18 @@ export const useDisplayState = () => {
     watch(
       () => route.query,
       () => {
-        state.value.currentPage = getPage();
-      },
-      { immediate: true, deep: true }
-    );
-
-    watch(
-      () => route.query.v,
-      () => {
-        const route = useRoute();
         const { player, playerLoading, headerMessage } = usePlayerProvider();
-        if (!!route.query.v) {
-          if (!!route.query.f) {
-            console.log("playerLoading.value = pass;", route.query);
-          } else {
-            playerLoading.value = true;
-            console.log("playerLoading.value = true;", route.query);
-          }
+        const page = getPage();
+        state.value.currentPage = page;
+
+        if (page === "video") {
+          playerLoading.value = true;
         } else {
-          console.log("pauseVideo", route.query);
           headerMessage.value = "댓글 누르면 순간 플레이";
           player.value?.pauseVideo?.();
         }
       },
-      { immediate: true }
+      { immediate: true, deep: true }
     );
   }
 

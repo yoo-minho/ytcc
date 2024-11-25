@@ -44,6 +44,7 @@ function setYoutubePlayer() {
                         animationFrameId = requestAnimationFrame(_updateTime);
                     };
                     animationFrameId = requestAnimationFrame(_updateTime);
+                    playerLoading.value = false;
                 } else {
                     if (animationFrameId !== null) {
                         cancelAnimationFrame(animationFrameId);

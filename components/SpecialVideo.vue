@@ -39,6 +39,9 @@ const videos = [
     }, {
         title: "정성훈",
         thumbnail: "https://i.ytimg.com/vi/KaWXrDuZF2o/mqdefault.jpg",
+    }, {
+        title: "TOP100",
+        thumbnail: "https://i.ytimg.com/vi/OG9c0nrnlfc/mqdefault.jpg",
     }
 ] as TrendingVideoType[];
 
@@ -67,7 +70,7 @@ useCustomSeoMeta({
                     <p>마지막 에피소드</p>
                 </div>
                 <div class="w-1/2 text-left text-gray-300 flex flex-col gap-2">
-                    <p>55화</p>
+                    <p>55화 (422일)</p>
                     <p>2023-9-23 (EP0)</p>
                     <p>2024-11-18 (EP54)</p>
                 </div>
@@ -79,8 +82,13 @@ useCustomSeoMeta({
         <div class="flex flex-col gap-8 p-4 items-center">
             <template v-for="(video) in videos">
                 <div class="cursor-pointer flex flex-col w-1/2" @click="movePage(video.title)">
-                    <img class="w-full rounded-md" :src="video.thumbnail" alt="Video Thumbnail"
-                        style="aspect-ratio: 16 / 9;">
+                    <div class="relative w-full" style="aspect-ratio: 16 / 9;">
+                        <img class="w-full rounded-md shadow-md absolute inset-0" :src="video.thumbnail"
+                            alt="Video Thumbnail">
+                        <div class="absolute flex items-center justify-center w-full h-full text-4xl opacity-70">
+                            <Icon name="mdi:play-circle-outline" />
+                        </div>
+                    </div>
                     <p class="text-white text-xl tracking-widest font-light text-center mt-1">
                         {{ video.title }}
                     </p>
@@ -89,9 +97,14 @@ useCustomSeoMeta({
         </div>
         <div class="flex flex-col gap-2 text-center w-full my-4">
             <div class="flex flex-col gap-4">
-                <span class="text-sm text-gray-300">그동안 열정을 담아</span>
-                <span class="text-sm text-gray-300">이 도전을 완성해주셔서 감사합니다!</span>
-                <p class="text-white text-3xl font-bold">End</p>
+                <span class="text-sm text-gray-300">그동안 도전해주셔서 감사합니다!</span>
+            </div>
+        </div>
+        <div class="flex justify-center gap-2 cursor-pointer w-full my-12" @click="navigateTo('/')">
+            <img src="/public/icon-192.png" width="24px" />
+            <div class="flex items-center">
+                <span class="font-bold text-xl tracking-tight">YouTube</span>
+                <span class="font-bold text-xl text-red-500 tracking-tight">Moments</span>
             </div>
         </div>
     </div>
