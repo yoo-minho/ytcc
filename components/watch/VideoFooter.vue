@@ -1,7 +1,6 @@
 <script setup lang="ts">
 defineProps<{
-  videoId: string;
-  videoInfo?: VideoInfoType | null;
+  videoInfo: VideoInfoType;
 }>();
 
 const LOOP_TIMES = [10, 15, 30, 60];
@@ -26,55 +25,30 @@ const toggleLoop = () => {
 };
 </script>
 <template>
-  <div class="h-[90px] w-full px-4">
-    <!-- <span>t : {{ t }} / currentTime : {{ currentTime }}</span> -->
-    <div v-if="videoInfo" class="flex h-full">
-      <div class="flex-1 flex flex-col justify-center gap-2">
-        <span class="flex items-center gap-2 tracking-tight justify-between">
+  <div class="flex h-full">
+    <div class="flex-1 flex flex-col justify-center gap-2">
+      <span class="flex items-center gap-2 tracking-tight justify-between">
+        <div class="flex items-center gap-2 cursor-pointer" @click="openYouTube({ channelId: videoInfo.channelId })">
+          <img :src="videoInfo.channelThumbnail" class="w-[30px] h-[30px] rounded-full border border-white/40" />
+          <span class="font-bold">@{{ videoInfo.channelTitle }}</span>
+        </div>
+        <div class="flex items-end gap-2">
           <div
-            class="flex items-center gap-2 cursor-pointer"
-            @click="openYouTube({ channelId: videoInfo.channelId })"
-          >
-            <img
-              :src="videoInfo.channelThumbnail"
-              class="w-[30px] h-[30px] rounded-full border border-white/40"
-            />
-            <span class="font-bold">@{{ videoInfo.channelTitle }}</span>
+            class="flex items-center justify-center bg-gray-300 rounded-full w-[30px] h-[30px] cursor-pointer opacity-60"
+            @click="toggleLoop()">
+            <div class="text-gray-700 text-sm">{{ loop }}s</div>
           </div>
-          <div class="flex items-end gap-2">
-            <div
-              class="flex items-center justify-center bg-gray-300 rounded-full w-[30px] h-[30px] cursor-pointer opacity-60"
-              @click="toggleLoop()"
-            >
-              <div class="text-gray-700 text-sm">{{ loop }}s</div>
-            </div>
-            <div
-              class="flex items-center justify-center gap-1 rounded-full w-[30px] h-[30px] cursor-pointer"
-              :class="isMuted ? `bg-red-700` : `bg-gray-300 opacity-60`"
-              @click="toggleMute()"
-            >
-              <Icon
-                v-if="isMuted"
-                name="ph:speaker-simple-slash-fill"
-                size="16px"
-                class="text-white"
-              />
-              <Icon
-                v-else
-                name="ph:speaker-simple-high-fill"
-                size="16px"
-                class="text-gray-700"
-              />
-            </div>
+          <div class="flex items-center justify-center gap-1 rounded-full w-[30px] h-[30px] cursor-pointer"
+            :class="isMuted ? `bg-red-700` : `bg-gray-300 opacity-60`" @click="toggleMute()">
+            <Icon v-if="isMuted" name="ph:speaker-simple-slash-fill" size="16px" class="text-white" />
+            <Icon v-else name="ph:speaker-simple-high-fill" size="16px" class="text-gray-700" />
           </div>
-        </span>
-        <span
-          class="ml-1 line-clamp-1 tracking-tighter cursor-pointer"
-          @click="openYouTube({ videoId })"
-        >
-          ▶<span class="ml-2"> {{ videoInfo.videoTitle }} </span>
-        </span>
-      </div>
+        </div>
+      </span>
+      <span class="ml-1 line-clamp-1 tracking-tighter cursor-pointer"
+        @click="openYouTube({ videoId: videoInfo.videoId })">
+        ▶<span class="ml-2"> {{ videoInfo.videoTitle }} </span>
+      </span>
     </div>
   </div>
 </template>

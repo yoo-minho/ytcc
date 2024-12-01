@@ -38,8 +38,8 @@ const toast = useToast();
 const makeCollection = () => {
     const { videoId, playlistId, empty } = extractYouTubeInfo(url.value);
     if (empty) return toast.add({ title: "유효한 링크가 아닙니다!" });
-    if (videoId) return moveVideoDetail(videoId);
-    if (playlistId) return movePlaylistDetail(playlistId);
+    if (videoId) return moveVideoDetail(videoId, true);
+    if (playlistId) return movePlaylistDetail(playlistId, true);
 };
 
 function extractYouTubeInfo(url: string) {

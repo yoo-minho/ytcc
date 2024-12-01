@@ -33,7 +33,14 @@ function seekToSec(sec: number, _videoId?: string) {
     comments.value.find((v) => v.sec === sec)?.comments[0].comment ||
     "댓글 누르면 순간 플레이";
 
-  // console.log('seekToSec', { sec, _videoId, t: t.value })
+  const getTitle = (title: string) =>
+    title.length > 20 ? title.slice(0, 20) + "..." : title;
+
+  useCustomSeoMeta({
+    title: `[공유하고픈순간❤️] ${getTitle(headerMessage.value)}`,
+    description: videoInfo.value?.videoTitle || "",
+    image: videoInfo.value?.thumbnail || "/og-image.png",
+  });
 
   if (sec && sec !== t.value) {
     if (_videoId) {
@@ -51,18 +58,6 @@ function seekToSec(sec: number, _videoId?: string) {
     scrollToElement();
   }, 0);
 }
-
-// SEO 메타 데이터 설정
-const displayState = useDisplayState();
-if (displayState.value.currentPage === "video") {
-  const getTitle = (title: string) =>
-    title.length > 20 ? title.slice(0, 20) + "..." : title;
-  useCustomSeoMeta({
-    title: `[공유하고픈순간❤️] ${getTitle(headerMessage.value)}`,
-    description: videoInfo.value?.videoTitle || "",
-    image: videoInfo.value?.thumbnail || "/og-image.png",
-  });
-}
 </script>
 <template>
   <div class="flex flex-col h-full w-full">
@@ -72,9 +67,9 @@ if (displayState.value.currentPage === "video") {
       </div>
     </div>
     <WatchYoutubePlayer :video-id="videoId" :status="status" />
-    <template v-if="videoId">
-      <WatchVideoFooter :video-id="videoId" :video-info="videoInfo" />
-    </template>
+    <div class="h-[90px] w-full px-4">
+      <WatchVideoFooter v-if="videoInfo" :video-info="videoInfo" />
+    </div>
     <div class="flex-1 flex flex-col h-0 bg-gray-900">
       <div class="flex items-center justify-between gap-2 p-4 border-b border-gray-800 h-[60px]">
         <div class="flex-1 tracking-tight flex items-center gap-2 font-bold">

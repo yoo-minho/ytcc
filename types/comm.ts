@@ -5,6 +5,7 @@ export type CommentType = {
   likeCount: number;
 };
 export type VideoInfoType = {
+  videoId: string;
   videoTitle: string;
   thumbnail: string;
   channelId: string;
@@ -22,7 +23,7 @@ export type TimelineCommentType = {
   time: string;
   sec: number;
   totalLikeCount: number;
-  comments: { comment: string; likeCount: number }[];
+  comments: { comment: string; likeCount: number; sec: number }[];
   videoId?: string;
   videoTitle?: string;
 };

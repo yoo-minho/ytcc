@@ -2,9 +2,20 @@
 
 const { player, playerLoading, videoId, currentTime, t, loop, updateTime, seekTo } = usePlayerProvider();
 
-onMounted(() => {
+function waitForYouTubeApi(): Promise<void> {
+    return new Promise((resolve) => {
+        if ((window as any).YT && (window as any).YT.Player) {
+            resolve()
+        } else {
+            (window as any).onYouTubeIframeAPIReady = () => resolve()
+        }
+    })
+}
+
+onMounted(async () => {
+    await waitForYouTubeApi();
     player.value = setYoutubePlayer();
-});
+})
 
 const 루프경과시간 = computed(() => Math.ceil(Math.max(currentTime.value - t.value, 0)));
 

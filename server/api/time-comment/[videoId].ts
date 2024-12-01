@@ -32,6 +32,7 @@ export default defineEventHandler(async (event) => {
   const videoInfo = {
     channelId,
     channelTitle: channelTitle,
+    videoId,
     videoTitle: title,
     thumbnail: thumbnails?.maxres?.url,
     channelThumbnail,
@@ -57,6 +58,40 @@ export default defineEventHandler(async (event) => {
     return filter1 && filter2;
   });
   _items = convertCommentsToTimeline(_items);
+
+  // 10초 이내 댓글 그룹화
+  const groupedComments = [];
+  let currentGroup = null;
+
+  // sec 기준으로 오름차순 정렬
+  const sortedComments = [..._items].sort((a, b) => a.sec - b.sec);
+  for (const comment of sortedComments) {
+    if (!currentGroup) {
+      currentGroup = { ...comment };
+      // 댓글을 좋아요 순으로 정렬
+      currentGroup.comments = currentGroup.comments.sort((a, b) => b.likeCount - a.likeCount);
+      groupedComments.push(currentGroup);
+      continue;
+    }
+
+    // 그룹의 최초 댓글과 현재 댓글의 시간차가 5초 이내인 경우
+    const firstCommentInGroup = groupedComments[groupedComments.length - 1];
+    if (Math.abs(firstCommentInGroup.sec - comment.sec) <= 5) {
+      // 댓글과 좋아요 수 병합
+      currentGroup.comments.push(...comment.comments);
+      // 병합된 댓글을 좋아요 순으로 정렬
+      currentGroup.comments = currentGroup.comments.sort((a, b) => b.likeCount - a.likeCount);
+      currentGroup.totalLikeCount += comment.totalLikeCount;
+    } else {
+      // 새로운 그룹 시작
+      currentGroup = { ...comment };
+      // 새 그룹의 댓글도 좋아요 순으로 정렬
+      currentGroup.comments = currentGroup.comments.sort((a, b) => b.likeCount - a.likeCount);
+      groupedComments.push(currentGroup);
+    }
+  }
+
+  _items = groupedComments.sort((a, b) => b.totalLikeCount - a.totalLikeCount);
 
   const result = {
     videoInfo,

@@ -50,8 +50,8 @@ export default defineNuxtConfig({
     },
     includeAssets: ["favicon.ico", "apple-touch-icon.png"],
     manifest: {
-      name: "Youtube Moments",
-      short_name: "Youtube Moments",
+      name: "YoutubeMoments",
+      short_name: "YoutubeMoments",
       description: "YouTube 영상 최고의 순간을 즐기고 공유하세요",
       start_url: "/",
       display: "standalone",
@@ -86,7 +86,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: "영상 최고의 순간을 즐기세요 | YouTube Moments",
+      title: "영상 최고의 순간을 즐기세요 | YouTubeMoments",
       meta: [
         { charset: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0" },
@@ -95,12 +95,12 @@ export default defineNuxtConfig({
           name: "description",
           content: "YouTube 영상 최고의 순간을 즐기고 공유하세요.",
         },
-        { property: "og:title", content: "YouTube Moments" },
+        { property: "og:title", content: "YouTubeMoments" },
         { property: "og:description", content: "YouTube 영상 최고의 순간을 즐기고 공유하세요." },
         { property: "og:image", content: "/og-image.png" },
         { property: "og:url", content: "https://youtube-moments.make1k.app" },
         { property: "og:type", content: "website" },
-        { property: "og:site_name", content: "YouTube Moments" },
+        { property: "og:site_name", content: "YouTubeMoments" },
       ],
       link: [
         { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
